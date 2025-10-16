@@ -120,7 +120,7 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
 
         // Add a csv path field
         Label wlSampleTextFieldLabel = new Label(shell, SWT.RIGHT);
-        wlSampleTextFieldLabel.setText(BaseMessages.getString(PKG, "SampleTransform.SchemaPath.Label"));
+        wlSampleTextFieldLabel.setText(BaseMessages.getString(PKG, "SampleTransform.CSVPath.Label"));
         props.setLook(wlSampleTextFieldLabel);
         FormData fdlSampleTextFieldLabel = new FormData();
         fdlSampleTextFieldLabel.left = new FormAttachment(0, 0);
@@ -139,11 +139,11 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
 
         // Add a syntax file path field
         Label wlSchemaPathFieldLabel = new Label(shell, SWT.RIGHT);
-        wlSchemaPathFieldLabel.setText(BaseMessages.getString(PKG, "SampleTransform.CSVPath.Label"));
+        wlSchemaPathFieldLabel.setText(BaseMessages.getString(PKG, "SampleTransform.SchemaPath.Label"));
         props.setLook(wlSchemaPathFieldLabel);
         FormData fdlSchemaPathFieldLabel = new FormData();
         fdlSchemaPathFieldLabel.left = new FormAttachment(0, 0);
-        fdlSchemaPathFieldLabel.top = new FormAttachment(spacer, margin);
+        fdlSchemaPathFieldLabel.top = new FormAttachment(wCSVPath, margin);
         wlSchemaPathFieldLabel.setLayoutData(fdlSchemaPathFieldLabel);
 
         wSchemaPath = new TextVar(variables, shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
@@ -151,7 +151,7 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
         wSchemaPath.addModifyListener(lsMod);
         FormData fdSchemaPathField = new FormData();
         fdSchemaPathField.left = new FormAttachment(wlSchemaPathFieldLabel, margin);
-        fdSchemaPathField.top = new FormAttachment(spacer, margin);
+        fdSchemaPathField.top = new FormAttachment(wCSVPath, margin);
         fdSchemaPathField.right = new FormAttachment(100, 0);
         wSchemaPath.setLayoutData(fdSchemaPathField);
 
