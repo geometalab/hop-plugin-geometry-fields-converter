@@ -32,65 +32,70 @@ import org.apache.hop.pipeline.transform.TransformMeta;
 
 import java.util.List;
 
-/** Meta data for the sample transform. */
+/**
+ * Meta data for the sample transform.
+ */
 @Transform(
-    id = "SampleTransform",
-    name = "i18n::SampleTransform.Name",
-    description = "i18n::SampleTransform.Description",
-    image = "sample.svg",
-    categoryDescription = "Sample.Category",
-    documentationUrl = "" /*url to your documentation */)
+        id = "SampleTransform",
+        name = "i18n::SampleTransform.Name",
+        description = "i18n::SampleTransform.Description",
+        image = "sample.svg",
+        categoryDescription = "Sample.Category",
+        documentationUrl = "" /*url to your documentation */)
 public class SampleMeta extends BaseTransformMeta<Sample, SampleData> {
 
-  private static final Class<?> PKG = SampleMeta.class; // Needed by Translator
-  public static final String SAMPLE_TEXT_FIELD_NAME = "Value";
+    public static final String SAMPLE_TEXT_FIELD_NAME = "Filepath";
 
-  @HopMetadataProperty(
-      key = "sample_text",
-      injectionKeyDescription = "SampleTransform.Injection.SampleText.Description")
-  private String sampleText;
+    @HopMetadataProperty(
+            key = "sample_text",
+            injectionKeyDescription = "SampleTransform.Injection.SampleText.Description")
+    private String sampleText;
 
-  public String getSampleText() {
-    return sampleText;
-  }
+    public String getSampleText() {
+        return sampleText;
+    }
 
-  public void setSampleText(String sampleText) {
-    this.sampleText = sampleText;
-  }
+    public void setSampleText(String sampleText) {
+        this.sampleText = sampleText;
+    }
 
-  @Override
-  public void getFields(
-      IRowMeta rowMeta,
-      String name,
-      IRowMeta[] info,
-      TransformMeta nextTransform,
-      IVariables variables,
-      IHopMetadataProvider metadataProvider)
-      throws HopTransformException {
-    // Add new
-    IValueMeta vm = new ValueMetaString(SAMPLE_TEXT_FIELD_NAME);
-    vm.setOrigin(getParentTransformMeta().getName());
+    @Override
+    public void getFields(
+            IRowMeta rowMeta,
+            String name,
+            IRowMeta[] info,
+            TransformMeta nextTransform,
+            IVariables variables,
+            IHopMetadataProvider metadataProvider)
+            throws HopTransformException {
+        // Add new
+        IValueMeta vm = new ValueMetaString(SAMPLE_TEXT_FIELD_NAME);
+        vm.setOrigin(name);
+        rowMeta.addValueMeta(vm);
+    }
 
-    rowMeta.addValueMeta(vm);
-  }
+    @Override
+    public void check(
+            List<ICheckResult> remarks,
+            PipelineMeta pipelineMeta,
+            TransformMeta transforminfo,
+            IRowMeta prev,
+            String[] input,
+            String[] output,
+            IRowMeta info,
+            IVariables variables,
+            IHopMetadataProvider metadataProvider) {
+        // Checks to perform when validating a transform
+    }
 
-  @Override
-  public void check(
-      List<ICheckResult> remarks,
-      PipelineMeta pipelineMeta,
-      TransformMeta transforminfo,
-      IRowMeta prev,
-      String[] input,
-      String[] output,
-      IRowMeta info,
-      IVariables variables,
-      IHopMetadataProvider metadataProvider) {
-    // Checks to perform when validating a transform
-  }
+    public String getConstantValue() {
+        return "C:\\Users\\tobia\\Desktop\\simple.csv";
+    }
 
-  @Override
-  public void setDefault() {
-    // Set default value for new sample text field
-    sampleText = "Hello my name is Apache Hop!";
-  }
+
+    @Override
+    public void setDefault() {
+        // Set default value for new sample text field
+        sampleText = "Hello my name is Apache Hop!";
+    }
 }

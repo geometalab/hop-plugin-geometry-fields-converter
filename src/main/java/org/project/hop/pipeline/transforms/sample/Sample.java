@@ -24,57 +24,51 @@ import org.apache.hop.pipeline.PipelineMeta;
 import org.apache.hop.pipeline.transform.BaseTransform;
 import org.apache.hop.pipeline.transform.TransformMeta;
 
-/** Transform That contains the basic skeleton needed to create your own plugin */
+/**
+ * Transform That contains the basic skeleton needed to create your own plugin
+ */
 public class Sample extends BaseTransform<SampleMeta, SampleData> {
 
-  private static final Class<?> PKG = Sample.class; // Needed by Translator
+    private static final Class<?> PKG = Sample.class; // Needed by Translator
 
-  public Sample(
-      TransformMeta transformMeta,
-      SampleMeta meta,
-      SampleData data,
-      int copyNr,
-      PipelineMeta pipelineMeta,
-      Pipeline pipeline) {
-    super(transformMeta, meta, data, copyNr, pipelineMeta, pipeline);
-  }
-
-  @Override
-  public boolean processRow() throws HopException {
-
-    Object[] r = getRow(); // Get row from input rowset & set row busy!
-
-    if (r == null) { // no more input to be expected...
-      setOutputDone();
-      return false;
+    public Sample(
+            TransformMeta transformMeta,
+            SampleMeta meta,
+            SampleData data,
+            int copyNr,
+            PipelineMeta pipelineMeta,
+            Pipeline pipeline) {
+        super(transformMeta, meta, data, copyNr, pipelineMeta, pipeline);
     }
 
-    if (first) { // use this block to do some processing that is only needed 1 time
-      first = false;
+    @Override
+    public boolean processRow() throws HopException {
+        if (first) {
+            first = false;
+
+            // If there is no input row meta (no upstream transforms), create one
+            if (getInputRowMeta() == null) {
+                data.outputRowMeta = new org.apache.hop.core.row.RowMeta();
+                getMeta().getFields(data.outputRowMeta, getTransformName(), null, null, this, getMetadataProvider());
+            } else {
+                data.outputRowMeta = getInputRowMeta().clone();
+            }
+
+            // Create one row with the constant value
+            Object[] outputRow = new Object[1];
+            outputRow[0] = "C:\\Users\\tobia\\Desktop\\simple.csv";
+            Object[] outputRow2 = new Object[1];
+            outputRow2[0] = "C:\\Users\\tobia\\Desktop\\simple2.csv";
+
+            // Send to output
+            putRow(data.outputRowMeta, outputRow);
+            putRow(data.outputRowMeta, outputRow2);
+            logBasic("Emitted constant string: " + getMeta().getConstantValue());
+        } else {
+            setOutputDone();
+            return false;
+        }
+
+        return true;
     }
-
-    data.outputRowMeta = getInputRowMeta().clone();
-    meta.getFields(data.outputRowMeta, getTransformName(), null, null, this, metadataProvider);
-
-    int fieldPos = data.outputRowMeta.indexOfValue(SampleMeta.SAMPLE_TEXT_FIELD_NAME);
-    if (fieldPos < 0) {
-      throw new HopTransformException(
-          "Target field ["
-              + SampleMeta.SAMPLE_TEXT_FIELD_NAME
-              + "] couldn't be found in output stream!");
-    }
-
-    r[fieldPos] = meta.getSampleText();
-
-    putRow(data.outputRowMeta, r); // return your data
-    return true;
-  }
-
-  @Override
-  public boolean init() {
-    if (super.init()) {
-      return true;
-    }
-    return false;
-  }
 }

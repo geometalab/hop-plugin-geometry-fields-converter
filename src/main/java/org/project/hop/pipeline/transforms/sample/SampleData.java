@@ -22,10 +22,12 @@ import org.apache.hop.pipeline.transform.BaseTransformData;
 import org.apache.hop.pipeline.transform.ITransformData;
 
 public class SampleData extends BaseTransformData implements ITransformData {
-  /** Default constructor for SampleData. */
-  public SampleData() {
-    super();
-  }
+    /**
+     * Default constructor for SampleData.
+     */
+    public SampleData() {
+        super();
+    }
 
-  public IRowMeta outputRowMeta;
+    public IRowMeta outputRowMeta;
 }
