@@ -50,14 +50,20 @@ public class SampleMeta extends BaseTransformMeta<Sample, SampleData> {
             key = "sample_text",
             injectionKeyDescription = "SampleTransform.Injection.SampleText.Description")
     private String sampleText;
+    @HopMetadataProperty(
+            key = "schema_path",
+            injectionKeyDescription = "SampleTransform.Injection.SchemaPath.Description")
+    private String schemaPath;
 
     public String getSampleText() {
         return sampleText;
     }
+    public String getSchemaPath() { return schemaPath; }
 
     public void setSampleText(String sampleText) {
         this.sampleText = sampleText;
     }
+    public void setSchemaPath(String schemaPath) {this.schemaPath = schemaPath; }
 
     @Override
     public void getFields(
@@ -97,5 +103,6 @@ public class SampleMeta extends BaseTransformMeta<Sample, SampleData> {
     public void setDefault() {
         // Set default value for new sample text field
         sampleText = "Hello my name is Apache Hop!";
+        schemaPath = "Yeet";
     }
 }

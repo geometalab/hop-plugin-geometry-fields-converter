@@ -198,9 +198,12 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
      * Copy information from the meta-data input to the dialog fields.
      */
     public void getData() {
-
+        if(input.getSchemaPath() ==null){
+            input.setSchemaPath("");
+        }
         // Get sample text and put it on dialog's text field
         wCSVPath.setText(input.getSampleText());
+        wSchemaPath.setText(input.getSchemaPath());
 
         wTransformName.selectAll();
         wTransformName.setFocus();
@@ -214,6 +217,7 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
     private void getInfo(SampleMeta in) {
         // Save sample text content
         input.setSampleText(wCSVPath.getText());
+        input.setSchemaPath(wSchemaPath.getText());
     }
 
     /**

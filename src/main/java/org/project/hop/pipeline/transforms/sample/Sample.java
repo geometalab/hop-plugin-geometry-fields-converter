@@ -23,6 +23,8 @@ import org.apache.hop.pipeline.Pipeline;
 import org.apache.hop.pipeline.PipelineMeta;
 import org.apache.hop.pipeline.transform.BaseTransform;
 import org.apache.hop.pipeline.transform.TransformMeta;
+import uk.gov.nationalarchives.csv.validator.api.CsvValidator;
+
 
 /**
  * Transform That contains the basic skeleton needed to create your own plugin
@@ -54,16 +56,24 @@ public class Sample extends BaseTransform<SampleMeta, SampleData> {
                 data.outputRowMeta = getInputRowMeta().clone();
             }
 
+            System.out.println("Doing shit");
+            System.out.println(meta.getSchemaPath());
+
+
+
+            CsvValidator.ValidatorBuilder validateWithStringNames = new CsvValidator.ValidatorBuilder(
+                    meta.getSampleText(),
+                    meta.getSchemaPath()
+            );
+
+
+
             // Create one row with the constant value
             Object[] outputRow = new Object[1];
-            outputRow[0] = "C:\\Users\\tobia\\Desktop\\simple.csv";
-            Object[] outputRow2 = new Object[1];
-            outputRow2[0] = "C:\\Users\\tobia\\Desktop\\simple2.csv";
+            outputRow[0] = meta.getSampleText();
 
             // Send to output
             putRow(data.outputRowMeta, outputRow);
-            putRow(data.outputRowMeta, outputRow2);
-            logBasic("Emitted constant string: " + getMeta().getConstantValue());
         } else {
             setOutputDone();
             return false;
