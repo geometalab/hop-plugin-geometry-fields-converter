@@ -118,24 +118,43 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
         wicon.setLayoutData(fdlicon);
         props.setLook(wicon);
 
-        // Add a csv path field
-        Label wlSampleTextFieldLabel = new Label(shell, SWT.RIGHT);
-        wlSampleTextFieldLabel.setText(BaseMessages.getString(PKG, "SampleTransform.CSVPath.Label"));
-        props.setLook(wlSampleTextFieldLabel);
-        FormData fdlSampleTextFieldLabel = new FormData();
-        fdlSampleTextFieldLabel.left = new FormAttachment(0, 0);
-        // fdlSampleTextFieldLabel.right = new FormAttachment(middle, -margin);
-        fdlSampleTextFieldLabel.top = new FormAttachment(spacer, margin);
-        wlSampleTextFieldLabel.setLayoutData(fdlSampleTextFieldLabel);
+        Label wlCSVPathLabel = new Label(shell, SWT.RIGHT);
+        wlCSVPathLabel.setText(BaseMessages.getString(PKG, "SampleTransform.CSVPath.Label"));
+        props.setLook(wlCSVPathLabel);
+        FormData fdlCSVPathLabel = new FormData();
+        fdlCSVPathLabel.left = new FormAttachment(0, 0);
+        fdlCSVPathLabel.top = new FormAttachment(spacer, margin);
+        wlCSVPathLabel.setLayoutData(fdlCSVPathLabel);
 
+        // Text field for the file path
         wCSVPath = new TextVar(variables, shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
         props.setLook(wCSVPath);
         wCSVPath.addModifyListener(lsMod);
-        FormData fdSampleTextField = new FormData();
-        fdSampleTextField.left = new FormAttachment(wlSampleTextFieldLabel, margin);
-        fdSampleTextField.top = new FormAttachment(spacer, margin);
-        fdSampleTextField.right = new FormAttachment(100, 0);
-        wCSVPath.setLayoutData(fdSampleTextField);
+        FormData fdCSVPath = new FormData();
+        fdCSVPath.left = new FormAttachment(wlCSVPathLabel, margin);
+        fdCSVPath.top = new FormAttachment(spacer, margin);
+        fdCSVPath.right = new FormAttachment(85, 0);
+        wCSVPath.setLayoutData(fdCSVPath);
+
+        // "Browse" button to open file dialog
+        Button wbBrowse = new Button(shell, SWT.PUSH);
+        wbBrowse.setText(BaseMessages.getString(PKG, "System.Button.Browse"));
+        props.setLook(wbBrowse);
+        FormData fdbBrowse = new FormData();
+        fdbBrowse.left = new FormAttachment(wCSVPath, margin);
+        fdbBrowse.top = new FormAttachment(wCSVPath, 0, SWT.TOP);
+        fdbBrowse.right = new FormAttachment(100, 0);
+        wbBrowse.setLayoutData(fdbBrowse);
+
+        // file dialog logic
+        wbBrowse.addListener(SWT.Selection, e -> {
+            FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+            dialog.setFilterExtensions(new String[] {"*.csv", "*.*"});
+            String selected = dialog.open();
+            if (selected != null) {
+                wCSVPath.setText(selected);
+            }
+        });
 
         // Add a syntax file path field
         Label wlSchemaPathFieldLabel = new Label(shell, SWT.RIGHT);
@@ -202,7 +221,7 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
             input.setSchemaPath("");
         }
         // Get sample text and put it on dialog's text field
-        wCSVPath.setText(input.getSampleText());
+        wCSVPath.setText(input.getCSVPath());
         wSchemaPath.setText(input.getSchemaPath());
 
         wTransformName.selectAll();
@@ -216,7 +235,7 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
      */
     private void getInfo(SampleMeta in) {
         // Save sample text content
-        input.setSampleText(wCSVPath.getText());
+        input.setCSVPath(wCSVPath.getText());
         input.setSchemaPath(wSchemaPath.getText());
     }
 

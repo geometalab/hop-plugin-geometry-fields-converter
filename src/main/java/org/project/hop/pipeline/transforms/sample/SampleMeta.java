@@ -55,12 +55,12 @@ public class SampleMeta extends BaseTransformMeta<Sample, SampleData> {
             injectionKeyDescription = "SampleTransform.Injection.SchemaPath.Description")
     private String schemaPath;
 
-    public String getSampleText() {
+    public String getCSVPath() {
         return sampleText;
     }
     public String getSchemaPath() { return schemaPath; }
 
-    public void setSampleText(String sampleText) {
+    public void setCSVPath(String sampleText) {
         this.sampleText = sampleText;
     }
     public void setSchemaPath(String schemaPath) {this.schemaPath = schemaPath; }
