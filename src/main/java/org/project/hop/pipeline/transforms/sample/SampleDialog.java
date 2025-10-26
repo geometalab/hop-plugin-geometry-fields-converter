@@ -118,61 +118,9 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
         wicon.setLayoutData(fdlicon);
         props.setLook(wicon);
 
-        Label wlCSVPathLabel = new Label(shell, SWT.RIGHT);
-        wlCSVPathLabel.setText(BaseMessages.getString(PKG, "SampleTransform.CSVPath.Label"));
-        props.setLook(wlCSVPathLabel);
-        FormData fdlCSVPathLabel = new FormData();
-        fdlCSVPathLabel.left = new FormAttachment(0, 0);
-        fdlCSVPathLabel.top = new FormAttachment(spacer, margin);
-        wlCSVPathLabel.setLayoutData(fdlCSVPathLabel);
 
-        // Text field for the file path
-        wCSVPath = new TextVar(variables, shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
-        props.setLook(wCSVPath);
-        wCSVPath.addModifyListener(lsMod);
-        FormData fdCSVPath = new FormData();
-        fdCSVPath.left = new FormAttachment(wlCSVPathLabel, margin);
-        fdCSVPath.top = new FormAttachment(spacer, margin);
-        fdCSVPath.right = new FormAttachment(85, 0);
-        wCSVPath.setLayoutData(fdCSVPath);
-
-        // "Browse" button to open file dialog
-        Button wbBrowse = new Button(shell, SWT.PUSH);
-        wbBrowse.setText(BaseMessages.getString(PKG, "System.Button.Browse"));
-        props.setLook(wbBrowse);
-        FormData fdbBrowse = new FormData();
-        fdbBrowse.left = new FormAttachment(wCSVPath, margin);
-        fdbBrowse.top = new FormAttachment(wCSVPath, 0, SWT.TOP);
-        fdbBrowse.right = new FormAttachment(100, 0);
-        wbBrowse.setLayoutData(fdbBrowse);
-
-        // file dialog logic
-        wbBrowse.addListener(SWT.Selection, e -> {
-            FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-            dialog.setFilterExtensions(new String[] {"*.csv", "*.*"});
-            String selected = dialog.open();
-            if (selected != null) {
-                wCSVPath.setText(selected);
-            }
-        });
-
-        // Add a syntax file path field
-        Label wlSchemaPathFieldLabel = new Label(shell, SWT.RIGHT);
-        wlSchemaPathFieldLabel.setText(BaseMessages.getString(PKG, "SampleTransform.SchemaPath.Label"));
-        props.setLook(wlSchemaPathFieldLabel);
-        FormData fdlSchemaPathFieldLabel = new FormData();
-        fdlSchemaPathFieldLabel.left = new FormAttachment(0, 0);
-        fdlSchemaPathFieldLabel.top = new FormAttachment(wCSVPath, margin);
-        wlSchemaPathFieldLabel.setLayoutData(fdlSchemaPathFieldLabel);
-
-        wSchemaPath = new TextVar(variables, shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
-        props.setLook(wSchemaPath);
-        wSchemaPath.addModifyListener(lsMod);
-        FormData fdSchemaPathField = new FormData();
-        fdSchemaPathField.left = new FormAttachment(wlSchemaPathFieldLabel, margin);
-        fdSchemaPathField.top = new FormAttachment(wCSVPath, margin);
-        fdSchemaPathField.right = new FormAttachment(100, 0);
-        wSchemaPath.setLayoutData(fdSchemaPathField);
+        Control csvSelection = createCSVSelection(lsMod, spacer, margin);
+        createSchemaSelection(lsMod, csvSelection, margin);
 
         // Some buttons
         wCancel = new Button(shell, SWT.PUSH);
@@ -202,6 +150,88 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
         BaseDialog.defaultShellHandling(shell, c -> ok(), c -> cancel());
 
         return transformName;
+    }
+    private Control createSchemaSelection(ModifyListener lsMod, Control attachment, int margin){
+        Label wlSchemaPathLabel = new Label(shell, SWT.RIGHT);
+        wlSchemaPathLabel.setText(BaseMessages.getString(PKG, "SampleTransform.SchemaPath.Label"));
+        props.setLook(wlSchemaPathLabel);
+        FormData fdlCSVPathLabel = new FormData();
+        fdlCSVPathLabel.left = new FormAttachment(0, 0);
+        fdlCSVPathLabel.top = new FormAttachment(attachment, margin);
+        wlSchemaPathLabel.setLayoutData(fdlCSVPathLabel);
+
+        wSchemaPath = new TextVar(variables, shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
+        props.setLook(wSchemaPath);
+        wSchemaPath.addModifyListener(lsMod);
+        FormData fdSchemaPath = new FormData();
+        fdSchemaPath.left = new FormAttachment(wlSchemaPathLabel, margin);
+        fdSchemaPath.top = new FormAttachment(attachment, margin);
+        fdSchemaPath.right = new FormAttachment(85, 0);
+        wSchemaPath.setLayoutData(fdSchemaPath);
+
+        // "Browse" button to open file dialog
+        Button wbBrowse = new Button(shell, SWT.PUSH);
+        wbBrowse.setText(BaseMessages.getString(PKG, "System.Button.Browse"));
+        props.setLook(wbBrowse);
+        FormData fdbSchemaBrowse = new FormData();
+        fdbSchemaBrowse.left = new FormAttachment(wSchemaPath, margin);
+        fdbSchemaBrowse.top = new FormAttachment(wSchemaPath, 0, SWT.TOP);
+        fdbSchemaBrowse.right = new FormAttachment(100, 0);
+        wbBrowse.setLayoutData(fdbSchemaBrowse);
+
+        // file dialog logic
+        wbBrowse.addListener(SWT.Selection, e -> {
+            FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+            dialog.setFilterExtensions(new String[] {"*.csvs", "*.*"});
+            String selected = dialog.open();
+            if (selected != null) {
+                wSchemaPath.setText(selected);
+            }
+        });
+
+        return wSchemaPath;
+    }
+
+    private Control createCSVSelection(ModifyListener lsMod, Control attachment, int margin){
+        Label wlCSVPathLabel = new Label(shell, SWT.RIGHT);
+        wlCSVPathLabel.setText(BaseMessages.getString(PKG, "SampleTransform.CSVPath.Label"));
+        props.setLook(wlCSVPathLabel);
+        FormData fdlCSVPathLabel = new FormData();
+        fdlCSVPathLabel.left = new FormAttachment(0, 0);
+        fdlCSVPathLabel.top = new FormAttachment(attachment, margin);
+        wlCSVPathLabel.setLayoutData(fdlCSVPathLabel);
+
+        // Text field for the file path
+        wCSVPath = new TextVar(variables, shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
+        props.setLook(wCSVPath);
+        wCSVPath.addModifyListener(lsMod);
+        FormData fdCSVPath = new FormData();
+        fdCSVPath.left = new FormAttachment(wlCSVPathLabel, margin);
+        fdCSVPath.top = new FormAttachment(attachment, margin);
+        fdCSVPath.right = new FormAttachment(85, 0);
+        wCSVPath.setLayoutData(fdCSVPath);
+
+        // "Browse" button to open file dialog
+        Button wbCSVBrowse = new Button(shell, SWT.PUSH);
+        wbCSVBrowse.setText(BaseMessages.getString(PKG, "System.Button.Browse"));
+        props.setLook(wbCSVBrowse);
+        FormData fdbCSVBrowse = new FormData();
+        fdbCSVBrowse.left = new FormAttachment(wCSVPath, margin);
+        fdbCSVBrowse.top = new FormAttachment(wCSVPath, 0, SWT.TOP);
+        fdbCSVBrowse.right = new FormAttachment(100, 0);
+        wbCSVBrowse.setLayoutData(fdbCSVBrowse);
+
+        // file dialog logic
+        wbCSVBrowse.addListener(SWT.Selection, e -> {
+            FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+            dialog.setFilterExtensions(new String[] {"*.csv", "*.*"});
+            String selected = dialog.open();
+            if (selected != null) {
+                wCSVPath.setText(selected);
+            }
+        });
+
+        return wCSVPath;
     }
 
     private Image getImage() {

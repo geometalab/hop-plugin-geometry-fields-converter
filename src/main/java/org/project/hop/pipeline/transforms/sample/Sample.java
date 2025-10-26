@@ -65,7 +65,7 @@ public class Sample extends BaseTransform<SampleMeta, SampleData> {
             System.out.println(meta.getSchemaPath());
             ArrayList<Substitution> substitutions = new ArrayList<Substitution>();
             Substitution sub = new Substitution("file://","//");
-            List<FailMessage> failMessages =  CsvValidator.validate(meta.getCSVPath(), "C:/Users/tobia/Desktop/test.csvs", false, substitutions, false, false);
+            List<FailMessage> failMessages =  CsvValidator.validate(meta.getCSVPath(), meta.getSchemaPath(), false, substitutions, false, false);
             System.out.println("failMessage is empty:");
             System.out.println(failMessages.isEmpty());
             for(FailMessage fm : failMessages){
