@@ -48,22 +48,28 @@ public class SampleMeta extends BaseTransformMeta<Sample, SampleData> {
 
     @HopMetadataProperty(
             key = "csv_path",
-            injectionKeyDescription = "SampleTransform.Injection.CSVPath")
-    private String csvPath = "default";
+            injectionKeyDescription = "SampleTransform.Injection.CsvPath")
+    private String csvPath = "please select";
+
     @HopMetadataProperty(
             key = "schema_path",
             injectionKeyDescription = "SampleTransform.Injection.SchemaPath")
-    private String schemaPath = "default";
+    private String schemaPath = "please select";
 
-    public String getCSVPath() {
+    public String getCsvPath() {
         return csvPath;
     }
     public String getSchemaPath() { return schemaPath; }
 
-    public void setCSVPath(String sampleText) {
-        this.csvPath = sampleText;
+    public void setCsvPath(String csvPath) {
+        this.csvPath = csvPath;
     }
     public void setSchemaPath(String schemaPath) {this.schemaPath = schemaPath; }
+
+    @Override
+    public boolean supportsErrorHandling() {
+        return true;
+    }
 
     @Override
     public void getFields(
@@ -104,5 +110,6 @@ public class SampleMeta extends BaseTransformMeta<Sample, SampleData> {
         // Set default value for new sample text field
         csvPath = "Hello my name is Apache Hop!";
         schemaPath = "Yeet";
+
     }
 }

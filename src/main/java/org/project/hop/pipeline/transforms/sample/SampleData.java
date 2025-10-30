@@ -30,4 +30,5 @@ public class SampleData extends BaseTransformData implements ITransformData {
     }
 
     public IRowMeta outputRowMeta;
+    public IRowMeta errorRowMeta;
 }

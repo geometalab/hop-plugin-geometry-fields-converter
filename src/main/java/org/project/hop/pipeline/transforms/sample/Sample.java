@@ -21,7 +21,9 @@ import org.apache.hop.core.exception.HopException;
 import org.apache.hop.pipeline.Pipeline;
 import org.apache.hop.pipeline.PipelineMeta;
 import org.apache.hop.pipeline.transform.BaseTransform;
+import org.apache.hop.pipeline.transform.TransformErrorMeta;
 import org.apache.hop.pipeline.transform.TransformMeta;
+import org.apache.hop.pipeline.transforms.dummy.DummyMeta;
 import uk.gov.nationalarchives.csv.validator.api.java.CsvValidator;
 import uk.gov.nationalarchives.csv.validator.api.java.FailMessage;
 import uk.gov.nationalarchives.csv.validator.api.java.Substitution;
@@ -61,21 +63,33 @@ public class Sample extends BaseTransform<SampleMeta, SampleData> {
                 data.outputRowMeta = getInputRowMeta().clone();
             }
 
+
+
             System.out.println("Doing shit");
             System.out.println(meta.getSchemaPath());
+
             ArrayList<Substitution> substitutions = new ArrayList<Substitution>();
             Substitution sub = new Substitution("file://","//");
-            List<FailMessage> failMessages =  CsvValidator.validate(meta.getCSVPath(), meta.getSchemaPath(), false, substitutions, false, false);
+            List<FailMessage> failMessages =  CsvValidator.validate(meta.getCsvPath(), meta.getSchemaPath(), false, substitutions, false, false);
+
             System.out.println("failMessage is empty:");
             System.out.println(failMessages.isEmpty());
-            for(FailMessage fm : failMessages){
-                System.out.println(fm.getMessage());
-            }
-
 
             // Create one row with the constant value
             Object[] outputRow = new Object[1];
-            outputRow[0] = meta.getCSVPath();
+            outputRow[0] = meta.getCsvPath();
+
+            for(FailMessage fm : failMessages){
+                putError(
+                        data.outputRowMeta,
+                        outputRow,
+                        1L,
+                        fm.getMessage(),
+                        "Filepath",
+                        "VALIDATION_ERROR"
+                );
+                System.out.println(fm.getMessage());
+            }
 
             // Send to output
             putRow(data.outputRowMeta, outputRow);
@@ -85,5 +99,29 @@ public class Sample extends BaseTransform<SampleMeta, SampleData> {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean init() {
+        boolean init = super.init();
+
+        // Create an error meta if not already defined
+        if (getTransformMeta().getTransformErrorMeta() == null) {
+            logBasic("Creating default TransformErrorMeta with filename + validation_error fields");
+
+            TransformMeta thisMeta = getTransformMeta();
+
+            // Optional: find or create a dummy target transform for errors
+            TransformMeta dummyErrorTarget = new TransformMeta("ErrorHandler", new DummyMeta());
+
+            TransformErrorMeta errorMeta = new TransformErrorMeta(thisMeta, dummyErrorTarget);
+            errorMeta.setEnabled(true);
+            errorMeta.setErrorFieldsValuename("validation_error_value_field_name");
+            errorMeta.setErrorDescriptionsValuename("validation_error_desc_value_name");
+
+            thisMeta.setTransformErrorMeta(errorMeta);
+        }
+
+        return init;
     }
 }

@@ -81,7 +81,6 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
         shell.setLayout(formLayout);
         shell.setText(BaseMessages.getString(PKG, "SampleTransform.Shell.Title"));
 
-        // TransformName line
         wlTransformName = new Label(shell, SWT.RIGHT);
         wlTransformName.setText(BaseMessages.getString(PKG, "SampleTransform.TransformName.Label"));
         props.setLook(wlTransformName);
@@ -151,6 +150,7 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
 
         return transformName;
     }
+
     private Control createSchemaSelection(ModifyListener lsMod, Control attachment, int margin){
         Label wlSchemaPathLabel = new Label(shell, SWT.RIGHT);
         wlSchemaPathLabel.setText(BaseMessages.getString(PKG, "SampleTransform.SchemaPath.Label"));
@@ -251,7 +251,7 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
             input.setSchemaPath("");
         }
         // Get sample text and put it on dialog's text field
-        wCSVPath.setText(input.getCSVPath());
+        wCSVPath.setText(input.getCsvPath());
         wSchemaPath.setText(input.getSchemaPath());
 
         wTransformName.selectAll();
@@ -265,7 +265,7 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
      */
     private void getInfo(SampleMeta in) {
         // Save sample text content
-        input.setCSVPath(wCSVPath.getText());
+        input.setCsvPath(wCSVPath.getText());
         input.setSchemaPath(wSchemaPath.getText());
     }
 
