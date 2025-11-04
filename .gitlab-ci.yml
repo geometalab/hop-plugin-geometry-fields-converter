@@ -1,0 +1,40 @@
+image: maven:latest
+
+stages:
+  - build
+  - test
+  - release
+
+before_script:
+  - mkdir -p target
+
+cache:
+  paths:
+    - target/
+
+build:
+  stage: build
+  script:
+    - mvn clean package
+
+unit_tests:
+  stage: test
+  script:
+    - mvn test
+
+integration_tests:
+  stage: test
+  script:
+    - echo "integration tests"
+
+release:
+  stage: release
+  only:
+    - main
+  script:
+    - |
+      glab release create "$CI_COMMIT_TAG" \
+      --name "Release ${VERSION}" \
+      --notes "Your release notes here" \
+      path/to/your/release-asset-file \
+      --use-package-registry
