@@ -40,7 +40,7 @@ release:
   before_script:
     - mkdir -p release
   script:
-    - cp build/target/csv-validator-1.0.0.jar release/
+    - cp target/csv-validator-1.0.0.jar release/
     - cp version.xml release/
     - |
       glab release create "$CI_COMMIT_TAG" \
