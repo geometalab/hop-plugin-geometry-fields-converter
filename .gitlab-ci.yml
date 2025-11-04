@@ -16,6 +16,9 @@ build:
   stage: build
   script:
     - mvn clean package
+  artifacts:
+    paths:
+      - "target/"
 
 unit_tests:
   stage: test
@@ -42,3 +45,6 @@ release:
       --notes "TODO: Release notes" \
       release/ \
       --use-package-registry
+  artifacts:
+    paths:
+      - "release/"
