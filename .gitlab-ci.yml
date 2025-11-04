@@ -34,6 +34,7 @@ release:
   stage: release
 #  only:
 #    - main
+  image: registry.gitlab.com/gitlab-org/cli:latest
   needs: ["build", "unit_tests", "integration_tests"]
   dependencies:
     - build
