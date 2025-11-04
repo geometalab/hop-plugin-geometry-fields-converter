@@ -35,10 +35,12 @@ release:
 #  only:
 #    - main
   needs: ["build", "unit_tests", "integration_tests"]
+  dependencies:
+    - build
   before_script:
     - mkdir -p release
   script:
-    - mvn install -DtargetDir=$CI_PROJECT_DIR/target -DreleaseDir=$CI_PROJECT_DIR/release
+    - mvn install -DtargetDir=$CI_PROJECT_DIR/build/target -DreleaseDir=$CI_PROJECT_DIR/release
     - |
       glab release create "$CI_COMMIT_TAG" \
       --name "Release ${VERSION}" \
