@@ -82,7 +82,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>copy-to-hop</id>
+                        <id>copy-to-release</id>
                         <phase>deploy</phase>
                         <goals>
                             <goal>run</goal>
