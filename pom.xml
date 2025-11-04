@@ -7,9 +7,9 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <artifactId>hop-transform-sample</artifactId>
+    <artifactId>csv-validator</artifactId>
     <groupId>com.example.hop</groupId>
-    <name>Hop Transform Sample</name>
+    <name>CSV Validator</name>
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
@@ -81,13 +81,29 @@
                             </target>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-to-hop</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+
+                                <copy file="target/${project.build.finalName}.jar"
+                                      todir="release" overwrite="true" />
+
+                                <copy file="target/version.xml"
+                                      todir="release" overwrite="true" failonerror="false" />
+                            </target>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
 
     <dependencies>
-        <!-- Apache Hop core modules -->
         <dependency>
             <groupId>org.apache.hop</groupId>
             <artifactId>hop-core</artifactId>

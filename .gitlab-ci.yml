@@ -32,10 +32,13 @@ release:
 #  only:
 #    - main
   needs: ["build", "unit_tests", "integration_tests"]
+  before_script:
+    - mkdir -p release
   script:
+    - mvn clean deploy
     - |
       glab release create "$CI_COMMIT_TAG" \
       --name "Release ${VERSION}" \
       --notes "TODO: Release notes" \
-      target/ \
+      release/ \
       --use-package-registry
