@@ -45,9 +45,11 @@ release:
     - cp version.xml release/
     - |
       glab release create "$CI_COMMIT_TAG" \
-      --name "Release ${VERSION}" \
+      --name "Release ${CI_COMMIT_TAG}" \
       --notes "TODO: Release notes" \
-      release/ \
+      release/* \
+      --repo "$CI_PROJECT_PATH" \
+      --host "$CI_SERVER_HOST" \
       --use-package-registry
   artifacts:
     paths:
