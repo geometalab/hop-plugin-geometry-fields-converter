@@ -85,13 +85,12 @@
                     </execution>
                     <execution>
                         <id>copy-to-release</id>
-                        <phase>deploy</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
                             <target>
-
                                 <copy file="${gitlab.target.dir}/${project.build.finalName}.jar"
                                       todir="${gitlab.release.dir}" overwrite="true" />
 

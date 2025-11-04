@@ -35,7 +35,7 @@ release:
   before_script:
     - mkdir -p release
   script:
-    - mvn clean deploy -DtargetDir=$CI_PROJECT_DIR/target -DreleaseDir=$CI_PROJECT_DIR/release
+    - mvn install -DtargetDir=$CI_PROJECT_DIR/target -DreleaseDir=$CI_PROJECT_DIR/release
     - |
       glab release create "$CI_COMMIT_TAG" \
       --name "Release ${VERSION}" \
