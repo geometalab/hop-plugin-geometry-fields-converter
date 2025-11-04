@@ -29,12 +29,13 @@ integration_tests:
 
 release:
   stage: release
-  only:
-    - main
+#  only:
+#    - main
+  needs: ["build", "unit_tests", "integration_tests"]
   script:
     - |
       glab release create "$CI_COMMIT_TAG" \
       --name "Release ${VERSION}" \
-      --notes "Your release notes here" \
-      path/to/your/release-asset-file \
+      --notes "TODO: Release notes" \
+      target/ \
       --use-package-registry
