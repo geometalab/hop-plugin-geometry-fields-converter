@@ -22,6 +22,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jandex.version>3.1.6</jandex.version>
         <hop.plugins.dir>C:\Program Files\hop\plugins\transforms\hop-transform-sample</hop.plugins.dir>
+        <gitlab.target.dir>{targetDir}</gitlab.target.dir>
+        <gitlab.release.dir>{releaseDir}</gitlab.release.dir>
     </properties>
 
     <build>
@@ -90,11 +92,11 @@
                         <configuration>
                             <target>
 
-                                <copy file="target/${project.build.finalName}.jar"
-                                      todir="release" overwrite="true" />
+                                <copy file="${gitlab.target.dir}/${project.build.finalName}.jar"
+                                      todir="${gitlab.release.dir}" overwrite="true" />
 
-                                <copy file="target/version.xml"
-                                      todir="release" overwrite="true" failonerror="false" />
+                                <copy file="${gitlab.target.dir}/version.xml"
+                                      todir="${gitlab.release.dir}" overwrite="true" failonerror="false" />
                             </target>
                         </configuration>
                     </execution>
