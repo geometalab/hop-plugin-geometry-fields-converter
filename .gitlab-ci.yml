@@ -31,9 +31,12 @@ integration_tests:
     entrypoint: [""]
   variables:
     HOP_LOG_LEVEL: Basic
-    HOP_PROJECT_FOLDER: "${CI_PROJECT_DIR}/samples"
-    HOP_PROJECT_NAME: samples
-    HOP_FILE_PATH: "transforms/switch-case-basic.hpl"
+    HOP_PROJECT_FOLDER: "${CI_PROJECT_DIR}/integration-tests"
+    HOP_PROJECT_NAME: sample
+    PIPELINE_NAME: integration-pipeline
     HOP_RUN_CONFIG: local
   script:
-    - /opt/hop/hop-run.sh -f="${HOP_FILE_PATH}" -j="${HOP_PROJECT_NAME}" -r="${HOP_RUN_CONFIG}" -l="${HOP_LOG_LEVEL}"
+    - mkdir -p "${HOP_PROJECT_FOLDER}/project"
+    - /opt/hop/hop-cli.sh -p create-project --name "${HOP_PROJECT_NAME}" --folder "${HOP_PROJECT_FOLDER}"
+    - /opt/hop/hop-cli.sh -p create-pipeline --project "${HOP_PROJECT_NAME}" --name "${PIPELINE_NAME}" --folder "${HOP_PROJECT_FOLDER}/pipelines"
+    - /opt/hop/hop-run.sh -f "pipelines/${PIPELINE_NAME}.hpl" -j "${HOP_PROJECT_NAME}" -r "${HOP_RUN_CONFIG}" -l "${HOP_LOG_LEVEL}"

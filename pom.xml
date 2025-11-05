@@ -21,7 +21,7 @@
         <jandex.version>3.2.3</jandex.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jandex.version>3.1.6</jandex.version>
-        <hop.plugins.dir>C:\Program Files\hop\plugins\transforms\hop-transform-sample</hop.plugins.dir>
+        <hop.plugins.dir>csvvalidator</hop.plugins.dir>
     </properties>
 
     <build>
@@ -80,6 +80,20 @@
                                       todir="${hop.plugins.dir}" overwrite="true" failonerror="false" />
                             </target>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
