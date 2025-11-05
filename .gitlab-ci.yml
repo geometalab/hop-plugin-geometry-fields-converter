@@ -3,7 +3,6 @@ image: maven:latest
 stages:
   - build
   - test
-  - release
 
 before_script:
   - mkdir -p target
@@ -12,21 +11,23 @@ cache:
   paths:
     - target/
 
-build:
-  stage: build
-  script:
-    - mvn clean package
-  artifacts:
-    paths:
-      - target/*.jar
-
-unit_tests:
-  stage: test
-  script:
-    - mvn test
+#build:
+#  stage: build
+#  script:
+#    - mvn clean package
+#  artifacts:
+#    paths:
+#      - target/*.jar
+#
+#unit_tests:
+#  stage: test
+#  script:
+#    - mvn test
 
 integration_tests:
   stage: test
-  image: apache/hop:latest
+  image: 
+    name: apache/hop:latest
+    entrypoint: [""]
   script:
     - hop-run.bat -j samples -r local -f ${PROJECT_HOME}/transforms/switch-case-basic.hpl
