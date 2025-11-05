@@ -36,7 +36,7 @@ integration_tests:
       HOP_PROJECT_NAME: samples
       HOP_RUN_CONFIG: local
   script:
-    - hop-run.sh \
+    - hop-run.sh/opt/hop/hop-run.sh \
         --file="${HOP_FILE_PATH}" \
         --project="${HOP_PROJECT_NAME}" \
         --runconfig="${HOP_RUN_CONFIG}" \
