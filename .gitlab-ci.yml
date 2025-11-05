@@ -37,6 +37,6 @@ integration_tests:
     HOP_RUN_CONFIG: local
   script:
     - mkdir -p "${HOP_PROJECT_FOLDER}/project"
-    - /opt/hop/hop-cli.sh -p create-project --name "${HOP_PROJECT_NAME}" --folder "${HOP_PROJECT_FOLDER}"
-    - /opt/hop/hop-cli.sh -p create-pipeline --project "${HOP_PROJECT_NAME}" --name "${PIPELINE_NAME}" --folder "${HOP_PROJECT_FOLDER}/pipelines"
+    - /opt/hop/hop-run.sh -p create-project --name "${HOP_PROJECT_NAME}" --folder "${HOP_PROJECT_FOLDER}"
+    - /opt/hop/hop-run.sh -p create-pipeline --project "${HOP_PROJECT_NAME}" --name "${PIPELINE_NAME}" --folder "${HOP_PROJECT_FOLDER}/pipelines"
     - /opt/hop/hop-run.sh -f "pipelines/${PIPELINE_NAME}.hpl" -j "${HOP_PROJECT_NAME}" -r "${HOP_RUN_CONFIG}" -l "${HOP_LOG_LEVEL}"
