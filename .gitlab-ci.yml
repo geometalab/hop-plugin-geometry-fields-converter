@@ -31,9 +31,9 @@ integration_tests:
     entrypoint: [""]
   variables:
     HOP_LOG_LEVEL: Basic
-    HOP_PROJECT_FOLDER: "${CI_PROJECT_DIR}"
+    HOP_PROJECT_FOLDER: "${CI_PROJECT_DIR}/resources/samples"
     HOP_PROJECT_NAME: samples
-    HOP_FILE_PATH: "resources/switch-case-basic.hpl"
+    HOP_FILE_PATH: "transforms/switch-case-basic.hpl"
     HOP_RUN_CONFIG: local
   script:
     - /opt/hop/hop-run.sh -f="${HOP_FILE_PATH}" -j="${HOP_PROJECT_NAME}" -r="${HOP_RUN_CONFIG}" -l="${HOP_LOG_LEVEL}"
