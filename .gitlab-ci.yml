@@ -30,11 +30,10 @@ integration_tests:
     name: apache/hop:latest
     entrypoint: [""]
   variables:
-      HOP_LOG_LEVEL: Basic
-      HOP_FILE_PATH: "${CI_PROJECT_DIR}/resources/switch-case-basic.hpl"
-      HOP_PROJECT_FOLDER: "${CI_PROJECT_DIR}"
-      HOP_PROJECT_NAME: samples
-      HOP_RUN_CONFIG: local
+    HOP_LOG_LEVEL: Basic
+    HOP_PROJECT_FOLDER: "${CI_PROJECT_DIR}"
+    HOP_PROJECT_NAME: samples
+    HOP_FILE_PATH: "resources/switch-case-basic.hpl"
+    HOP_RUN_CONFIG: local
   script:
-    - /opt/hop/hop-run.sh --file="${HOP_FILE_PATH}" --project="${HOP_PROJECT_NAME}" --runconfig="${HOP_RUN_CONFIG}" --level="${HOP_LOG_LEVEL}"
-
+    - /opt/hop/hop-run.sh -f="${HOP_FILE_PATH}" -j="${HOP_PROJECT_NAME}" -r="${HOP_RUN_CONFIG}" -l="${HOP_LOG_LEVEL}"
