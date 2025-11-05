@@ -27,5 +27,6 @@ unit_tests:
 
 integration_tests:
   stage: test
+  image: apache/hop:latest
   script:
-    - echo "integration tests"
+    - hop-run.bat -j samples -r local -f ${PROJECT_HOME}/transforms/switch-case-basic.hpl

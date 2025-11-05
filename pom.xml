@@ -7,11 +7,11 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <artifactId>csv-validator</artifactId>
+    <artifactId>csvvalidator</artifactId>
     <groupId>com.example.hop</groupId>
     <name>CSV Validator</name>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
 
     <!-- Define versions here -->
     <properties>
