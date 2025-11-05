@@ -11,18 +11,18 @@ cache:
   paths:
     - target/
 
-#build:
-#  stage: build
-#  script:
-#    - mvn clean package
-#  artifacts:
-#    paths:
-#      - target/*.jar
-#
-#unit_tests:
-#  stage: test
-#  script:
-#    - mvn test
+build:
+  stage: build
+  script:
+    - mvn clean package
+  artifacts:
+    paths:
+      - target/*.jar
+
+unit_tests:
+  stage: test
+  script:
+    - mvn test
 
 integration_tests:
   stage: test
@@ -31,7 +31,7 @@ integration_tests:
     entrypoint: [""]
   variables:
     HOP_LOG_LEVEL: Basic
-    HOP_PROJECT_FOLDER: "${CI_PROJECT_DIR}/resources/samples"
+    HOP_PROJECT_FOLDER: "${CI_PROJECT_DIR}/samples"
     HOP_PROJECT_NAME: samples
     HOP_FILE_PATH: "transforms/switch-case-basic.hpl"
     HOP_RUN_CONFIG: local
