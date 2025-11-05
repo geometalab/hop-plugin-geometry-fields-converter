@@ -11,28 +11,27 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class IntegrationTests {
 
-    PipelineMeta pipeline;
+  PipelineMeta pipeline;
 
-    @BeforeEach
-    void setUp() throws Exception {
-        HopEnvironment.init();
+  @BeforeEach
+  void setUp() throws Exception {
+    HopEnvironment.init();
 
-        pipeline = new PipelineMeta();
-        pipeline.setName("CSV Validator Integration Test");
+    pipeline = new PipelineMeta();
+    pipeline.setName("CSV Validator Integration Test");
 
-        SampleMeta sampleMeta = new SampleMeta();
-        sampleMeta.setCsvPath("src/test/resources/email-password-recovery-code.csv");
-        TransformMeta input = new TransformMeta("Input", sampleMeta);
+    SampleMeta sampleMeta = new SampleMeta();
+    sampleMeta.setCsvPath("src/test/resources/email-password-recovery-code.csv");
+    TransformMeta input = new TransformMeta("Input", sampleMeta);
 
-        pipeline.addTransform(input);
-    }
+    pipeline.addTransform(input);
+  }
 
   @Test
   void testIntegration() throws Exception {
-      LocalPipelineEngine engine = new LocalPipelineEngine(pipeline);
-      engine.prepareExecution();
-      engine.startThreads();
-      assertDoesNotThrow(engine::waitUntilFinished);
-
+    LocalPipelineEngine engine = new LocalPipelineEngine(pipeline);
+    engine.prepareExecution();
+    engine.startThreads();
+    assertDoesNotThrow(engine::waitUntilFinished);
   }
 }
