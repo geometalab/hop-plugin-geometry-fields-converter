@@ -38,17 +38,17 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.*;
 
-public class SampleDialog extends BaseTransformDialog implements ITransformDialog {
-    private static final Class<?> PKG = SampleDialog.class; // Needed by Translator
+public class Ogr2OgrDialog extends BaseTransformDialog implements ITransformDialog {
+    private static final Class<?> PKG = Ogr2OgrDialog.class; // Needed by Translator
 
-    private final SampleMeta input;
+    private final Ogr2OgrMeta input;
     private TextVar wCSVPath;
     private TextVar wSchemaPath;
 
-    public SampleDialog(
+    public Ogr2OgrDialog(
             Shell parent, IVariables variables, Object in, PipelineMeta pipelineMeta, String sname) {
         super(parent, variables, (BaseTransformMeta) in, pipelineMeta, sname);
-        input = (SampleMeta) in;
+        input = (Ogr2OgrMeta) in;
     }
 
     @Override
@@ -79,10 +79,10 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
         formLayout.marginHeight = 15;
 
         shell.setLayout(formLayout);
-        shell.setText(BaseMessages.getString(PKG, "SampleTransform.Shell.Title"));
+        shell.setText(BaseMessages.getString(PKG, "Ogr2Ogr.Shell.Title"));
 
         wlTransformName = new Label(shell, SWT.RIGHT);
-        wlTransformName.setText(BaseMessages.getString(PKG, "SampleTransform.TransformName.Label"));
+        wlTransformName.setText(BaseMessages.getString(PKG, "Ogr2Ogr.TransformName.Label"));
         props.setLook(wlTransformName);
         fdlTransformName = new FormData();
         fdlTransformName.left = new FormAttachment(0, 0);
@@ -153,7 +153,7 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
 
     private Control createSchemaSelection(ModifyListener lsMod, Control attachment, int margin){
         Label wlSchemaPathLabel = new Label(shell, SWT.RIGHT);
-        wlSchemaPathLabel.setText(BaseMessages.getString(PKG, "SampleTransform.SchemaPath.Label"));
+        wlSchemaPathLabel.setText(BaseMessages.getString(PKG, "Ogr2Ogr.SchemaPath.Label"));
         props.setLook(wlSchemaPathLabel);
         FormData fdlCSVPathLabel = new FormData();
         fdlCSVPathLabel.left = new FormAttachment(0, 0);
@@ -194,7 +194,7 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
 
     private Control createCSVSelection(ModifyListener lsMod, Control attachment, int margin){
         Label wlCSVPathLabel = new Label(shell, SWT.RIGHT);
-        wlCSVPathLabel.setText(BaseMessages.getString(PKG, "SampleTransform.CSVPath.Label"));
+        wlCSVPathLabel.setText(BaseMessages.getString(PKG, "Ogr2Ogr.CSVPath.Label"));
         props.setLook(wlCSVPathLabel);
         FormData fdlCSVPathLabel = new FormData();
         fdlCSVPathLabel.left = new FormAttachment(0, 0);
@@ -263,7 +263,7 @@ public class SampleDialog extends BaseTransformDialog implements ITransformDialo
      *
      * @param in
      */
-    private void getInfo(SampleMeta in) {
+    private void getInfo(Ogr2OgrMeta in) {
         // Save sample text content
         input.setCsvPath(wCSVPath.getText());
         input.setSchemaPath(wSchemaPath.getText());
