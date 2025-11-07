@@ -18,6 +18,7 @@
 package org.project.hop.pipeline.transforms.sample;
 
 import org.apache.hop.core.exception.HopException;
+import org.apache.hop.core.plugins.IPlugin;
 import org.apache.hop.pipeline.Pipeline;
 import org.apache.hop.pipeline.PipelineMeta;
 import org.apache.hop.pipeline.transform.BaseTransform;

@@ -7,9 +7,9 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <artifactId>csvvalidator</artifactId>
+    <artifactId>ogr2ogr</artifactId>
     <groupId>com.example.hop</groupId>
-    <name>CSV Validator</name>
+    <name>ogr2ogr</name>
     <packaging>jar</packaging>
     <version>0.1.0</version>
 
@@ -21,7 +21,7 @@
         <jandex.version>3.2.3</jandex.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jandex.version>3.1.6</jandex.version>
-        <hop.plugins.dir>csvvalidator</hop.plugins.dir>
+        <hop.plugins.dir>ogr2ogr</hop.plugins.dir>
     </properties>
 
     <build>
@@ -132,11 +132,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>uk.gov.nationalarchives</groupId>
-            <artifactId>csv-validator-java-api</artifactId>
-            <version>1.4.0</version>
-        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

@@ -1,3 +1,3 @@
 package org.project.hop.pipeline.transforms.sample;
 
-public class SampleTest {}
+public class Ogr2OgrUnitTests {}
