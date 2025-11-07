@@ -37,23 +37,23 @@ import java.util.List;
  */
 @Transform(
         id = "SampleTransform",
-        name = "i18n::SampleTransform.Name",
-        description = "i18n::SampleTransform.Description",
+        name = "i18n::Ogr2Ogr.Name",
+        description = "i18n::Ogr2Ogr.Description",
         image = "sample.svg",
         categoryDescription = "Sample.Category",
         documentationUrl = "" /*url to your documentation */)
-public class SampleMeta extends BaseTransformMeta<Sample, SampleData> {
+public class Ogr2OgrMeta extends BaseTransformMeta<Ogr2Ogr, Ogr2OgrData> {
 
     public static final String SAMPLE_TEXT_FIELD_NAME = "Filepath";
 
     @HopMetadataProperty(
             key = "csv_path",
-            injectionKeyDescription = "SampleTransform.Injection.CsvPath")
+            injectionKeyDescription = "Ogr2Ogr.Injection.CsvPath")
     private String csvPath = "please select";
 
     @HopMetadataProperty(
             key = "schema_path",
-            injectionKeyDescription = "SampleTransform.Injection.SchemaPath")
+            injectionKeyDescription = "Ogr2Ogr.Injection.SchemaPath")
     private String schemaPath = "please select";
 
     public String getCsvPath() {
@@ -110,6 +110,5 @@ public class SampleMeta extends BaseTransformMeta<Sample, SampleData> {
         // Set default value for new sample text field
         csvPath = "Hello my name is Apache Hop!";
         schemaPath = "Yeet";
-
     }
 }

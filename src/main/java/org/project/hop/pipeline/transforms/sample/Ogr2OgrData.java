@@ -21,14 +21,13 @@ import org.apache.hop.core.row.IRowMeta;
 import org.apache.hop.pipeline.transform.BaseTransformData;
 import org.apache.hop.pipeline.transform.ITransformData;
 
-public class SampleData extends BaseTransformData implements ITransformData {
+public class Ogr2OgrData extends BaseTransformData implements ITransformData {
     /**
      * Default constructor for SampleData.
      */
-    public SampleData() {
+    public Ogr2OgrData() {
         super();
     }
 
     public IRowMeta outputRowMeta;
-    public IRowMeta errorRowMeta;
 }
