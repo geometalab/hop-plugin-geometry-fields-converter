@@ -89,11 +89,10 @@ public class Wkt2Wkb extends BaseTransform<Wkt2WkbMeta, Wkt2WkbData> {
   public static byte[] wktToWkb(String wkt) throws Exception {
     WKTReader reader = new WKTReader();
     Geometry geometry = reader.read(wkt);
-    WKBWriter writer = new WKBWriter();
+    WKBWriter writer = new WKBWriter(2, 0);
     return writer.write(geometry);
   }
 
-  // Convert WKB → WKT
   public static String wkbToWkt(byte[] wkb) throws Exception {
     WKBReader reader = new WKBReader();
     Geometry geometry = reader.read(wkb);
