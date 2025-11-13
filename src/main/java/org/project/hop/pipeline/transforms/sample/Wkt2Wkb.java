@@ -57,7 +57,6 @@ public class Wkt2Wkb extends BaseTransform<Wkt2WkbMeta, Wkt2WkbData> {
     }
 
     if (first) {
-      System.out.println("First");
       first = false;
 
       data.inputRowMeta = getInputRowMeta().clone();
@@ -75,21 +74,33 @@ public class Wkt2Wkb extends BaseTransform<Wkt2WkbMeta, Wkt2WkbData> {
       data.outputFieldIndex = data.outputRowMeta.size() - 1;
     }
 
-    String in = Const.NVL(data.inputMeta.getString(row[data.inputFieldIndex]), "");
-    try {
-      row[data.outputFieldIndex] = wktToWkb(in);
-    } catch (Exception e) {
-      System.out.println("womp womp");
-    }
-    putRow(data.outputRowMeta, row);
+    if(meta.isWktToWkb()) {
+      String inWKT = Const.NVL(data.inputMeta.getString(row[data.inputFieldIndex]), "");
 
+      try {
+        row[data.outputFieldIndex] = wktToWkb(inWKT);
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
+      putRow(data.outputRowMeta, row);
+    }else{
+
+      byte[] inWKB = data.inputMeta.getBinary(row[data.inputFieldIndex]);
+      try {
+        row[data.outputFieldIndex] = wkbToWkt(inWKB);
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
+      putRow(data.outputRowMeta, row);
+
+    }
     return true;
   }
 
   public static byte[] wktToWkb(String wkt) throws Exception {
     WKTReader reader = new WKTReader();
     Geometry geometry = reader.read(wkt);
-    WKBWriter writer = new WKBWriter(2, 0);
+    WKBWriter writer = new WKBWriter(2, 1);
     return writer.write(geometry);
   }
 

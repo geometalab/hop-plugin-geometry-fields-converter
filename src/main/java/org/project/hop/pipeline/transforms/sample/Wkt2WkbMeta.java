@@ -69,7 +69,7 @@ public class Wkt2WkbMeta extends BaseTransformMeta<Wkt2Wkb, Wkt2WkbData> {
   /*
   Endianess in WKB is defined by its first byte, 0: little endian, 1: big endian
   */
-  private byte endianess = 0;
+  private int endianess = 0;
 
   public String getInputField() {
     return inputField;
@@ -95,11 +95,11 @@ public class Wkt2WkbMeta extends BaseTransformMeta<Wkt2Wkb, Wkt2WkbData> {
     this.wktToWkb = wktToWkb;
   }
 
-  public byte getEndianess(){
+  public int getEndianess(){
     return endianess;
   }
 
-  public void setEndianess(byte endianess){
+  public void setEndianess(int endianess){
     this.endianess = endianess;
   }
 
@@ -121,9 +121,15 @@ public class Wkt2WkbMeta extends BaseTransformMeta<Wkt2Wkb, Wkt2WkbData> {
     IValueMeta extra = null;
 
     if (!Utils.isEmpty(getOutputField())) {
-      extra = new ValueMetaBinary(variables.resolve(getOutputField()));
-      extra.setOrigin(name);
-      rowMeta.addValueMeta(extra);
+      if(isWktToWkb()){
+        extra = new ValueMetaBinary(variables.resolve(getOutputField()));
+        extra.setOrigin(name);
+        rowMeta.addValueMeta(extra);
+      }else{
+        extra = new ValueMetaString(variables.resolve(getOutputField()));
+        extra.setOrigin(name);
+        rowMeta.addValueMeta(extra);
+      }
     } else {
       if (!Utils.isEmpty(getInputField())) {
         extra = rowMeta.searchValueMeta(variables.resolve(getInputField()));
