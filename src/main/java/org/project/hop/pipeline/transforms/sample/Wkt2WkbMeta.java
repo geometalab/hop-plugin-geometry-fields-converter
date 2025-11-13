@@ -42,11 +42,9 @@ import java.util.List;
     name = "i18n::Wkt2Wkb.Name",
     description = "i18n::Wkt2Wkb.Description",
     image = "sample.svg",
-    categoryDescription = "Wkt2Wkb.Category",
-    documentationUrl = "" /*url to your documentation */)
+    categoryDescription = "Wkt2Wkb.Category"
+)
 public class Wkt2WkbMeta extends BaseTransformMeta<Wkt2Wkb, Wkt2WkbData> {
-
-  public static final String SAMPLE_TEXT_FIELD_NAME = "Filepath";
 
   @HopMetadataProperty(
       key = "input_field",
@@ -58,20 +56,51 @@ public class Wkt2WkbMeta extends BaseTransformMeta<Wkt2Wkb, Wkt2WkbData> {
       injectionKeyDescription = "Wkt2Wkb.Injection.OutputField")
   private String outputField = "please select";
 
+  @HopMetadataProperty(
+      key = "is_wkt_to_wkb",
+      injectionKeyDescription = "Convert WKT to WKB or the other way around."
+  )
+  private boolean wktToWkb = true;
+
+  @HopMetadataProperty(
+      key = "endianess",
+      injectionKeyDescription = "Set WKB endianess"
+  )
+  /*
+  Endianess in WKB is defined by its first byte, 0: little endian, 1: big endian
+  */
+  private byte endianess = 0;
+
   public String getInputField() {
     return inputField;
-  }
-
-  public String getOutputField() {
-    return outputField;
   }
 
   public void setInputField(String inputField) {
     this.inputField = inputField;
   }
 
+  public String getOutputField() {
+    return outputField;
+  }
+
   public void setOutputField(String outputField) {
     this.outputField = outputField;
+  }
+
+  public boolean isWktToWkb() {
+    return wktToWkb;
+  }
+
+  public void setWktToWkb(boolean wktToWkb) {
+    this.wktToWkb = wktToWkb;
+  }
+
+  public byte getEndianess(){
+    return endianess;
+  }
+
+  public void setEndianess(byte endianess){
+    this.endianess = endianess;
   }
 
   @Override

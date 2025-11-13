@@ -46,6 +46,8 @@ public class Wkt2WkbDialog extends BaseTransformDialog implements ITransformDial
   private final Wkt2WkbMeta input;
   private TextVar wInputField;
   private TextVar wOutputField;
+  private Button wWktToWkb;
+  private Button wWkbToWkt;
 
   public Wkt2WkbDialog(
       Shell parent, IVariables variables, Object in, PipelineMeta pipelineMeta, String sname) {
@@ -119,7 +121,43 @@ public class Wkt2WkbDialog extends BaseTransformDialog implements ITransformDial
     wicon.setLayoutData(fdlicon);
     PropsUi.setLook(wicon);
 
-    Control InputFieldSelection = createInputFieldSelection(lsMod, spacer, margin);
+    // Radio buttons for conversion direction
+    Group wConversionGroup = new Group(shell, SWT.SHADOW_NONE);
+    wConversionGroup.setText("Conversion Direction");
+    PropsUi.setLook(wConversionGroup);
+    FormLayout conversionLayout = new FormLayout();
+    conversionLayout.marginWidth = 10;
+    conversionLayout.marginHeight = 10;
+    wConversionGroup.setLayout(conversionLayout);
+
+    FormData fdConversionGroup = new FormData();
+    fdConversionGroup.left = new FormAttachment(0, 0);
+    fdConversionGroup.top = new FormAttachment(spacer, 10);
+    fdConversionGroup.right = new FormAttachment(100, 0);
+    wConversionGroup.setLayoutData(fdConversionGroup);
+
+// "WKT to WKB" radio button
+    wWktToWkb = new Button(wConversionGroup, SWT.RADIO);
+    wWktToWkb.setText("WKT to WKB");
+    PropsUi.setLook(wWktToWkb);
+    FormData fdWktToWkb = new FormData();
+    fdWktToWkb.left = new FormAttachment(0, 0);
+    fdWktToWkb.top = new FormAttachment(0, 0);
+    wWktToWkb.setLayoutData(fdWktToWkb);
+
+// "WKB to WKT" radio button
+    wWkbToWkt = new Button(wConversionGroup, SWT.RADIO);
+    wWkbToWkt.setText("WKB to WKT");
+    PropsUi.setLook(wWkbToWkt);
+    FormData fdWkbToWkt = new FormData();
+    fdWkbToWkt.left = new FormAttachment(wWktToWkb, 20);
+    fdWkbToWkt.top = new FormAttachment(0, 0);
+    wWkbToWkt.setLayoutData(fdWkbToWkt);
+
+    wWktToWkb.addSelectionListener(lsSelMod);
+    wWkbToWkt.addSelectionListener(lsSelMod);
+
+    Control InputFieldSelection = createInputFieldSelection(lsMod, wConversionGroup, margin);
     createOutputFieldSelection(lsMod, InputFieldSelection, margin);
 
     // Some buttons
@@ -216,6 +254,12 @@ public class Wkt2WkbDialog extends BaseTransformDialog implements ITransformDial
 
     wTransformName.selectAll();
     wTransformName.setFocus();
+
+    if (input.isWktToWkb()) {
+      wWktToWkb.setSelection(true);
+    } else {
+      wWkbToWkt.setSelection(true);
+    }
   }
 
   /**
@@ -227,6 +271,7 @@ public class Wkt2WkbDialog extends BaseTransformDialog implements ITransformDial
     // Save sample text content
     input.setInputField(wInputField.getText());
     input.setOutputField(wOutputField.getText());
+    input.setWktToWkb(wWktToWkb.getSelection());
   }
 
   /**
