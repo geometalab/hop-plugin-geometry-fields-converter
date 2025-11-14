@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.project.hop.pipeline.transforms.sample;
+package ch.ost.hop.plugins.transforms;
 
 import org.apache.hop.core.Const;
 import org.apache.hop.core.exception.HopException;
@@ -100,7 +100,8 @@ public class Wkt2Wkb extends BaseTransform<Wkt2WkbMeta, Wkt2WkbData> {
   public static byte[] wktToWkb(String wkt) throws Exception {
     WKTReader reader = new WKTReader();
     Geometry geometry = reader.read(wkt);
-    WKBWriter writer = new WKBWriter(2, 1);
+    byte byteOrder = 0x01;
+    WKBWriter writer = new WKBWriter(2, byteOrder, false);
     return writer.write(geometry);
   }
 

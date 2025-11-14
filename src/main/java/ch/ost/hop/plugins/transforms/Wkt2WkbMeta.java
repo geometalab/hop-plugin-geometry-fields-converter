@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.project.hop.pipeline.transforms.sample;
+package ch.ost.hop.plugins.transforms;
 
 import org.apache.hop.core.ICheckResult;
 import org.apache.hop.core.annotations.Transform;

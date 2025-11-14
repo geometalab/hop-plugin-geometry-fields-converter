@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.project.hop.pipeline.transforms.sample;
+package ch.ost.hop.plugins.transforms;
 
 import org.apache.hop.core.row.IRowMeta;
 import org.apache.hop.core.row.IValueMeta;
