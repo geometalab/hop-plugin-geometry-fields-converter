@@ -18,16 +18,24 @@
 package org.project.hop.pipeline.transforms.sample;
 
 import org.apache.hop.core.row.IRowMeta;
+import org.apache.hop.core.row.IValueMeta;
 import org.apache.hop.pipeline.transform.BaseTransformData;
 import org.apache.hop.pipeline.transform.ITransformData;
 
-public class Ogr2OgrData extends BaseTransformData implements ITransformData {
-    /**
-     * Default constructor for SampleData.
-     */
-    public Ogr2OgrData() {
-        super();
-    }
+public class Wkt2WkbData extends BaseTransformData implements ITransformData {
 
-    public IRowMeta outputRowMeta;
+  /**
+   * Default constructor for SampleData.
+   */
+  public Wkt2WkbData() {
+    super();
+  }
+
+  public IRowMeta outputRowMeta;
+  public IRowMeta inputRowMeta;
+
+  public int inputFieldIndex = -1;
+  public int outputFieldIndex = -1;
+  public IValueMeta inputMeta;
+  public IValueMeta outputMeta;
 }
