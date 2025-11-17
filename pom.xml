@@ -132,13 +132,6 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <dataFile>${project.build.directory}/jacoco.exec</dataFile>
-                            <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
-                            <excludes>
-                                <exclude>**/Wkt2WkbDialog$*.class</exclude>
-                            </excludes>
-                        </configuration>
                     </execution>
 
                 </executions>

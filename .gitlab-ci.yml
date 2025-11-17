@@ -32,7 +32,7 @@ unit_tests:
     reports:
       coverage_report:
         coverage_format: jacoco
-        path: target/jacoco/jacoco.xml
+        path: target/site/jacoco/jacoco-resources/jacoco.xml
 
 integration_tests:
   stage: test
