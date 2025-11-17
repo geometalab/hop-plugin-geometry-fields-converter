@@ -103,40 +103,6 @@
                 <version>3.1.2</version>
             </plugin>
 
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
-
-                <configuration>
-                    <excludes>
-                        <exclude>ch/ost/hop/pipeline/transforms/wkt2wkb/Wkt2WkbDialog.class</exclude>
-                        <exclude>ch/ost/hop/pipeline/transforms/wkt2wkb/Wkt2WkbDialog$*.class</exclude>
-                        <exclude>ch/ost/hop/pipeline/transforms/wkt2wkb/Wkt2WkbData.class</exclude>
-                        <exclude>ch/ost/hop/pipeline/transforms/wkt2wkb/Wkt2WkbMeta.class</exclude>
-                    </excludes>
-                </configuration>
-
-                <executions>
-
-                    <execution>
-                        <id>prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 
