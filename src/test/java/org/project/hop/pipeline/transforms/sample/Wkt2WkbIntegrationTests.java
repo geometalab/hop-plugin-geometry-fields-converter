@@ -19,7 +19,7 @@ public class Wkt2WkbIntegrationTests {
    HopEnvironment.init();
 
    pipeline = new PipelineMeta();
-   pipeline.setName("CSV Validator Integration Test");
+   pipeline.setName("WKT2WKB Converter Integration Test");
 
    var ogr2ogrMeta = new Wkt2WkbMeta();
    TransformMeta input = new TransformMeta("Input", ogr2ogrMeta);

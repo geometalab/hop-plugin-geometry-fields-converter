@@ -215,10 +215,10 @@ public class Wkt2WkbDialog extends BaseTransformDialog implements ITransformDial
     Label wlInputFieldLabel = new Label(shell, SWT.RIGHT);
     wlInputFieldLabel.setText(BaseMessages.getString(PKG, "Wkt2Wkb.InputFieldSelection.Label"));
     PropsUi.setLook(wlInputFieldLabel);
-    FormData fdlCSVPathLabel = new FormData();
-    fdlCSVPathLabel.left = new FormAttachment(0, 0);
-    fdlCSVPathLabel.top = new FormAttachment(attachment, margin);
-    wlInputFieldLabel.setLayoutData(fdlCSVPathLabel);
+    FormData fdlFilePathLabel = new FormData();
+    fdlFilePathLabel.left = new FormAttachment(0, 0);
+    fdlFilePathLabel.top = new FormAttachment(attachment, margin);
+    wlInputFieldLabel.setLayoutData(fdlFilePathLabel);
 
     wInputField = new TextVar(variables, shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
     PropsUi.setLook(wInputField);
