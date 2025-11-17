@@ -7,9 +7,9 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <artifactId>ogr2ogr</artifactId>
+    <artifactId>wkt2wkb</artifactId>
     <groupId>com.example.hop</groupId>
-    <name>ogr2ogr</name>
+    <name>WKT2WKB</name>
     <packaging>jar</packaging>
     <version>0.1.0</version>
 
@@ -21,7 +21,7 @@
         <jandex.version>3.2.3</jandex.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jandex.version>3.1.6</jandex.version>
-        <hop.plugins.dir>ogr2ogr</hop.plugins.dir>
+        <hop.plugins.dir>wkt2wkb</hop.plugins.dir>
     </properties>
 
     <build>
