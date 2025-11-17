@@ -71,13 +71,13 @@
                         </goals>
                         <configuration>
                             <target>
-                                <mkdir dir="${hop.plugins.dir}" />
+                                <mkdir dir="${hop.plugins.dir}"/>
 
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
-                                      todir="${hop.plugins.dir}" overwrite="true" />
+                                      todir="${hop.plugins.dir}" overwrite="true"/>
 
                                 <copy file="${project.basedir}/version.xml"
-                                      todir="${hop.plugins.dir}" overwrite="true" failonerror="false" />
+                                      todir="${hop.plugins.dir}" overwrite="true" failonerror="false"/>
                             </target>
                         </configuration>
                     </execution>
@@ -97,12 +97,53 @@
                 </executions>
             </plugin>
 
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
             </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+
+                <configuration>
+                    <excludes>
+                        <exclude>ch/ost/hop/pipeline/transforms/wkt2wkb/Wkt2WkbDialog.class</exclude>
+                        <exclude>ch/ost/hop/pipeline/transforms/wkt2wkb/Wkt2WkbDialog$*.class</exclude>
+                        <exclude>ch/ost/hop/pipeline/transforms/wkt2wkb/Wkt2WkbData.class</exclude>
+                        <exclude>ch/ost/hop/pipeline/transforms/wkt2wkb/Wkt2WkbMeta.class</exclude>
+                    </excludes>
+                </configuration>
+
+                <executions>
+
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                            <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
+                            <excludes>
+                                <exclude>**/Wkt2WkbDialog$*.class</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -140,9 +181,9 @@
         </dependency>
 
         <dependency>
-          <groupId>org.locationtech.jts</groupId>
-          <artifactId>jts-core</artifactId>
-          <version>1.19.0</version>
+            <groupId>org.locationtech.jts</groupId>
+            <artifactId>jts-core</artifactId>
+            <version>1.19.0</version>
         </dependency>
     </dependencies>
 

@@ -28,6 +28,11 @@ unit_tests:
   stage: test
   script:
     - mvn test
+  artifacts:
+    paths:
+      - target/site/jacoco
+    reports:
+      cobertura: target/site/jacoco/jacoco.xml
 
 integration_tests:
   stage: test
