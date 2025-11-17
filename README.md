@@ -5,9 +5,8 @@ This plugin allows you to convert between the two geometry representation format
 
 ***TODO: ADD IMAGE OF DIALOG***
 
-https://gitlab.ost.ch//apache-hop-plugin-sa/apache-hop-plugins-wkt-wkb-converter/badges/${CI_COMMIT_REF_NAME}/pipeline.svg
-
-https://gitlab.ost.ch//apache-hop-plugin-sa/apache-hop-plugins-wkt-wkb-converter/badges/-/badges/release.svg
+![Pipeline Status](https://gitlab.ost.ch//apache-hop-plugin-sa/apache-hop-plugins-wkt-wkb-converter/badges/main/pipeline.svg)
+![Latest Release](https://gitlab.ost.ch//apache-hop-plugin-sa/apache-hop-plugins-wkt-wkb-converter/badges/-/badges/release.svg)]
 
 
 ## Visuals
