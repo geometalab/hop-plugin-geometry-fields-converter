@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <artifactId>hop-transform-sample</artifactId>
+    <artifactId>Wkt2Wkb</artifactId>
     <groupId>com.example.hop</groupId>
     <name>Hop Transform Sample</name>
     <packaging>jar</packaging>
@@ -110,6 +110,12 @@
             <groupId>uk.gov.nationalarchives</groupId>
             <artifactId>csv-validator-java-api</artifactId>
             <version>1.4.0</version>
+        </dependency>
+
+        <dependency>
+          <groupId>org.locationtech.jts</groupId>
+          <artifactId>jts-core</artifactId>
+          <version>1.19.0</version>
         </dependency>
     </dependencies>
 
