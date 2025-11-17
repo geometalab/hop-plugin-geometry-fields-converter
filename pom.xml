@@ -21,7 +21,7 @@
         <jandex.version>3.2.3</jandex.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jandex.version>3.1.6</jandex.version>
-        <hop.plugins.dir>C:\Program Files\hop\plugins\transforms\hop-transform-sample</hop.plugins.dir>
+        <hop.plugins.dir>C:\Users\tobia\Desktop\hop\plugins\transforms\hop-transform-sample</hop.plugins.dir>
     </properties>
 
     <build>
@@ -104,12 +104,6 @@
             <groupId>org.apache.hop</groupId>
             <artifactId>hop-ui</artifactId>
             <version>${hop.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>uk.gov.nationalarchives</groupId>
-            <artifactId>csv-validator-java-api</artifactId>
-            <version>1.4.0</version>
         </dependency>
 
         <dependency>
