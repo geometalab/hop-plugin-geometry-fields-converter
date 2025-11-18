@@ -45,15 +45,13 @@ import java.util.List;
         "https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-wkt-wkb-converter/-/blob/main/README.md")
 public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktWkbConverterData> {
 
-  @HopMetadataProperty(
-      key = "input_field",
-      injectionKeyDescription = "WktWkb.Injection.InputField")
-  private String inputField = "please select";
+  @HopMetadataProperty(key = "input_field", injectionKeyDescription = "WktWkb.Injection.InputField")
+  private String inputField = "";
 
   @HopMetadataProperty(
       key = "output_field",
       injectionKeyDescription = "WktWkb.Injection.OutputField")
-  private String outputField = "please select";
+  private String outputField = "";
 
   @HopMetadataProperty(
       key = "is_wkt_to_wkb",
@@ -140,7 +138,7 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
   public void check(
       List<ICheckResult> remarks,
       PipelineMeta pipelineMeta,
-      TransformMeta transforminfo,
+      TransformMeta transformInfo,
       IRowMeta prev,
       String[] input,
       String[] output,
@@ -150,10 +148,4 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
     // Checks to perform when validating a transform
   }
 
-  @Override
-  public void setDefault() {
-    // Set default value for new sample text field
-    inputField = "WKT input";
-    outputField = "WKB output";
-  }
 }
