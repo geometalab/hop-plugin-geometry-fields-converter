@@ -23,6 +23,7 @@ import org.apache.hop.core.exception.HopTransformException;
 import org.apache.hop.core.row.IRowMeta;
 import org.apache.hop.core.row.IValueMeta;
 import org.apache.hop.core.row.value.ValueMetaBinary;
+import org.apache.hop.core.row.value.ValueMetaFactory;
 import org.apache.hop.core.row.value.ValueMetaString;
 import org.apache.hop.core.util.Utils;
 import org.apache.hop.core.variables.IVariables;
@@ -122,31 +123,15 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
 
     IValueMeta extra = null;
 
-    String inputField = variables.resolve(getInputField());
-    String outputField = variables.resolve(getOutputField());
-
-    if (!Utils.isEmpty(getOutputField())) {
-      if (!outputField.equals(inputField)) {
-        if (isWktToWkb()) {
-          extra = new ValueMetaBinary(variables.resolve(getOutputField()));
-          extra.setOrigin(name);
-          rowMeta.addValueMeta(extra);
-        } else {
-          extra = new ValueMetaString(variables.resolve(getOutputField()));
-          extra.setOrigin(name);
-          rowMeta.addValueMeta(extra);
-        }
+    if (!Utils.isEmpty(getOutputField()) || !outputField.equals(inputField)) {
+      if (isWktToWkb()) {
+        extra = new ValueMetaBinary(variables.resolve(getOutputField()));
+        extra.setOrigin(name);
+        rowMeta.addValueMeta(extra);
       } else {
-        IValueMeta vm = rowMeta.searchValueMeta(inputField);
-        if (isWktToWkb()) {
-          extra = new ValueMetaBinary(variables.resolve(getOutputField()));
-          rowMeta.addValueMeta(extra);
-          vm.set
-          vm.setType(IValueMeta.TYPE_BINARY);
-        } else {
-          extra = new ValueMetaString(variables.resolve(getOutputField()));
-          rowMeta.addValueMeta(extra);
-        }
+        extra = new ValueMetaString(variables.resolve(getOutputField()));
+        extra.setOrigin(name);
+        rowMeta.addValueMeta(extra);
       }
     } else {
       if (!Utils.isEmpty(getInputField())) {
