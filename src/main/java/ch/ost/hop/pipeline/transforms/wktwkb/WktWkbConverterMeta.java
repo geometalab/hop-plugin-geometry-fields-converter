@@ -58,10 +58,8 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
       injectionKeyDescription = "Convert WKT to WKB or the other way around.")
   private boolean wktToWkb = true;
 
+  /* Endianness in WKB is defined by its first byte, 0: big endian, 1: little endian */
   @HopMetadataProperty(key = "endianness", injectionKeyDescription = "Set WKB endianness")
-  /*
-  Endianness in WKB is defined by its first byte, 0: big endian, 1: little endian
-  */
   private int endianness = 0;
 
   public String getInputField() {
@@ -147,5 +145,4 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
       IHopMetadataProvider metadataProvider) {
     // Checks to perform when validating a transform
   }
-
 }

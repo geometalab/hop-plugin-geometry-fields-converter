@@ -17,8 +17,10 @@
 
 package ch.ost.hop.pipeline.transforms.wktwkb;
 
+import org.apache.hop.core.Const;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.row.IRowMeta;
+import org.apache.hop.core.row.RowMeta;
 import org.apache.hop.core.util.Utils;
 import org.apache.hop.core.variables.IVariables;
 import org.apache.hop.i18n.BaseMessages;
@@ -28,6 +30,8 @@ import org.apache.hop.pipeline.transform.TransformMeta;
 import org.apache.hop.ui.core.ConstUi;
 import org.apache.hop.ui.core.PropsUi;
 import org.apache.hop.ui.core.dialog.BaseDialog;
+import org.apache.hop.ui.core.widget.ColumnInfo;
+import org.apache.hop.ui.core.widget.ComboVar;
 import org.apache.hop.ui.core.widget.TextVar;
 import org.apache.hop.ui.pipeline.transform.BaseTransformDialog;
 import org.apache.hop.ui.util.SwtSvgImageUtil;
@@ -41,15 +45,15 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 public class WktWkbConverterDialog extends BaseTransformDialog implements ITransformDialog {
 
   private static final Class<?> PKG = WktWkbConverterDialog.class; // Needed by Translator
 
   private final WktWkbConverterMeta input;
-  private TextVar wInputField;
+  private ComboVar wInputField;
   private TextVar wOutputField;
   private Button wWktToWkb;
   private Button wWkbToWkt;
@@ -58,8 +62,12 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
   private final Map<String, Integer> inputFields;
 
+  private final List<ColumnInfo> fieldColumns = new ArrayList<>();
+
   /** Fields from previous transform */
   private IRowMeta prevFields;
+
+  private boolean bPreviousFieldsLoaded = false;
 
   public WktWkbConverterDialog(
       Shell parent, IVariables variables, WktWkbConverterMeta in, PipelineMeta pipelineMeta) {
@@ -239,58 +247,67 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     setButtonPositions(new Button[] {wOk, wCancel}, margin, null);
 
-    final Runnable runnable =
-        () -> {
-          TransformMeta transformMeta = pipelineMeta.findTransform(transformName);
-          if (transformMeta != null) {
-            try {
-              IRowMeta row = pipelineMeta.getPrevTransformFields(variables, transformMeta);
-              prevFields = row;
-              // Remember these fields...
-              for (int i = 0; i < row.size(); i++) {
-                inputFields.put(row.getValueMeta(i).getName(), i);
-              }
-            } catch (HopException e) {
-              logError(BaseMessages.getString(PKG, "System.Dialog.GetFieldsFailed.Message"));
-            }
-          }
-        };
-    new Thread(runnable).start();
+    shell
+        .getDisplay()
+        .asyncExec(
+            () -> {
+              try {
+                IRowMeta row = pipelineMeta.getPrevTransformFields(variables, transformMeta);
+                prevFields = row;
 
-    // Set the shell size, based upon previous time...
+                inputFields.clear();
+                for (int i = 0; i < row.size(); i++) {
+                  inputFields.put(row.getValueMeta(i).getName(), i);
+                }
+
+                wInputField.setItems(inputFields.keySet().toArray(new String[0]));
+              } catch (Exception e) {
+                logError(BaseMessages.getString(PKG, "System.Dialog.GetFieldsFailed.Message"));
+              }
+            });
+
     setSize();
     getData();
-
     input.setChanged(changed);
+    setComboValues();
 
     BaseDialog.defaultShellHandling(shell, c -> ok(), c -> cancel());
 
     return transformName;
   }
 
-
   private Control createInputFieldSelection(ModifyListener lsMod, Control attachment, int margin) {
     Label wlInputFieldLabel = new Label(shell, SWT.RIGHT);
+    wlInputFieldLabel.setText(BaseMessages.getString(PKG, "WktWkb.InputFieldSelection.Label"));
     PropsUi.setLook(wlInputFieldLabel);
     FormData fdlFilePathLabel = new FormData();
     fdlFilePathLabel.left = new FormAttachment(0, 0);
     fdlFilePathLabel.top = new FormAttachment(attachment, margin);
     wlInputFieldLabel.setLayoutData(fdlFilePathLabel);
 
-    wInputField = new TextVar(variables, shell, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
+    wInputField = new ComboVar(variables, shell, SWT.DROP_DOWN | SWT.BORDER);
     PropsUi.setLook(wInputField);
     wInputField.addModifyListener(lsMod);
+    wInputField.setItems(inputFields.keySet().toArray(new String[0]));
     FormData fdInputField = new FormData();
     fdInputField.left = new FormAttachment(wlInputFieldLabel, margin);
     fdInputField.top = new FormAttachment(attachment, margin);
     fdInputField.right = new FormAttachment(100, 0); // extend to the right edge
     wInputField.setLayoutData(fdInputField);
 
+    wInputField.addModifyListener(
+        e -> {
+          wOutputField.setText(wInputField.getText());
+
+          input.setChanged();
+        });
+
     return wInputField;
   }
 
   private Control createOutputFieldSelection(ModifyListener lsMod, Control attachment, int margin) {
     Label wlOutputFieldLabel = new Label(shell, SWT.RIGHT);
+    wlOutputFieldLabel.setText(BaseMessages.getString(PKG, "WktWkb.OutputFieldSelection.Label"));
     PropsUi.setLook(wlOutputFieldLabel);
     FormData fdlOutputFieldLabel = new FormData();
     fdlOutputFieldLabel.left = new FormAttachment(0, 0);
@@ -340,6 +357,46 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
       wBigEndian.setSelection(true);
     } else {
       wLilEndian.setSelection(true);
+    }
+  }
+
+  private void setComboValues() {
+    Runnable fieldLoader =
+        () -> {
+          try {
+            prevFields = pipelineMeta.getPrevTransformFields(variables, transformName);
+          } catch (HopException e) {
+            prevFields = new RowMeta();
+            String msg = BaseMessages.getString(PKG, "WktWkb.DoMapping.UnableToFindInput");
+            logError(msg);
+          }
+          String[] prevTransformFieldNames =
+              prevFields != null ? prevFields.getFieldNames() : new String[0];
+          Arrays.sort(prevTransformFieldNames);
+          bPreviousFieldsLoaded = true;
+          for (ColumnInfo colInfo : fieldColumns) {
+            colInfo.setComboValues(prevTransformFieldNames);
+          }
+        };
+    shell.getDisplay().asyncExec(fieldLoader);
+  }
+
+  protected void setComboBoxes() {
+
+    final Map<String, Integer> fields = new HashMap<>(inputFields);
+
+    Set<String> keySet = fields.keySet();
+    List<String> entries = new ArrayList<>(keySet);
+
+    String[] fieldNames = entries.toArray(new String[0]);
+
+    if (PropsUi.getInstance().isSortFieldByName()) {
+      Const.sortStrings(fieldNames);
+    }
+
+    bPreviousFieldsLoaded = true;
+    for (ColumnInfo colInfo : fieldColumns) {
+      colInfo.setComboValues(fieldNames);
     }
   }
 
