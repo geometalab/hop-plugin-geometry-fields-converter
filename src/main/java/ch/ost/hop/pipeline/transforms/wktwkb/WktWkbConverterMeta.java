@@ -125,15 +125,28 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
     String inputField = variables.resolve(getInputField());
     String outputField = variables.resolve(getOutputField());
 
-    if (!Utils.isEmpty(getOutputField()) && !outputField.equals(inputField)) {
-      if (isWktToWkb()) {
-        extra = new ValueMetaBinary(variables.resolve(getOutputField()));
-        extra.setOrigin(name);
-        rowMeta.addValueMeta(extra);
+    if (!Utils.isEmpty(getOutputField())) {
+      if (!outputField.equals(inputField)) {
+        if (isWktToWkb()) {
+          extra = new ValueMetaBinary(variables.resolve(getOutputField()));
+          extra.setOrigin(name);
+          rowMeta.addValueMeta(extra);
+        } else {
+          extra = new ValueMetaString(variables.resolve(getOutputField()));
+          extra.setOrigin(name);
+          rowMeta.addValueMeta(extra);
+        }
       } else {
-        extra = new ValueMetaString(variables.resolve(getOutputField()));
-        extra.setOrigin(name);
-        rowMeta.addValueMeta(extra);
+        IValueMeta vm = rowMeta.searchValueMeta(inputField);
+        if (isWktToWkb()) {
+          extra = new ValueMetaBinary(variables.resolve(getOutputField()));
+          rowMeta.addValueMeta(extra);
+          vm.set
+          vm.setType(IValueMeta.TYPE_BINARY);
+        } else {
+          extra = new ValueMetaString(variables.resolve(getOutputField()));
+          rowMeta.addValueMeta(extra);
+        }
       }
     } else {
       if (!Utils.isEmpty(getInputField())) {
