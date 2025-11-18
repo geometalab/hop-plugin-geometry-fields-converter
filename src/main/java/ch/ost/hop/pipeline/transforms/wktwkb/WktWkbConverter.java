@@ -52,7 +52,6 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       setOutputDone();
       return false;
     }
-    Object[] outputRow = row.clone();
 
     if (first) {
       first = false;
