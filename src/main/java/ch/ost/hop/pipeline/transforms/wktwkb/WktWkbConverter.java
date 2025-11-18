@@ -52,6 +52,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       setOutputDone();
       return false;
     }
+    Object[] outputRow = row.clone();
 
     if (first) {
       first = false;
@@ -71,38 +72,38 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       data.outputFieldIndex = data.outputRowMeta.size() - 1;
     }
 
-    if(meta.isWktToWkb()) {
+    if (meta.isWktToWkb()) {
       String inWKT = Const.NVL(data.inputMeta.getString(row[data.inputFieldIndex]), "");
 
       try {
-        row[data.outputFieldIndex] = wktToWkb(inWKT, meta.getEndianness()/*, meta.IncludeSRID()*/);
+        row[data.outputFieldIndex] = wktToWkb(inWKT, meta.getEndianness() /*, meta.IncludeSRID()*/);
       } catch (Exception e) {
         System.out.println(e.getMessage());
       }
       putRow(data.outputRowMeta, row);
-    }else{
+    } else {
 
       byte[] inWKB = data.inputMeta.getBinary(row[data.inputFieldIndex]);
       try {
-        row[data.outputFieldIndex] = wkbToWkt(inWKB/*, meta.IncludeSRID()*/);
+        row[data.outputFieldIndex] = wkbToWkt(inWKB /*, meta.IncludeSRID()*/);
       } catch (Exception e) {
         System.out.println(e.getMessage());
       }
       putRow(data.outputRowMeta, row);
-
     }
     return true;
   }
 
-  public static byte[] wktToWkb(String wkt, int endianness/*, boolean includeSRID*/) throws Exception {
+  public static byte[] wktToWkb(String wkt, int endianness /*, boolean includeSRID*/)
+      throws Exception {
     WKTReader reader = new WKTReader();
     Geometry geometry = reader.read(wkt);
     byte byteOrder = (byte) (endianness == 0 ? 0x00 : 0x01);
-    WKBWriter writer = new WKBWriter(2, byteOrder/*, includeSRID*/);
+    WKBWriter writer = new WKBWriter(2, byteOrder /*, includeSRID*/);
     return writer.write(geometry);
   }
 
-  public static String wkbToWkt(byte[] wkb/*, boolean includeSRID*/) throws Exception {
+  public static String wkbToWkt(byte[] wkb /*, boolean includeSRID*/) throws Exception {
     WKBReader reader = new WKBReader();
     Geometry geometry = reader.read(wkb);
     WKTWriter writer = new WKTWriter();

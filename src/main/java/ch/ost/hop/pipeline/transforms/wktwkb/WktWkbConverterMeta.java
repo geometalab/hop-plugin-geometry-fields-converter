@@ -101,7 +101,7 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
     return SRIDEnabled;
   }
 
-  public void setIsSRIDEnabled(boolean SRIDEnabled) {
+  public void setSRIDEnabled(boolean SRIDEnabled) {
     this.SRIDEnabled = SRIDEnabled;
   }
 
@@ -122,7 +122,10 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
 
     IValueMeta extra = null;
 
-    if (!Utils.isEmpty(getOutputField())) {
+    String inputField = variables.resolve(getInputField());
+    String outputField = variables.resolve(getOutputField());
+
+    if (!Utils.isEmpty(getOutputField()) && !outputField.equals(inputField)) {
       if (isWktToWkb()) {
         extra = new ValueMetaBinary(variables.resolve(getOutputField()));
         extra.setOrigin(name);
