@@ -7,9 +7,9 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <artifactId>wkt2wkb</artifactId>
+    <artifactId>wktwkb</artifactId>
     <groupId>com.example.hop</groupId>
-    <name>WKT2WKB</name>
+    <name>WKT/WKB</name>
     <packaging>jar</packaging>
     <version>0.1.0</version>
 
@@ -21,7 +21,7 @@
         <jandex.version>3.2.3</jandex.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jandex.version>3.1.6</jandex.version>
-        <hop.plugins.dir>wkt2wkb</hop.plugins.dir>
+        <hop.plugins.dir>wktwkb</hop.plugins.dir>
     </properties>
 
     <build>
