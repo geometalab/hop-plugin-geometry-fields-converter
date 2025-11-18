@@ -419,11 +419,11 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   }
 
   private void getInfo(WktWkbConverterMeta in) {
-    // Save sample text content
     input.setInputField(wFieldCombo.getText());
     input.setOutputField(wOutputField.getText());
     input.setWktToWkb(wWktToWkb.getSelection());
     input.setEndianness(wBigEndian.getSelection() ? 0 : 1);
+    input.setIsSRIDEnabled(wLilEndian.getSelection());
   }
 
   /** Cancel the dialog. */

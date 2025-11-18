@@ -85,10 +85,6 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
     return wktToWkb;
   }
 
-  public boolean IncludeSRID() {
-    return SRIDEnabled;
-  }
-
   public void setWktToWkb(boolean wktToWkb) {
     this.wktToWkb = wktToWkb;
   }
@@ -99,6 +95,14 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
 
   public void setEndianness(int endianness) {
     this.endianness = endianness;
+  }
+
+  public boolean isSRIDEnabled() {
+    return SRIDEnabled;
+  }
+
+  public void setIsSRIDEnabled(boolean SRIDEnabled) {
+    this.SRIDEnabled = SRIDEnabled;
   }
 
   @Override
