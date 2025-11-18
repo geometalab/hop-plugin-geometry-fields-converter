@@ -26,11 +26,9 @@ import org.apache.hop.core.variables.IVariables;
 import org.apache.hop.i18n.BaseMessages;
 import org.apache.hop.pipeline.PipelineMeta;
 import org.apache.hop.pipeline.transform.ITransformDialog;
-import org.apache.hop.pipeline.transform.TransformMeta;
 import org.apache.hop.ui.core.ConstUi;
 import org.apache.hop.ui.core.PropsUi;
 import org.apache.hop.ui.core.dialog.BaseDialog;
-import org.apache.hop.ui.core.widget.ColumnInfo;
 import org.apache.hop.ui.core.widget.ComboVar;
 import org.apache.hop.ui.core.widget.TextVar;
 import org.apache.hop.ui.pipeline.transform.BaseTransformDialog;
@@ -53,21 +51,20 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private static final Class<?> PKG = WktWkbConverterDialog.class; // Needed by Translator
 
   private final WktWkbConverterMeta input;
-  private ComboVar wInputField;
+  private ComboVar wFieldCombo;
   private TextVar wOutputField;
   private Button wWktToWkb;
   private Button wWkbToWkt;
   private Button wLilEndian;
   private Button wBigEndian;
+  private Button wSRIDButton;
 
   private final Map<String, Integer> inputFields;
 
-  private final List<ColumnInfo> fieldColumns = new ArrayList<>();
+  private boolean bPreviousFieldsLoaded = false;
 
   /** Fields from previous transform */
   private IRowMeta prevFields;
-
-  private boolean bPreviousFieldsLoaded = false;
 
   public WktWkbConverterDialog(
       Shell parent, IVariables variables, WktWkbConverterMeta in, PipelineMeta pipelineMeta) {
@@ -225,7 +222,34 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wLilEndian.addSelectionListener(lsSelMod);
     wBigEndian.addSelectionListener(lsSelMod);
 
-    Control InputFieldSelection = createInputFieldSelection(lsMod, wEndiannessGroup, margin);
+    // SRID Selection
+    Group wSRIDGroup = new Group(shell, SWT.SHADOW_NONE);
+    wSRIDGroup.setText("SRID");
+    PropsUi.setLook(wSRIDGroup);
+    FormLayout sridLayout = new FormLayout();
+    sridLayout.marginWidth = 10;
+    sridLayout.marginHeight = 10;
+    wSRIDGroup.setLayout(sridLayout);
+
+    FormData fdSRIDGroup = new FormData();
+    fdSRIDGroup.left = new FormAttachment(0, 0);
+    fdSRIDGroup.top = new FormAttachment(wEndiannessGroup, 10);
+    fdSRIDGroup.right = new FormAttachment(100, 0);
+    wSRIDGroup.setLayoutData(fdSRIDGroup);
+
+    // "SRID" radio button
+    wSRIDButton = new Button(wSRIDGroup, SWT.RADIO);
+    wSRIDButton.setText("Include SRID");
+    wSRIDButton.setSelection(true);
+    PropsUi.setLook(wSRIDButton);
+    FormData fdSRIDButton = new FormData();
+    fdSRIDButton.left = new FormAttachment(0, 0);
+    fdSRIDButton.top = new FormAttachment(0, 0);
+    wSRIDButton.setLayoutData(fdSRIDButton);
+
+    wSRIDButton.addSelectionListener(lsSelMod);
+
+    Control InputFieldSelection = createInputFieldSelection(lsMod, wSRIDGroup, margin);
     createOutputFieldSelection(lsMod, InputFieldSelection, margin);
 
     // Some buttons
@@ -260,7 +284,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
                   inputFields.put(row.getValueMeta(i).getName(), i);
                 }
 
-                wInputField.setItems(inputFields.keySet().toArray(new String[0]));
+                wFieldCombo.setItems(inputFields.keySet().toArray(new String[0]));
               } catch (Exception e) {
                 logError(BaseMessages.getString(PKG, "System.Dialog.GetFieldsFailed.Message"));
               }
@@ -285,24 +309,24 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fdlFilePathLabel.top = new FormAttachment(attachment, margin);
     wlInputFieldLabel.setLayoutData(fdlFilePathLabel);
 
-    wInputField = new ComboVar(variables, shell, SWT.DROP_DOWN | SWT.BORDER);
-    PropsUi.setLook(wInputField);
-    wInputField.addModifyListener(lsMod);
-    wInputField.setItems(inputFields.keySet().toArray(new String[0]));
+    wFieldCombo = new ComboVar(variables, shell, SWT.DROP_DOWN | SWT.BORDER);
+    PropsUi.setLook(wFieldCombo);
+    wFieldCombo.addModifyListener(lsMod);
+    wFieldCombo.setItems(inputFields.keySet().toArray(new String[0]));
     FormData fdInputField = new FormData();
     fdInputField.left = new FormAttachment(wlInputFieldLabel, margin);
     fdInputField.top = new FormAttachment(attachment, margin);
     fdInputField.right = new FormAttachment(100, 0); // extend to the right edge
-    wInputField.setLayoutData(fdInputField);
+    wFieldCombo.setLayoutData(fdInputField);
 
-    wInputField.addModifyListener(
+    wFieldCombo.addModifyListener(
         e -> {
-          wOutputField.setText(wInputField.getText());
+          wOutputField.setText(wFieldCombo.getText());
 
           input.setChanged();
         });
 
-    return wInputField;
+    return wFieldCombo;
   }
 
   private Control createOutputFieldSelection(ModifyListener lsMod, Control attachment, int margin) {
@@ -341,7 +365,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
       input.setOutputField("");
     }
     // Get sample text and put it on dialog's text field
-    wInputField.setText(input.getInputField());
+    wFieldCombo.setText(input.getInputField());
     wOutputField.setText(input.getOutputField());
 
     wTransformName.selectAll();
@@ -374,9 +398,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
               prevFields != null ? prevFields.getFieldNames() : new String[0];
           Arrays.sort(prevTransformFieldNames);
           bPreviousFieldsLoaded = true;
-          for (ColumnInfo colInfo : fieldColumns) {
-            colInfo.setComboValues(prevTransformFieldNames);
-          }
         };
     shell.getDisplay().asyncExec(fieldLoader);
   }
@@ -395,14 +416,11 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     }
 
     bPreviousFieldsLoaded = true;
-    for (ColumnInfo colInfo : fieldColumns) {
-      colInfo.setComboValues(fieldNames);
-    }
   }
 
   private void getInfo(WktWkbConverterMeta in) {
     // Save sample text content
-    input.setInputField(wInputField.getText());
+    input.setInputField(wFieldCombo.getText());
     input.setOutputField(wOutputField.getText());
     input.setWktToWkb(wWktToWkb.getSelection());
     input.setEndianness(wBigEndian.getSelection() ? 0 : 1);

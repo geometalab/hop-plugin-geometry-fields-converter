@@ -75,7 +75,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       String inWKT = Const.NVL(data.inputMeta.getString(row[data.inputFieldIndex]), "");
 
       try {
-        row[data.outputFieldIndex] = wktToWkb(inWKT, meta.getEndianness());
+        row[data.outputFieldIndex] = wktToWkb(inWKT, meta.getEndianness()/*, meta.IncludeSRID()*/);
       } catch (Exception e) {
         System.out.println(e.getMessage());
       }
@@ -84,7 +84,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
 
       byte[] inWKB = data.inputMeta.getBinary(row[data.inputFieldIndex]);
       try {
-        row[data.outputFieldIndex] = wkbToWkt(inWKB);
+        row[data.outputFieldIndex] = wkbToWkt(inWKB/*, meta.IncludeSRID()*/);
       } catch (Exception e) {
         System.out.println(e.getMessage());
       }
@@ -94,15 +94,15 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
     return true;
   }
 
-  public static byte[] wktToWkb(String wkt, int endianness) throws Exception {
+  public static byte[] wktToWkb(String wkt, int endianness/*, boolean includeSRID*/) throws Exception {
     WKTReader reader = new WKTReader();
     Geometry geometry = reader.read(wkt);
     byte byteOrder = (byte) (endianness == 0 ? 0x00 : 0x01);
-    WKBWriter writer = new WKBWriter(2, byteOrder, false);
+    WKBWriter writer = new WKBWriter(2, byteOrder/*, includeSRID*/);
     return writer.write(geometry);
   }
 
-  public static String wkbToWkt(byte[] wkb) throws Exception {
+  public static String wkbToWkt(byte[] wkb/*, boolean includeSRID*/) throws Exception {
     WKBReader reader = new WKBReader();
     Geometry geometry = reader.read(wkb);
     WKTWriter writer = new WKTWriter();

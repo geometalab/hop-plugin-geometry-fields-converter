@@ -62,6 +62,9 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
   @HopMetadataProperty(key = "endianness", injectionKeyDescription = "Set WKB endianness")
   private int endianness = 0;
 
+  @HopMetadataProperty(key = "srid", injectionKeyDescription = "Enable SRID")
+  private boolean SRIDEnabled = true;
+
   public String getInputField() {
     return inputField;
   }
@@ -80,6 +83,10 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
 
   public boolean isWktToWkb() {
     return wktToWkb;
+  }
+
+  public boolean IncludeSRID() {
+    return SRIDEnabled;
   }
 
   public void setWktToWkb(boolean wktToWkb) {
