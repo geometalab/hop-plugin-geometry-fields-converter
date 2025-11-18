@@ -34,8 +34,8 @@ public class WktWkbConverterUnitTests {
     }
 
     @Test
-    public void testFalseWKT() throws Exception {
-        String wkt = "(1 2)";
+    public void testFalseWKT() throws ParseException {
+        String wkt = "test string you're supposed to fail";
         assertThrows(ParseException.class, () -> WktWkbConverter.wktToWkb(wkt, 0));
     }
 
