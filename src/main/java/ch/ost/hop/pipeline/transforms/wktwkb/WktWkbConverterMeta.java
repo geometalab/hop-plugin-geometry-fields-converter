@@ -119,7 +119,6 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
       throws HopTransformException {
 
     IValueMeta extra;
-    String resolvedInputField = variables.resolve(getInputField());
     String resolvedOutputField = variables.resolve(getOutputField());
 
     if (!Utils.isEmpty(getOutputField())) {
@@ -136,9 +135,7 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
       }
     } else {
       extra =
-          isWktToWkb()
-              ? new ValueMetaBinary("geometry_wkb")
-              : new ValueMetaString("geometry_wkt");
+          isWktToWkb() ? new ValueMetaBinary("geometry_wkb") : new ValueMetaString("geometry_wkt");
       extra.setOrigin(isWktToWkb() ? "geometry_wkb" : "geometry_wkt");
       rowMeta.addValueMeta(extra);
     }

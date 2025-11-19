@@ -20,17 +20,13 @@ package ch.ost.hop.pipeline.transforms.wktwkb;
 import org.apache.hop.core.Const;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.row.RowDataUtil;
+import org.apache.hop.i18n.BaseMessages;
 import org.apache.hop.pipeline.Pipeline;
 import org.apache.hop.pipeline.PipelineMeta;
 import org.apache.hop.pipeline.transform.BaseTransform;
 import org.apache.hop.pipeline.transform.TransformMeta;
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.io.WKBReader;
-import org.locationtech.jts.io.WKBWriter;
-import org.locationtech.jts.io.WKTReader;
-import org.locationtech.jts.io.WKTWriter;
-
-import java.util.Arrays;
+import org.locationtech.jts.io.*;
 
 /** Transform That contains the basic skeleton needed to create your own plugin */
 public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbConverterData> {
@@ -74,13 +70,12 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       data.outputMeta = data.outputRowMeta.searchValueMeta(realOutputField);
       data.outputFieldIndex = data.outputRowMeta.indexOfValue(realOutputField);
       if (data.outputFieldIndex < 0) {
-          data.outputFieldIndex = data.outputRowMeta.size() - 1;
+        data.outputFieldIndex = data.outputRowMeta.size() - 1;
       }
     }
 
-    Object[] outputRow = RowDataUtil.createResizedCopy(inputRow, data.outputRowMeta.size());
-
     try {
+      Object[] outputRow = RowDataUtil.createResizedCopy(inputRow, data.outputRowMeta.size());
       if (meta.isWktToWkb()) {
         String inWKT = Const.NVL(data.inputMeta.getString(inputRow[data.inputFieldIndex]), "");
         outputRow[data.outputFieldIndex] =
@@ -89,12 +84,12 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
         byte[] inWKB = data.inputMeta.getBinary(inputRow[data.inputFieldIndex]);
         outputRow[data.outputFieldIndex] = wkbToWkt(inWKB /*, meta.IncludeSRID()*/);
       }
-      System.out.println(outputRow[data.outputFieldIndex]);
+      putRow(data.outputRowMeta, outputRow);
     } catch (Exception e) {
       System.out.println(e.getMessage());
-      throw new HopException("Error converting WKT/WKB", e);
+      throw new HopException(BaseMessages.getString(PKG, "WktWkb.FailedToConvert.DialogMessage"), e);
     }
-    putRow(data.outputRowMeta, outputRow);
+
     return true;
   }
 
@@ -102,7 +97,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       throws Exception {
     WKTReader reader = new WKTReader();
     Geometry geometry = reader.read(wkt);
-    byte byteOrder = (byte) (endianness == 0 ? 0x00 : 0x01);
+    var byteOrder = endianness == 1 ? ByteOrderValues.BIG_ENDIAN : ByteOrderValues.LITTLE_ENDIAN;
     WKBWriter writer = new WKBWriter(2, byteOrder /*, includeSRID*/);
     return writer.write(geometry);
   }

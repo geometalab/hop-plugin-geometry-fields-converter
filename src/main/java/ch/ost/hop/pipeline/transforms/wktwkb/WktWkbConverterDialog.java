@@ -407,7 +407,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     input.setOutputField(wOutputFieldCombo.getText());
     input.setWktToWkb(wWktToWkb.getSelection());
     input.setEndianness(wBigEndian.getSelection() ? 0 : 1);
-    input.setSRIDEnabled(wLilEndian.getSelection());
+    input.setSRIDEnabled(wSRIDButton.getSelection());
   }
 
   /** Cancel the dialog. */
