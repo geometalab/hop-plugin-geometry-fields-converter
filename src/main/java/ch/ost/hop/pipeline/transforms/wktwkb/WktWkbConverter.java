@@ -87,7 +87,8 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       putRow(data.outputRowMeta, outputRow);
     } catch (Exception e) {
       System.out.println(e.getMessage());
-      throw new HopException(BaseMessages.getString(PKG, "WktWkb.FailedToConvert.DialogMessage"), e);
+      throw new HopException(
+          BaseMessages.getString(PKG, "WktWkb.FailedToConvert.DialogMessage"), e);
     }
 
     return true;
