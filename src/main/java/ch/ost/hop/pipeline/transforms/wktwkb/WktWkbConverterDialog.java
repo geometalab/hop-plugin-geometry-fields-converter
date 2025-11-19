@@ -284,7 +284,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
                   inputFields.put(row.getValueMeta(i).getName(), i);
                 }
 
-                wFieldCombo.setItems(inputFields.keySet().toArray(new String[0]));
+                if (!wFieldCombo.isDisposed()) {
+                  wFieldCombo.setItems(inputFields.keySet().toArray(new String[0]));
+                }
               } catch (Exception e) {
                 logError(BaseMessages.getString(PKG, "System.Dialog.GetFieldsFailed.Message"));
               }
