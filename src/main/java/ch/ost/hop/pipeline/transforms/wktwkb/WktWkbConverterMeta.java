@@ -23,7 +23,6 @@ import org.apache.hop.core.exception.HopTransformException;
 import org.apache.hop.core.row.IRowMeta;
 import org.apache.hop.core.row.IValueMeta;
 import org.apache.hop.core.row.value.ValueMetaBinary;
-import org.apache.hop.core.row.value.ValueMetaFactory;
 import org.apache.hop.core.row.value.ValueMetaString;
 import org.apache.hop.core.util.Utils;
 import org.apache.hop.core.variables.IVariables;
@@ -60,10 +59,10 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
   private boolean wktToWkb = true;
 
   /* Endianness in WKB is defined by its first byte, 0: big endian, 1: little endian */
-  @HopMetadataProperty(key = "endianness", injectionKeyDescription = "Set WKB endianness")
+  @HopMetadataProperty(key = "endianness", injectionKeyDescription = "WktWkb.Injection.Endianness")
   private int endianness = 0;
 
-  @HopMetadataProperty(key = "srid", injectionKeyDescription = "Enable SRID")
+  @HopMetadataProperty(key = "srid", injectionKeyDescription = "WktWkb.Injection.SRID")
   private boolean SRIDEnabled = true;
 
   public String getInputField() {

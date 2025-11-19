@@ -63,7 +63,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
   private boolean bPreviousFieldsLoaded = false;
 
-  /** Fields from previous transform */
   private IRowMeta prevFields;
 
   public WktWkbConverterDialog(
@@ -141,7 +140,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     // Radio buttons for conversion direction
     Group wConversionGroup = new Group(shell, SWT.SHADOW_NONE);
-    wConversionGroup.setText("Conversion Direction");
+    wConversionGroup.setText("WktWkb.ConversionGroupConversion Direction");
     PropsUi.setLook(wConversionGroup);
     FormLayout conversionLayout = new FormLayout();
     conversionLayout.marginWidth = 10;
