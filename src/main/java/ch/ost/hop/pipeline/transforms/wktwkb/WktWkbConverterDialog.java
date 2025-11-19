@@ -17,7 +17,6 @@
 
 package ch.ost.hop.pipeline.transforms.wktwkb;
 
-import org.apache.hop.core.Const;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.row.IRowMeta;
 import org.apache.hop.core.row.RowMeta;
@@ -44,7 +43,6 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.*;
 
 import java.util.*;
-import java.util.List;
 
 public class WktWkbConverterDialog extends BaseTransformDialog implements ITransformDialog {
 
@@ -247,8 +245,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wSRIDButton.addSelectionListener(lsSelMod);
 
-    Control InputFieldSelection = createInputFieldSelection(lsMod, wSRIDGroup, margin);
-    createOutputFieldSelection(lsMod, InputFieldSelection, margin);
+    Control inputFieldSelection = createInputFieldSelection(lsMod, wSRIDGroup, margin);
+    Control outputFieldSelection = createOutputFieldSelection(lsMod, inputFieldSelection, margin);
 
     // Some buttons
     wCancel = new Button(shell, SWT.PUSH);
