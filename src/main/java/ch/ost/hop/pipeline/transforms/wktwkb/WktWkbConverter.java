@@ -19,6 +19,7 @@ package ch.ost.hop.pipeline.transforms.wktwkb;
 
 import org.apache.hop.core.Const;
 import org.apache.hop.core.exception.HopException;
+import org.apache.hop.core.row.RowDataUtil;
 import org.apache.hop.pipeline.Pipeline;
 import org.apache.hop.pipeline.PipelineMeta;
 import org.apache.hop.pipeline.transform.BaseTransform;
@@ -28,6 +29,8 @@ import org.locationtech.jts.io.WKBReader;
 import org.locationtech.jts.io.WKBWriter;
 import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.io.WKTWriter;
+
+import java.util.Arrays;
 
 /** Transform That contains the basic skeleton needed to create your own plugin */
 public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbConverterData> {
@@ -46,9 +49,8 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
 
   @Override
   public boolean processRow() throws HopException {
-    Object[] row = getRow();
-    if (row == null) {
-      System.out.println("Done!");
+    Object[] inputRow = getRow();
+    if (inputRow == null) {
       setOutputDone();
       return false;
     }
@@ -65,31 +67,34 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       String realOutputField = resolve(meta.getOutputField());
 
       data.inputFieldIndex = getInputRowMeta().indexOfValue(realInputField);
+      if (data.inputFieldIndex < 0)
+        throw new HopException("Field " + realInputField + " not found");
       data.inputMeta = data.inputRowMeta.getValueMeta(data.inputFieldIndex);
 
       data.outputMeta = data.outputRowMeta.searchValueMeta(realOutputField);
-      data.outputFieldIndex = data.outputRowMeta.size() - 1;
+      data.outputFieldIndex = data.outputRowMeta.indexOfValue(realOutputField);
+      if (data.outputFieldIndex < 0) {
+          data.outputFieldIndex = data.outputRowMeta.size() - 1;
+      }
     }
 
-    if (meta.isWktToWkb()) {
-      String inWKT = Const.NVL(data.inputMeta.getString(row[data.inputFieldIndex]), "");
+    Object[] outputRow = RowDataUtil.createResizedCopy(inputRow, data.outputRowMeta.size());
 
-      try {
-        row[data.outputFieldIndex] = wktToWkb(inWKT, meta.getEndianness() /*, meta.IncludeSRID()*/);
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
+    try {
+      if (meta.isWktToWkb()) {
+        String inWKT = Const.NVL(data.inputMeta.getString(inputRow[data.inputFieldIndex]), "");
+        outputRow[data.outputFieldIndex] =
+            wktToWkb(inWKT, meta.getEndianness() /*, meta.IncludeSRID()*/);
+      } else {
+        byte[] inWKB = data.inputMeta.getBinary(inputRow[data.inputFieldIndex]);
+        outputRow[data.outputFieldIndex] = wkbToWkt(inWKB /*, meta.IncludeSRID()*/);
       }
-      putRow(data.outputRowMeta, row);
-    } else {
-
-      byte[] inWKB = data.inputMeta.getBinary(row[data.inputFieldIndex]);
-      try {
-        row[data.outputFieldIndex] = wkbToWkt(inWKB /*, meta.IncludeSRID()*/);
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
-      }
-      putRow(data.outputRowMeta, row);
+      System.out.println(outputRow[data.outputFieldIndex]);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      throw new HopException("Error converting WKT/WKB", e);
     }
+    putRow(data.outputRowMeta, outputRow);
     return true;
   }
 

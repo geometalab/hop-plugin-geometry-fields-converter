@@ -118,7 +118,7 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
       IHopMetadataProvider metadataProvider)
       throws HopTransformException {
 
-    IValueMeta extra = null;
+    IValueMeta extra;
     String resolvedInputField = variables.resolve(getInputField());
     String resolvedOutputField = variables.resolve(getOutputField());
 
@@ -134,26 +134,16 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
       } else {
         rowMeta.setValueMeta(outputFieldIndex, extra);
       }
-    } else if (!Utils.isEmpty(getInputField())) {
-      if (!Utils.isEmpty(getInputField())) {
-        int inputFieldIndex = rowMeta.indexOfValue(resolvedInputField);
-
-        if (inputFieldIndex >= 0) {
-
-          extra =
-              isWktToWkb()
-                  ? new ValueMetaBinary(resolvedInputField)
-                  : new ValueMetaString(resolvedInputField);
-
-          extra.setOrigin(name);
-          rowMeta.setValueMeta(inputFieldIndex, extra);
-        }
-      }
+    } else {
+      extra =
+          isWktToWkb()
+              ? new ValueMetaBinary("geometry_wkb")
+              : new ValueMetaString("geometry_wkt");
+      extra.setOrigin(isWktToWkb() ? "geometry_wkb" : "geometry_wkt");
+      rowMeta.addValueMeta(extra);
     }
 
-    if (extra != null) {
-      extra.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
-    }
+    extra.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
   }
 
   @Override
