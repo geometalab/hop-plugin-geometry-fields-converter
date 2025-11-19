@@ -186,7 +186,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     // "Big Endian" radio button
     wBigEndian = new Button(wEndiannessGroup, SWT.RADIO);
-    wBigEndian.setEnabled(wWktToWkb.getSelection());
     wBigEndian.setText(BaseMessages.getString(PKG, "WktWkb.BigEndian.Button"));
     PropsUi.setLook(wBigEndian);
     FormData fdBigEndian = new FormData();
@@ -196,7 +195,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     // "Little Endian" radio button
     wLilEndian = new Button(wEndiannessGroup, SWT.RADIO);
-    wLilEndian.setEnabled(wWktToWkb.getSelection());
     wLilEndian.setText(BaseMessages.getString(PKG, "WktWkb.LittleEndian.Button"));
     PropsUi.setLook(wLilEndian);
     FormData fdLilEndian = new FormData();
@@ -294,6 +292,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     getData();
     input.setChanged(changed);
     setComboValues();
+
+    wBigEndian.setEnabled(wWktToWkb.getSelection());
+    wLilEndian.setEnabled(wWktToWkb.getSelection());
 
     BaseDialog.defaultShellHandling(shell, c -> ok(), c -> cancel());
 
