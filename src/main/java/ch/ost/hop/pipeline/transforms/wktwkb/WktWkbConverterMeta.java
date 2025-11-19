@@ -53,9 +53,7 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
       injectionKeyDescription = "WktWkb.Injection.OutputField")
   private String outputField = "";
 
-  @HopMetadataProperty(
-      key = "is_wkt_to_wkb",
-      injectionKeyDescription = "WktWkb.Injection.WKTtoWKB")
+  @HopMetadataProperty(key = "is_wkt_to_wkb", injectionKeyDescription = "WktWkb.Injection.WKTtoWKB")
   private boolean wktToWkb = true;
 
   /* Endianness in WKB is defined by its first byte, 0: big endian, 1: little endian */
@@ -121,20 +119,35 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
       throws HopTransformException {
 
     IValueMeta extra = null;
+    String resolvedInputField = variables.resolve(getInputField());
+    String resolvedOutputField = variables.resolve(getOutputField());
 
-    if (!Utils.isEmpty(getOutputField()) || !outputField.equals(inputField)) {
-      if (isWktToWkb()) {
-        extra = new ValueMetaBinary(variables.resolve(getOutputField()));
-        extra.setOrigin(name);
+    if (!Utils.isEmpty(getOutputField())) {
+      int outputFieldIndex = rowMeta.indexOfValue(resolvedOutputField);
+      extra =
+          isWktToWkb()
+              ? new ValueMetaBinary(resolvedOutputField)
+              : new ValueMetaString(resolvedOutputField);
+      extra.setOrigin(name);
+      if (outputFieldIndex < 0) {
         rowMeta.addValueMeta(extra);
       } else {
-        extra = new ValueMetaString(variables.resolve(getOutputField()));
-        extra.setOrigin(name);
-        rowMeta.addValueMeta(extra);
+        rowMeta.setValueMeta(outputFieldIndex, extra);
       }
-    } else {
+    } else if (!Utils.isEmpty(getInputField())) {
       if (!Utils.isEmpty(getInputField())) {
-        extra = rowMeta.searchValueMeta(variables.resolve(getInputField()));
+        int inputFieldIndex = rowMeta.indexOfValue(resolvedInputField);
+
+        if (inputFieldIndex >= 0) {
+
+          extra =
+              isWktToWkb()
+                  ? new ValueMetaBinary(resolvedInputField)
+                  : new ValueMetaString(resolvedInputField);
+
+          extra.setOrigin(name);
+          rowMeta.setValueMeta(inputFieldIndex, extra);
+        }
       }
     }
 
