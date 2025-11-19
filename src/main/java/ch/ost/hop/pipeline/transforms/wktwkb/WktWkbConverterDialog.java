@@ -18,6 +18,7 @@
 package ch.ost.hop.pipeline.transforms.wktwkb;
 
 import org.apache.hop.core.exception.HopException;
+import org.apache.hop.core.exception.HopTransformException;
 import org.apache.hop.core.row.IRowMeta;
 import org.apache.hop.core.row.RowMeta;
 import org.apache.hop.core.util.Utils;
@@ -266,27 +267,21 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     setButtonPositions(new Button[] {wOk, wCancel}, margin, null);
 
-    shell
-        .getDisplay()
-        .asyncExec(
-            () -> {
-              try {
-                IRowMeta row = pipelineMeta.getPrevTransformFields(variables, transformMeta);
-                prevFields = row;
+    IRowMeta row = null;
+    try {
+      row = pipelineMeta.getPrevTransformFields(variables, transformMeta);
+    } catch (HopTransformException e) {
+      throw new RuntimeException(e);
+    }
+    prevFields = row;
 
-                fields.clear();
-                for (int i = 0; i < row.size(); i++) {
-                  fields.put(row.getValueMeta(i).getName(), i);
-                }
+    fields.clear();
+    for (int i = 0; i < row.size(); i++) {
+      fields.put(row.getValueMeta(i).getName(), i);
+    }
 
-                if (!wInputFieldCombo.isDisposed() && !wOutputFieldCombo.isDisposed()) {
-                  wInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
-                  wOutputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
-                }
-              } catch (Exception e) {
-                logError(BaseMessages.getString(PKG, "System.Dialog.GetFieldsFailed.Message"));
-              }
-            });
+    wInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
+    wOutputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
 
     setSize();
     getData();
