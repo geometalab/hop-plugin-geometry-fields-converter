@@ -25,7 +25,6 @@ import org.apache.hop.pipeline.Pipeline;
 import org.apache.hop.pipeline.PipelineMeta;
 import org.apache.hop.pipeline.transform.BaseTransform;
 import org.apache.hop.pipeline.transform.TransformMeta;
-import org.locationtech.jts.geom.CoordinateSequence;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.*;
 
@@ -95,16 +94,26 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
   }
 
   public static byte[] wktToWkb(String wkt, int endianness, boolean includeSRID) throws Exception {
+    String geomStr = null;
+    int srid = 0;
+    String[] parts = null;
+    if (wkt.contains(";")) {
+      parts = wkt.split(";");
+      srid = Integer.parseInt(parts[0].split("=")[1]);
+      geomStr = parts[1];
+    }
+    if (geomStr == null) geomStr = wkt;
     WKTReader reader = new WKTReader();
-    Geometry geometry = reader.read(wkt);
+    Geometry geometry = reader.read(geomStr);
     int outputDimension =
         geometry
             .getFactory()
             .getCoordinateSequenceFactory()
             .create(geometry.getCoordinates())
             .getDimension();
+    if (includeSRID && parts != null) geometry.setSRID(srid);
     var byteOrder = endianness == 0 ? ByteOrderValues.BIG_ENDIAN : ByteOrderValues.LITTLE_ENDIAN;
-    WKBWriter writer = new WKBWriter(outputDimension, byteOrder /*, includeSRID*/);
+    WKBWriter writer = new WKBWriter(outputDimension, byteOrder, includeSRID);
     return writer.write(geometry);
   }
 
