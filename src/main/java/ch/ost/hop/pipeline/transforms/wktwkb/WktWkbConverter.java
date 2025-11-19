@@ -25,6 +25,7 @@ import org.apache.hop.pipeline.Pipeline;
 import org.apache.hop.pipeline.PipelineMeta;
 import org.apache.hop.pipeline.transform.BaseTransform;
 import org.apache.hop.pipeline.transform.TransformMeta;
+import org.locationtech.jts.geom.CoordinateSequence;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.*;
 
@@ -79,10 +80,10 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       if (meta.isWktToWkb()) {
         String inWKT = Const.NVL(data.inputMeta.getString(inputRow[data.inputFieldIndex]), "");
         outputRow[data.outputFieldIndex] =
-            wktToWkb(inWKT, meta.getEndianness() /*, meta.IncludeSRID()*/);
+            wktToWkb(inWKT, meta.getEndianness(), meta.isSRIDEnabled());
       } else {
         byte[] inWKB = data.inputMeta.getBinary(inputRow[data.inputFieldIndex]);
-        outputRow[data.outputFieldIndex] = wkbToWkt(inWKB /*, meta.IncludeSRID()*/);
+        outputRow[data.outputFieldIndex] = wkbToWkt(inWKB, meta.isSRIDEnabled());
       }
       putRow(data.outputRowMeta, outputRow);
     } catch (Exception e) {
@@ -90,23 +91,33 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       throw new HopException(
           BaseMessages.getString(PKG, "WktWkb.FailedToConvert.DialogMessage"), e);
     }
-
     return true;
   }
 
-  public static byte[] wktToWkb(String wkt, int endianness /*, boolean includeSRID*/)
-      throws Exception {
+  public static byte[] wktToWkb(String wkt, int endianness, boolean includeSRID) throws Exception {
     WKTReader reader = new WKTReader();
     Geometry geometry = reader.read(wkt);
-    var byteOrder = endianness == 1 ? ByteOrderValues.BIG_ENDIAN : ByteOrderValues.LITTLE_ENDIAN;
-    WKBWriter writer = new WKBWriter(2, byteOrder /*, includeSRID*/);
+    int outputDimension =
+        geometry
+            .getFactory()
+            .getCoordinateSequenceFactory()
+            .create(geometry.getCoordinates())
+            .getDimension();
+    var byteOrder = endianness == 0 ? ByteOrderValues.BIG_ENDIAN : ByteOrderValues.LITTLE_ENDIAN;
+    WKBWriter writer = new WKBWriter(outputDimension, byteOrder /*, includeSRID*/);
     return writer.write(geometry);
   }
 
-  public static String wkbToWkt(byte[] wkb /*, boolean includeSRID*/) throws Exception {
+  public static String wkbToWkt(byte[] wkb, boolean includeSRID) throws Exception {
     WKBReader reader = new WKBReader();
     Geometry geometry = reader.read(wkb);
-    WKTWriter writer = new WKTWriter();
+    int outputDimension =
+        geometry
+            .getFactory()
+            .getCoordinateSequenceFactory()
+            .create(geometry.getCoordinates())
+            .getDimension();
+    WKTWriter writer = new WKTWriter(outputDimension);
     return writer.write(geometry);
   }
 

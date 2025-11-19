@@ -10,7 +10,7 @@ public class WktWkbConverterUnitTests {
   @Test
   public void testWktToWkb() throws Exception {
     String wkt = "POINT (1 2)";
-    byte[] wkb = WktWkbConverter.wktToWkb(wkt, 0 /*, false*/);
+    byte[] wkb = WktWkbConverter.wktToWkb(wkt, 0, false);
 
     assertNotNull(wkb);
     assertTrue(wkb.length > 0);
@@ -23,7 +23,7 @@ public class WktWkbConverterUnitTests {
         hexStringToByteArray(
             "010300000001000000050000000000000000003E4000000000000024400000000000004440000000000000444000000000000034400000000000004440000000000000244000000000000034400000000000003E400000000000002440");
 
-    assertEquals(wkt, WktWkbConverter.wkbToWkt(wkb /*, false*/));
+    assertEquals(wkt, WktWkbConverter.wkbToWkt(wkb, false));
   }
 
   /*
@@ -47,7 +47,7 @@ public class WktWkbConverterUnitTests {
   @Test
   public void testFalseWKT() throws ParseException {
     String wkt = "test string you're supposed to fail";
-    assertThrows(ParseException.class, () -> WktWkbConverter.wktToWkb(wkt, 0 /*, false*/));
+    assertThrows(ParseException.class, () -> WktWkbConverter.wktToWkb(wkt, 0, false));
   }
 
   public static byte[] hexStringToByteArray(String s) {
