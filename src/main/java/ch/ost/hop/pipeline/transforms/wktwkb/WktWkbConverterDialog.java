@@ -61,8 +61,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
   private final Map<String, Integer> inputFields;
 
-  private boolean bPreviousFieldsLoaded = false;
-
   private IRowMeta prevFields;
 
   public WktWkbConverterDialog(
@@ -399,25 +397,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
           String[] prevTransformFieldNames =
               prevFields != null ? prevFields.getFieldNames() : new String[0];
           Arrays.sort(prevTransformFieldNames);
-          bPreviousFieldsLoaded = true;
         };
     shell.getDisplay().asyncExec(fieldLoader);
-  }
-
-  protected void setComboBoxes() {
-
-    final Map<String, Integer> fields = new HashMap<>(inputFields);
-
-    Set<String> keySet = fields.keySet();
-    List<String> entries = new ArrayList<>(keySet);
-
-    String[] fieldNames = entries.toArray(new String[0]);
-
-    if (PropsUi.getInstance().isSortFieldByName()) {
-      Const.sortStrings(fieldNames);
-    }
-
-    bPreviousFieldsLoaded = true;
   }
 
   private void getInfo(WktWkbConverterMeta in) {
