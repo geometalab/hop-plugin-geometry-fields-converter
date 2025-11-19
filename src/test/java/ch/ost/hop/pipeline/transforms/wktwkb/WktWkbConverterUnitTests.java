@@ -23,31 +23,29 @@ public class WktWkbConverterUnitTests {
         hexStringToByteArray(
             "010300000001000000050000000000000000003E4000000000000024400000000000004440000000000000444000000000000034400000000000004440000000000000244000000000000034400000000000003E400000000000002440");
 
-    assertEquals(wkt, WktWkbConverter.wkbToWkt(wkb, false));
+    assertEquals(wkt, WktWkbConverter.wkbToWkt(wkb, true));
   }
 
-  /*
-      @Test
-      public void testEWKTToEWKB() throws Exception {
-          String ewkt = "SRID=4326;POINT(-44.3 60.1)";
-          byte[] ewkb = hexStringToByteArray("110001021021021021023870192205204204204204127864");
+  /*@Test
+  public void testEWKTToEWKB() throws Exception {
+    String ewkt = "SRID=4326;POINT(-44.3 60.1)";
+    byte[] ewkb = hexStringToByteArray("0101000020E610000033333333333346C09A99999999993E40");
 
-          assertEquals(ewkb, WktWkbConverter.wktToWkb(ewkt, 0, true));
-      }
+    assertEquals(ewkb, WktWkbConverter.wktToWkb(ewkt, 0, true));
+  }
 
-      @Test
-      public void testEWKBToEWKT() throws Exception {
-          String ewkt = "SRID=4326;POINT(-44.3 60.1)";
-          byte[] ewkb = hexStringToByteArray("110001021021021021023870192205204204204204127864");
+  @Test
+  public void testEWKBToEWKT() throws Exception {
+    String ewkt = "SRID=4326;POINT(-44.3 60.1)";
+    byte[] ewkb = hexStringToByteArray("0101000020E610000033333333333346C09A99999999993E40");
 
-          assertEquals(ewkt, WktWkbConverter.wkbToWkt(ewkb, true));
-      }
-  */
+    assertEquals(ewkt, WktWkbConverter.wkbToWkt(ewkb, true));
+  }*/
 
   @Test
   public void testFalseWKT() throws ParseException {
     String wkt = "test string you're supposed to fail";
-    assertThrows(ParseException.class, () -> WktWkbConverter.wktToWkb(wkt, 0, false));
+    assertThrows(ParseException.class, () -> WktWkbConverter.wktToWkb(wkt, 0, true));
   }
 
   public static byte[] hexStringToByteArray(String s) {
