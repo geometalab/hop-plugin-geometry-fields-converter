@@ -140,7 +140,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     // Radio buttons for conversion direction
     Group wConversionGroup = new Group(shell, SWT.SHADOW_NONE);
-    wConversionGroup.setText("WktWkb.ConversionGroupConversion Direction");
+    wConversionGroup.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.Label"));
     PropsUi.setLook(wConversionGroup);
     FormLayout conversionLayout = new FormLayout();
     conversionLayout.marginWidth = 10;
@@ -155,7 +155,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     // "WKT to WKB" radio button
     wWktToWkb = new Button(wConversionGroup, SWT.RADIO);
-    wWktToWkb.setText("WKT to WKB");
+    wWktToWkb.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.WKTtoWKB.Button"));
     PropsUi.setLook(wWktToWkb);
     FormData fdWktToWkb = new FormData();
     fdWktToWkb.left = new FormAttachment(0, 0);
@@ -164,7 +164,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     // "WKB to WKT" radio button
     wWkbToWkt = new Button(wConversionGroup, SWT.RADIO);
-    wWkbToWkt.setText("WKB to WKT");
+    wWkbToWkt.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.WKBtoWKT.Button"));
     PropsUi.setLook(wWkbToWkt);
     FormData fdWkbToWkt = new FormData();
     fdWkbToWkt.left = new FormAttachment(wWktToWkb, 20);
@@ -176,7 +176,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     // Endianness Selection
     Group wEndiannessGroup = new Group(shell, SWT.SHADOW_NONE);
-    wEndiannessGroup.setText("Endianness");
+    wEndiannessGroup.setText(BaseMessages.getString(PKG, "WktWkb.Endianness.Label"));
     PropsUi.setLook(wEndiannessGroup);
     FormLayout endiannessLayout = new FormLayout();
     endiannessLayout.marginWidth = 10;
@@ -191,7 +191,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     // "Big Endian" radio button
     wBigEndian = new Button(wEndiannessGroup, SWT.RADIO);
-    wBigEndian.setText("Big Endian");
+    wBigEndian.setText(BaseMessages.getString(PKG, "WktWkb.BigEndian.Button"));
     PropsUi.setLook(wBigEndian);
     FormData fdBigEndian = new FormData();
     fdBigEndian.left = new FormAttachment(0, 0);
@@ -200,7 +200,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     // "Little Endian" radio button
     wLilEndian = new Button(wEndiannessGroup, SWT.RADIO);
-    wLilEndian.setText("Little Endian");
+    wLilEndian.setText(BaseMessages.getString(PKG, "WktWkb.LittleEndian.Button"));
     PropsUi.setLook(wLilEndian);
     FormData fdLilEndian = new FormData();
     fdLilEndian.left = new FormAttachment(wBigEndian, 20);
@@ -223,7 +223,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     // SRID Selection
     Group wSRIDGroup = new Group(shell, SWT.SHADOW_NONE);
-    wSRIDGroup.setText("SRID");
+    wSRIDGroup.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Label"));
     PropsUi.setLook(wSRIDGroup);
     FormLayout sridLayout = new FormLayout();
     sridLayout.marginWidth = 10;
@@ -238,7 +238,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     // "SRID" radio button
     wSRIDButton = new Button(wSRIDGroup, SWT.RADIO);
-    wSRIDButton.setText("Include SRID");
+    wSRIDButton.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Button"));
+    wSRIDButton.setToolTipText(BaseMessages.getString(PKG, "WktWkb.SRID.Tooltip"));
     wSRIDButton.setSelection(true);
     PropsUi.setLook(wSRIDButton);
     FormData fdSRIDButton = new FormData();

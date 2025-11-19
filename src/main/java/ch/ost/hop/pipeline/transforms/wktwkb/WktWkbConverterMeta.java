@@ -55,7 +55,7 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
 
   @HopMetadataProperty(
       key = "is_wkt_to_wkb",
-      injectionKeyDescription = "Convert WKT to WKB or the other way around.")
+      injectionKeyDescription = "WktWkb.Injection.WKTtoWKB")
   private boolean wktToWkb = true;
 
   /* Endianness in WKB is defined by its first byte, 0: big endian, 1: little endian */
