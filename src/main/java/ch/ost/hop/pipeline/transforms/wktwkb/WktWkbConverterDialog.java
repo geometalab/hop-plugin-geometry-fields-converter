@@ -306,6 +306,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wlInputFieldLabel.setLayoutData(fdlFilePathLabel);
 
     wInputFieldCombo = new ComboVar(variables, shell, SWT.DROP_DOWN | SWT.BORDER);
+    wInputFieldCombo.setToolTipText(BaseMessages.getString(PKG, "WktWkb.InputFieldSelection.Tooltip"));
     PropsUi.setLook(wInputFieldCombo);
     wInputFieldCombo.addModifyListener(lsMod);
     wInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
@@ -333,6 +334,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wlOutputFieldLabel.setLayoutData(fdlOutputFieldLabel);
 
     wOutputFieldCombo = new ComboVar(variables, shell, SWT.DROP_DOWN | SWT.BORDER);
+    wOutputFieldCombo.setToolTipText(BaseMessages.getString(PKG, "WktWkb.OutputFieldSelection.Tooltip"));
     PropsUi.setLook(wOutputFieldCombo);
     wOutputFieldCombo.addModifyListener(lsMod);
     FormData fdSchemaPath = new FormData();
