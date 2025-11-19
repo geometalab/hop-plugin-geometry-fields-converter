@@ -233,7 +233,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wSRIDGroup.setLayoutData(fdSRIDGroup);
 
     // "SRID" radio button
-    wSRIDButton = new Button(wSRIDGroup, SWT.RADIO);
+    wSRIDButton = new Button(wSRIDGroup, SWT.CHECK);
     wSRIDButton.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Button"));
     wSRIDButton.setToolTipText(BaseMessages.getString(PKG, "WktWkb.SRID.Tooltip"));
     wSRIDButton.setSelection(true);
@@ -267,17 +267,17 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     setButtonPositions(new Button[] {wOk, wCancel}, margin, null);
 
-    IRowMeta row = null;
+    IRowMeta prevRowMeta;
     try {
-      row = pipelineMeta.getPrevTransformFields(variables, transformMeta);
+      prevRowMeta = pipelineMeta.getPrevTransformFields(variables, transformMeta);
     } catch (HopTransformException e) {
       throw new RuntimeException(e);
     }
-    prevFields = row;
+    prevFields = prevRowMeta;
 
     fields.clear();
-    for (int i = 0; i < row.size(); i++) {
-      fields.put(row.getValueMeta(i).getName(), i);
+    for (int i = 0; i < prevRowMeta.size(); i++) {
+      fields.put(prevRowMeta.getValueMeta(i).getName(), i);
     }
 
     wInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
@@ -306,7 +306,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wlInputFieldLabel.setLayoutData(fdlFilePathLabel);
 
     wInputFieldCombo = new ComboVar(variables, shell, SWT.DROP_DOWN | SWT.BORDER);
-    wInputFieldCombo.setToolTipText(BaseMessages.getString(PKG, "WktWkb.InputFieldSelection.Tooltip"));
+    wInputFieldCombo.setToolTipText(
+        BaseMessages.getString(PKG, "WktWkb.InputFieldSelection.Tooltip"));
     PropsUi.setLook(wInputFieldCombo);
     wInputFieldCombo.addModifyListener(lsMod);
     wInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
@@ -316,10 +317,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fdInputField.right = new FormAttachment(100, 0);
     wInputFieldCombo.setLayoutData(fdInputField);
 
-    wInputFieldCombo.addModifyListener(
-        e -> {
-          input.setChanged();
-        });
+    wInputFieldCombo.addModifyListener(e -> input.setChanged());
 
     return wInputFieldCombo;
   }
@@ -334,7 +332,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wlOutputFieldLabel.setLayoutData(fdlOutputFieldLabel);
 
     wOutputFieldCombo = new ComboVar(variables, shell, SWT.DROP_DOWN | SWT.BORDER);
-    wOutputFieldCombo.setToolTipText(BaseMessages.getString(PKG, "WktWkb.OutputFieldSelection.Tooltip"));
+    wOutputFieldCombo.setToolTipText(
+        BaseMessages.getString(PKG, "WktWkb.OutputFieldSelection.Tooltip"));
     PropsUi.setLook(wOutputFieldCombo);
     wOutputFieldCombo.addModifyListener(lsMod);
     FormData fdSchemaPath = new FormData();
@@ -343,10 +342,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fdSchemaPath.right = new FormAttachment(100, 0);
     wOutputFieldCombo.setLayoutData(fdSchemaPath);
 
-    wOutputFieldCombo.addModifyListener(
-        e -> {
-          input.setChanged();
-        });
+    wOutputFieldCombo.addModifyListener(e -> input.setChanged());
 
     return wOutputFieldCombo;
   }
