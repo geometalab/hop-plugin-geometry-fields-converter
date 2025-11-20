@@ -102,7 +102,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       srid = Integer.parseInt(parts[0].split("=")[1]);
       geomStr = parts[1];
     }
-    if (geomStr == null) geomStr = wkt;
+    geomStr = geomStr == null ? wkt : geomStr;
     WKTReader reader = new WKTReader();
     Geometry geometry = reader.read(geomStr);
     int outputDimension =
@@ -127,7 +127,16 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
             .create(geometry.getCoordinates())
             .getDimension();
     WKTWriter writer = new WKTWriter(outputDimension);
-    return writer.write(geometry);
+    String wkt = writer.write(geometry);
+    if (!includeSRID) {
+      return wkt;
+    } else {
+      if (geometry.getSRID() != 0) {
+        return String.format("SRID=%d;%s", geometry.getSRID(), wkt);
+      } else {
+        return wkt;
+      }
+    }
   }
 
   @Override
