@@ -71,7 +71,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   @Override
   public String open() {
     Shell parent = getParent();
-    Display display = parent.getDisplay();
 
     shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.MIN | SWT.MAX | SWT.RESIZE);
     PropsUi.setLook(shell);
@@ -79,7 +78,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     setShellImage(shell, input);
 
     int margin = PropsUi.getMargin();
-    int middle = props.getMiddlePct();
 
     ModifyListener lsMod = e -> input.setChanged();
     SelectionAdapter lsSelMod =
@@ -236,7 +234,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wSRIDButton = new Button(wSRIDGroup, SWT.CHECK);
     wSRIDButton.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Button"));
     wSRIDButton.setToolTipText(BaseMessages.getString(PKG, "WktWkb.SRID.Tooltip"));
-    wSRIDButton.setSelection(true);
     PropsUi.setLook(wSRIDButton);
     FormData fdSRIDButton = new FormData();
     fdSRIDButton.left = new FormAttachment(0, 0);
@@ -379,6 +376,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     } else {
       wLilEndian.setSelection(true);
     }
+
+    wSRIDButton.setSelection(input.isSRIDEnabled());
   }
 
   private void setComboValues() {
