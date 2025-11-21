@@ -1,0 +1,45 @@
+image: maven:latest
+
+include:
+  - template: Jobs/Code-Quality.gitlab-ci.yml
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+
+stages:
+  - build
+  - test
+
+before_script:
+  - mkdir -p target
+
+cache:
+  paths:
+    - target/
+
+build:
+  stage: build
+  script:
+    - mvn clean package
+    - mv version.xml target/version.xml
+  artifacts:
+    paths:
+      - target/*.jar
+      - target/version.xml
+      - target/lib/
+
+unit_tests:
+  stage: test
+  script:
+    - mvn test
+
+integration_tests:
+  stage: test
+  image:
+    name: apache/hop:latest
+    entrypoint: [ "" ]
+  script:
+    - mkdir -p /files
+    - mkdir -p /opt/hop/plugins/transforms/wktwkbconverter
+    - cp -r integration_test/* /files/
+    - cp -r target/* /opt/hop/plugins/transforms/wktwkbconverter/
+    - /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl

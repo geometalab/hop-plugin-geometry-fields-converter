@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
 
-    <artifactId>Wkt2Wkb</artifactId>
+    <artifactId>wktwkbconverter</artifactId>
     <groupId>com.example.hop</groupId>
-    <name>Hop Transform Sample</name>
+    <name>WKT/WKB Converter</name>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
 
     <!-- Define versions here -->
     <properties>
@@ -21,7 +21,7 @@
         <jandex.version>3.2.3</jandex.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jandex.version>3.1.6</jandex.version>
-        <hop.plugins.dir>C:\Users\tobia\Desktop\hop\plugins\transforms\hop-transform-sample</hop.plugins.dir>
+        <hop.plugins.dir>C:\Users\simon\workspace\sa\hop\plugins\transforms\wktwkbconverter</hop.plugins.dir>
     </properties>
 
     <build>
@@ -58,7 +58,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>3.1.0</version>
@@ -71,14 +70,58 @@
                         </goals>
                         <configuration>
                             <target>
-                                <mkdir dir="${hop.plugins.dir}" />
+                                <mkdir dir="${hop.plugins.dir}"/>
 
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
-                                      todir="${hop.plugins.dir}" overwrite="true" />
+                                      todir="${hop.plugins.dir}" overwrite="true"/>
 
                                 <copy file="${project.basedir}/version.xml"
-                                      todir="${hop.plugins.dir}" overwrite="true" failonerror="false" />
+                                      todir="${hop.plugins.dir}" overwrite="true" failonerror="false"/>
                             </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M7</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.0</version>
+
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+
+                            <!-- EXCLUSIONS -->
+                            <excludeGroupIds>
+                                com.google.guava,org.postgresql
+                            </excludeGroupIds>
+
+                            <excludeArtifactIds>
+                                junit,hop-core,hop-ui,hop-engine
+                            </excludeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>
@@ -87,7 +130,6 @@
     </build>
 
     <dependencies>
-        <!-- Apache Hop core modules -->
         <dependency>
             <groupId>org.apache.hop</groupId>
             <artifactId>hop-core</artifactId>
@@ -107,9 +149,23 @@
         </dependency>
 
         <dependency>
-          <groupId>org.locationtech.jts</groupId>
-          <artifactId>jts-core</artifactId>
-          <version>1.19.0</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>6.0.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.locationtech.jts</groupId>
+            <artifactId>jts-core</artifactId>
+            <version>1.19.0</version>
         </dependency>
     </dependencies>
 

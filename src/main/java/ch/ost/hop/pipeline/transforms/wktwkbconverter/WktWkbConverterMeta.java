@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package ch.ost.hop.plugins.transforms;
+package ch.ost.hop.pipeline.transforms.wktwkbconverter;
 
 import org.apache.hop.core.ICheckResult;
 import org.apache.hop.core.annotations.Transform;
@@ -34,42 +34,34 @@ import org.apache.hop.pipeline.transform.TransformMeta;
 
 import java.util.List;
 
-/**
- * Meta data for the sample transform.
- */
+/** Meta data for the sample transform. */
 @Transform(
-    id = "Wkt2Wkb",
-    name = "i18n::Wkt2Wkb.Name",
-    description = "i18n::Wkt2Wkb.Description",
+    id = "Wkt/Wkb",
+    name = "i18n::WktWkb.Name",
+    description = "i18n::WktWkb.Description",
     image = "sample.svg",
-    categoryDescription = "Wkt2Wkb.Category"
-)
-public class Wkt2WkbMeta extends BaseTransformMeta<Wkt2Wkb, Wkt2WkbData> {
+    categoryDescription = "WktWkb.Category",
+    documentationUrl =
+        "https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-wkt-wkb-converter/-/blob/main/README.md")
+public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktWkbConverterData> {
 
-  @HopMetadataProperty(
-      key = "input_field",
-      injectionKeyDescription = "Wkt2Wkb.Injection.InputField")
-  private String inputField = "please select";
+  @HopMetadataProperty(key = "input_field", injectionKeyDescription = "WktWkb.Injection.InputField")
+  private String inputField = "";
 
   @HopMetadataProperty(
       key = "output_field",
-      injectionKeyDescription = "Wkt2Wkb.Injection.OutputField")
-  private String outputField = "please select";
+      injectionKeyDescription = "WktWkb.Injection.OutputField")
+  private String outputField = "";
 
-  @HopMetadataProperty(
-      key = "is_wkt_to_wkb",
-      injectionKeyDescription = "Convert WKT to WKB or the other way around."
-  )
+  @HopMetadataProperty(key = "is_wkt_to_wkb", injectionKeyDescription = "WktWkb.Injection.WKTtoWKB")
   private boolean wktToWkb = true;
 
-  @HopMetadataProperty(
-      key = "endianess",
-      injectionKeyDescription = "Set WKB endianess"
-  )
-  /*
-  Endianess in WKB is defined by its first byte, 0: little endian, 1: big endian
-  */
-  private int endianess = 0;
+  /* Endianness in WKB is defined by its first byte, 0: big endian, 1: little endian */
+  @HopMetadataProperty(key = "endianness", injectionKeyDescription = "WktWkb.Injection.Endianness")
+  private int endianness = 0;
+
+  @HopMetadataProperty(key = "srid", injectionKeyDescription = "WktWkb.Injection.SRID")
+  private boolean SRIDIncluded = true;
 
   public String getInputField() {
     return inputField;
@@ -95,12 +87,20 @@ public class Wkt2WkbMeta extends BaseTransformMeta<Wkt2Wkb, Wkt2WkbData> {
     this.wktToWkb = wktToWkb;
   }
 
-  public int getEndianess(){
-    return endianess;
+  public int getEndianness() {
+    return endianness;
   }
 
-  public void setEndianess(int endianess){
-    this.endianess = endianess;
+  public void setEndianness(int endianness) {
+    this.endianness = endianness;
+  }
+
+  public boolean isSRIDIncluded() {
+    return SRIDIncluded;
+  }
+
+  public void setSRIDIncluded(boolean SRIDIncluded) {
+    this.SRIDIncluded = SRIDIncluded;
   }
 
   @Override
@@ -118,34 +118,36 @@ public class Wkt2WkbMeta extends BaseTransformMeta<Wkt2Wkb, Wkt2WkbData> {
       IHopMetadataProvider metadataProvider)
       throws HopTransformException {
 
-    IValueMeta extra = null;
+    IValueMeta extra;
+    String resolvedOutputField = variables.resolve(getOutputField());
 
     if (!Utils.isEmpty(getOutputField())) {
-      if(isWktToWkb()){
-        extra = new ValueMetaBinary(variables.resolve(getOutputField()));
-        extra.setOrigin(name);
+      int outputFieldIndex = rowMeta.indexOfValue(resolvedOutputField);
+      extra =
+          isWktToWkb()
+              ? new ValueMetaBinary(resolvedOutputField)
+              : new ValueMetaString(resolvedOutputField);
+      extra.setOrigin(name);
+      if (outputFieldIndex < 0) {
         rowMeta.addValueMeta(extra);
-      }else{
-        extra = new ValueMetaString(variables.resolve(getOutputField()));
-        extra.setOrigin(name);
-        rowMeta.addValueMeta(extra);
+      } else {
+        rowMeta.setValueMeta(outputFieldIndex, extra);
       }
     } else {
-      if (!Utils.isEmpty(getInputField())) {
-        extra = rowMeta.searchValueMeta(variables.resolve(getInputField()));
-      }
+      extra =
+          isWktToWkb() ? new ValueMetaBinary("geometry_wkb") : new ValueMetaString("geometry_wkt");
+      extra.setOrigin(isWktToWkb() ? "geometry_wkb" : "geometry_wkt");
+      rowMeta.addValueMeta(extra);
     }
 
-    if (extra != null) {
-      extra.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
-    }
+    extra.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
   }
 
   @Override
   public void check(
       List<ICheckResult> remarks,
       PipelineMeta pipelineMeta,
-      TransformMeta transforminfo,
+      TransformMeta transformInfo,
       IRowMeta prev,
       String[] input,
       String[] output,
@@ -153,12 +155,5 @@ public class Wkt2WkbMeta extends BaseTransformMeta<Wkt2Wkb, Wkt2WkbData> {
       IVariables variables,
       IHopMetadataProvider metadataProvider) {
     // Checks to perform when validating a transform
-  }
-
-  @Override
-  public void setDefault() {
-    // Set default value for new sample text field
-    inputField = "WKT input";
-    outputField = "WKB output";
   }
 }

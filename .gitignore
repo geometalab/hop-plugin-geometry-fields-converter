@@ -9,4 +9,6 @@
 # Maven
 log/
 target/
-libs/
+
+#VSC
+.vscode/

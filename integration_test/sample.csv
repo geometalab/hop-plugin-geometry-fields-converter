@@ -1,0 +1,7 @@
+id,content,binary-content
+1,"POINT (30 10)",
+2,"POINT (10 30)",
+3,"POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))",
+4,"POINT Z (10 20 30)",
+5,"SRID=4326;POINT (10 20)",
+6,"SRID=2932;POINT (10 20)",

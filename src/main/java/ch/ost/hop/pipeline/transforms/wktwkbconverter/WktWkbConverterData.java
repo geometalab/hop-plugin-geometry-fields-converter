@@ -15,19 +15,19 @@
  * limitations under the License.
  */
 
-package ch.ost.hop.plugins.transforms;
+package ch.ost.hop.pipeline.transforms.wktwkbconverter;
 
 import org.apache.hop.core.row.IRowMeta;
 import org.apache.hop.core.row.IValueMeta;
 import org.apache.hop.pipeline.transform.BaseTransformData;
 import org.apache.hop.pipeline.transform.ITransformData;
 
-public class Wkt2WkbData extends BaseTransformData implements ITransformData {
+public class WktWkbConverterData extends BaseTransformData implements ITransformData {
 
   /**
    * Default constructor for SampleData.
    */
-  public Wkt2WkbData() {
+  public WktWkbConverterData() {
     super();
   }
 
