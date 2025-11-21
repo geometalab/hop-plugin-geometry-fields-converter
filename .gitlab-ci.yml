@@ -38,6 +38,8 @@ integration_tests:
     name: apache/hop:latest
     entrypoint: [ "" ]
   script:
-    - mkdir /opt/hop/plugins/transforms/wktwkbconverter
+    - mkdir -p /files
+    - mkdir -p /opt/hop/plugins/transforms/wktwkbconverter
+    - cp -r integration_test/* /files/
     - cp -r target/* /opt/hop/plugins/transforms/wktwkbconverter/
-    - /opt/hop/hop-run.sh -r local -f integration_test/pipeline.hpl
+    - /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl
