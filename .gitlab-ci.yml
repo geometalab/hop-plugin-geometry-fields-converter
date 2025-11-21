@@ -40,4 +40,4 @@ integration_tests:
   script:
     - mkdir /opt/hop/plugins/transforms/wktwkbconverter
     - cp -r target/* /opt/hop/plugins/transforms/wktwkbconverter/
-    - /opt/hop/hop-run.sh r local -f integration_test/pipeline.hpl
+    - /opt/hop/hop-run.sh -r local -f integration_test/pipeline.hpl
