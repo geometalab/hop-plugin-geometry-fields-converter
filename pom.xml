@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
@@ -9,7 +9,7 @@
 
     <artifactId>wktwkbconverter</artifactId>
     <groupId>com.example.hop</groupId>
-    <name>WKT/WKB</name>
+    <name>WKT/WKB Converter</name>
     <packaging>jar</packaging>
     <version>0.1.0</version>
 
@@ -21,7 +21,7 @@
         <jandex.version>3.2.3</jandex.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jandex.version>3.1.6</jandex.version>
-        <hop.plugins.dir>wktwkbconverter</hop.plugins.dir>
+        <hop.plugins.dir>C:\Users\simon\workspace\sa\hop\plugins\transforms\wktwkbconverter</hop.plugins.dir>
     </properties>
 
     <build>
@@ -58,7 +58,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>3.1.0</version>
@@ -83,7 +82,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.0.0-M7</version>
@@ -96,13 +94,38 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.0</version>
 
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+
+                            <!-- EXCLUSIONS -->
+                            <excludeGroupIds>
+                                com.google.guava,org.postgresql
+                            </excludeGroupIds>
+
+                            <excludeArtifactIds>
+                                junit,hop-core,hop-ui,hop-engine
+                            </excludeArtifactIds>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

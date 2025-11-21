@@ -23,6 +23,8 @@ build:
   artifacts:
     paths:
       - target/*.jar
+      - version.xml
+      - target/lib/
 
 unit_tests:
   stage: test
@@ -32,4 +34,12 @@ unit_tests:
 integration_tests:
   stage: test
   script:
-    - mvn integration-test
+    - docker run -v target:/opt/hop/plugins/transforms/wktwkbconverter
+      -v integration_test:/files -it --rm
+      --env HOP_LOG_LEVEL=Basic
+      --env HOP_FILE_PATH=/files/pipeline.hpl
+      --env HOP_PROJECT_FOLDER=/files
+      --env HOP_PROJECT_NAME=integration_test
+      --env HOP_RUN_CONFIG=local
+      --name hop-test-container
+      apache/hop:latest
