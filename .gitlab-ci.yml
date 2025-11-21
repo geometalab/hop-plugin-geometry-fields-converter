@@ -20,10 +20,11 @@ build:
   stage: build
   script:
     - mvn clean package
+    - mv version.xml target/version.xml
   artifacts:
     paths:
       - target/*.jar
-      - version.xml
+      - target/version.xml
       - target/lib/
 
 unit_tests:
