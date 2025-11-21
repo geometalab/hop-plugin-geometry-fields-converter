@@ -43,3 +43,4 @@ integration_tests:
     - cp -r integration_test/* /files/
     - cp -r target/* /opt/hop/plugins/transforms/wktwkbconverter/
     - /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl
+    - echo Test
