@@ -1,4 +1,4 @@
-package ch.ost.hop.pipeline.transforms.wktwkb;
+package ch.ost.hop.pipeline.transforms.wktwkbconverter;
 
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.io.*;
@@ -26,15 +26,13 @@ public class WktWkbConverterUnitTests {
     assertEquals(wkt, WktWkbConverter.wkbToWkt(wkb, true));
   }
 
-  /*@Test
-  public void testEWKTToEWKB() throws Exception {
-    String ewkt = "SRID=4326;POINT(-44.3 60.1)";
-    byte[] ewkb = hexStringToByteArray("0101000020E610000033333333333346C09A99999999993E40");
-
-    assertEquals(ewkb, WktWkbConverter.wktToWkb(ewkt, 0, true));
+  @Test
+  public void testEWKTToEWKBandBack() throws Exception {
+    String ewkt = "SRID=4326;POINT (-44.3 60.1)";
+    assertEquals(ewkt, WktWkbConverter.wkbToWkt(WktWkbConverter.wktToWkb(ewkt, 0, true), true));
   }
 
-  @Test
+  /*@Test
   public void testEWKBToEWKT() throws Exception {
     String ewkt = "SRID=4326;POINT(-44.3 60.1)";
     byte[] ewkb = hexStringToByteArray("0101000020E610000033333333333346C09A99999999993E40");

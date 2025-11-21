@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package ch.ost.hop.pipeline.transforms.wktwkb;
+package ch.ost.hop.pipeline.transforms.wktwkbconverter;
 
 import org.apache.hop.core.ICheckResult;
 import org.apache.hop.core.annotations.Transform;
@@ -61,7 +61,7 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
   private int endianness = 0;
 
   @HopMetadataProperty(key = "srid", injectionKeyDescription = "WktWkb.Injection.SRID")
-  private boolean SRIDEnabled = true;
+  private boolean SRIDIncluded = true;
 
   public String getInputField() {
     return inputField;
@@ -95,12 +95,12 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
     this.endianness = endianness;
   }
 
-  public boolean isSRIDEnabled() {
-    return SRIDEnabled;
+  public boolean isSRIDIncluded() {
+    return SRIDIncluded;
   }
 
-  public void setSRIDEnabled(boolean SRIDEnabled) {
-    this.SRIDEnabled = SRIDEnabled;
+  public void setSRIDIncluded(boolean SRIDIncluded) {
+    this.SRIDIncluded = SRIDIncluded;
   }
 
   @Override

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package ch.ost.hop.pipeline.transforms.wktwkb;
+package ch.ost.hop.pipeline.transforms.wktwkbconverter;
 
 import org.apache.hop.core.Const;
 import org.apache.hop.core.exception.HopException;
@@ -79,10 +79,10 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       if (meta.isWktToWkb()) {
         String inWKT = Const.NVL(data.inputMeta.getString(inputRow[data.inputFieldIndex]), "");
         outputRow[data.outputFieldIndex] =
-            wktToWkb(inWKT, meta.getEndianness(), meta.isSRIDEnabled());
+            wktToWkb(inWKT, meta.getEndianness(), meta.isSRIDIncluded());
       } else {
         byte[] inWKB = data.inputMeta.getBinary(inputRow[data.inputFieldIndex]);
-        outputRow[data.outputFieldIndex] = wkbToWkt(inWKB, meta.isSRIDEnabled());
+        outputRow[data.outputFieldIndex] = wkbToWkt(inWKB, meta.isSRIDIncluded());
       }
       putRow(data.outputRowMeta, outputRow);
     } catch (Exception e) {

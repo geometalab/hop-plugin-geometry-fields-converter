@@ -1,4 +1,4 @@
-package ch.ost.hop.pipeline.transforms.wktwkb;
+package ch.ost.hop.pipeline.transforms.wktwkbconverter;
 
 import org.apache.hop.core.HopEnvironment;
 import org.apache.hop.pipeline.PipelineMeta;

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package ch.ost.hop.pipeline.transforms.wktwkb;
+package ch.ost.hop.pipeline.transforms.wktwkbconverter;
 
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.exception.HopTransformException;
@@ -377,7 +377,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
       wLilEndian.setSelection(true);
     }
 
-    wSRIDButton.setSelection(input.isSRIDEnabled());
+    wSRIDButton.setSelection(input.isSRIDIncluded());
   }
 
   private void setComboValues() {
@@ -402,7 +402,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     input.setOutputField(wOutputFieldCombo.getText());
     input.setWktToWkb(wWktToWkb.getSelection());
     input.setEndianness(wBigEndian.getSelection() ? 0 : 1);
-    input.setSRIDEnabled(wSRIDButton.getSelection());
+    input.setSRIDIncluded(wSRIDButton.getSelection());
   }
 
   /** Cancel the dialog. */
