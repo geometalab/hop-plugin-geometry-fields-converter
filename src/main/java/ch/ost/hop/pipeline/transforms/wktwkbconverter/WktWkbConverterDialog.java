@@ -38,9 +38,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import java.util.*;
@@ -52,13 +50,18 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private final WktWkbConverterMeta input;
   private ComboVar wInputFieldCombo;
   private ComboVar wOutputFieldCombo;
-  private Button wWktToWkb;
-  private Button wWkbToWkt;
+  private Button wFromWKTButton;
+  private Button wFromWKBButton;
+  private Button wFromPCButton;
+  private Button wToWKTButton;
+  private Button wToWKBButton;
+  private Button wToPCButton;
   private Button wLilEndian;
   private Button wBigEndian;
   private Button wSRIDButton;
   private TextVar wSRIDField;
-  private TextVar wOptionsField;
+
+  private int margin;
 
   private final Map<String, Integer> fields;
 
@@ -80,7 +83,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     shell.setMinimumSize(400, 520);
     setShellImage(shell, input);
 
-    int margin = PropsUi.getMargin();
+    margin = PropsUi.getMargin();
 
     ModifyListener lsMod = e -> input.setChanged();
     SelectionAdapter lsSelMod =
@@ -126,172 +129,21 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fdSpacer.right = new FormAttachment(100, 0);
     spacer.setLayoutData(fdSpacer);
 
-    Label wicon = new Label(shell, SWT.RIGHT);
-    wicon.setImage(getImage());
-    FormData fdlicon = new FormData();
-    fdlicon.top = new FormAttachment(0, 0);
-    fdlicon.right = new FormAttachment(100, 0);
-    fdlicon.bottom = new FormAttachment(spacer, 0);
-    wicon.setLayoutData(fdlicon);
-    PropsUi.setLook(wicon);
+    Label wIcon = new Label(shell, SWT.RIGHT);
+    wIcon.setImage(getImage());
+    FormData fdIcon = new FormData();
+    fdIcon.top = new FormAttachment(0, 0);
+    fdIcon.right = new FormAttachment(100, 0);
+    fdIcon.bottom = new FormAttachment(spacer, 0);
+    wIcon.setLayoutData(fdIcon);
+    PropsUi.setLook(wIcon);
 
-    // Radio buttons for conversion direction
-    Group wConversionGroup = new Group(shell, SWT.SHADOW_NONE);
-    wConversionGroup.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.Label"));
-    PropsUi.setLook(wConversionGroup);
-    FormLayout conversionLayout = new FormLayout();
-    conversionLayout.marginWidth = 10;
-    conversionLayout.marginHeight = 10;
-    wConversionGroup.setLayout(conversionLayout);
+    Group wConversionGroup = createConversionGroup(spacer, lsSelMod);
+    Group wEndiannessGroup = createEndiannessGroup(wConversionGroup, lsSelMod);
+    Group wOptionsGroup = createOptionsGroup(wEndiannessGroup, lsSelMod, lsMod);
+    Group inputGroup = createInputGroup(lsMod, wOptionsGroup);
+    Group outputGroup = createOutputGroup(lsMod, inputGroup);
 
-    FormData fdConversionGroup = new FormData();
-    fdConversionGroup.left = new FormAttachment(0, 0);
-    fdConversionGroup.top = new FormAttachment(spacer, 10);
-    fdConversionGroup.right = new FormAttachment(100, 0);
-    wConversionGroup.setLayoutData(fdConversionGroup);
-
-    // "WKT to WKB" radio button
-    wWktToWkb = new Button(wConversionGroup, SWT.RADIO);
-    wWktToWkb.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.WKTtoWKB.Button"));
-    PropsUi.setLook(wWktToWkb);
-    FormData fdWktToWkb = new FormData();
-    fdWktToWkb.left = new FormAttachment(0, 0);
-    fdWktToWkb.top = new FormAttachment(0, 0);
-    wWktToWkb.setLayoutData(fdWktToWkb);
-
-    // "WKB to WKT" radio button
-    wWkbToWkt = new Button(wConversionGroup, SWT.RADIO);
-    wWkbToWkt.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.WKBtoWKT.Button"));
-    PropsUi.setLook(wWkbToWkt);
-    FormData fdWkbToWkt = new FormData();
-    fdWkbToWkt.left = new FormAttachment(wWktToWkb, 20);
-    fdWkbToWkt.top = new FormAttachment(0, 0);
-    wWkbToWkt.setLayoutData(fdWkbToWkt);
-
-    wWktToWkb.addSelectionListener(lsSelMod);
-    wWkbToWkt.addSelectionListener(lsSelMod);
-
-    // Endianness Selection
-    Group wEndiannessGroup = new Group(shell, SWT.SHADOW_NONE);
-    wEndiannessGroup.setText(BaseMessages.getString(PKG, "WktWkb.Endianness.Label"));
-    PropsUi.setLook(wEndiannessGroup);
-    FormLayout endiannessLayout = new FormLayout();
-    endiannessLayout.marginWidth = 10;
-    endiannessLayout.marginHeight = 10;
-    wEndiannessGroup.setLayout(endiannessLayout);
-
-    FormData fdEndiannessGroup = new FormData();
-    fdEndiannessGroup.left = new FormAttachment(0, 0);
-    fdEndiannessGroup.top = new FormAttachment(wConversionGroup, 10);
-    fdEndiannessGroup.right = new FormAttachment(100, 0);
-    wEndiannessGroup.setLayoutData(fdEndiannessGroup);
-
-    // "Big Endian" radio button
-    wBigEndian = new Button(wEndiannessGroup, SWT.RADIO);
-    wBigEndian.setText(BaseMessages.getString(PKG, "WktWkb.BigEndian.Button"));
-    PropsUi.setLook(wBigEndian);
-    FormData fdBigEndian = new FormData();
-    fdBigEndian.left = new FormAttachment(0, 0);
-    fdBigEndian.top = new FormAttachment(0, 0);
-    wBigEndian.setLayoutData(fdBigEndian);
-
-    // "Little Endian" radio button
-    wLilEndian = new Button(wEndiannessGroup, SWT.RADIO);
-    wLilEndian.setText(BaseMessages.getString(PKG, "WktWkb.LittleEndian.Button"));
-    PropsUi.setLook(wLilEndian);
-    FormData fdLilEndian = new FormData();
-    fdLilEndian.left = new FormAttachment(wBigEndian, 20);
-    fdLilEndian.top = new FormAttachment(0, 0);
-    wLilEndian.setLayoutData(fdLilEndian);
-
-    Listener updateEndianness =
-        e -> {
-          boolean enable = wWktToWkb.getSelection();
-          wEndiannessGroup.setEnabled(enable);
-          wBigEndian.setEnabled(enable);
-          wLilEndian.setEnabled(enable);
-        };
-
-    wWktToWkb.addListener(SWT.Selection, updateEndianness);
-    wWkbToWkt.addListener(SWT.Selection, updateEndianness);
-
-    wLilEndian.addSelectionListener(lsSelMod);
-    wBigEndian.addSelectionListener(lsSelMod);
-
-    // Options Group
-    Group wOptionsGroup = new Group(shell, SWT.SHADOW_NONE);
-    wOptionsGroup.setText(BaseMessages.getString(PKG, "WktWkb.Options.Label"));
-    PropsUi.setLook(wOptionsGroup);
-    FormLayout optionsLayout = new FormLayout();
-    optionsLayout.marginWidth = 10;
-    optionsLayout.marginHeight = 10;
-    wOptionsGroup.setLayout(optionsLayout);
-
-    FormData fdOptionsGroup = new FormData();
-    fdOptionsGroup.left = new FormAttachment(0, 0);
-    fdOptionsGroup.top = new FormAttachment(wEndiannessGroup, 10);
-    fdOptionsGroup.right = new FormAttachment(100, 0);
-    wOptionsGroup.setLayoutData(fdOptionsGroup);
-
-    // SRID checkbox
-    wSRIDButton = new Button(wOptionsGroup, SWT.CHECK);
-    wSRIDButton.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Button"));
-    wSRIDButton.setToolTipText(BaseMessages.getString(PKG, "WktWkb.SRID.Button.Tooltip"));
-    PropsUi.setLook(wSRIDButton);
-    wSRIDButton.addSelectionListener(lsSelMod);
-
-    Listener updateSRIDFieldListener =
-        e -> {
-          wSRIDField.setEnabled(wSRIDButton.getSelection());
-        };
-
-    wSRIDButton.addListener(SWT.Selection, updateSRIDFieldListener);
-
-    FormData fdSRIDButton = new FormData();
-    fdSRIDButton.left = new FormAttachment(0, 0);
-    fdSRIDButton.top = new FormAttachment(0, 0);
-    wSRIDButton.setLayoutData(fdSRIDButton);
-
-    Label wSRIDFieldLabel = new Label(wOptionsGroup, SWT.RIGHT);
-    wSRIDFieldLabel.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Label"));
-    PropsUi.setLook(wSRIDFieldLabel);
-
-    FormData fdSRIDFieldLabel = new FormData();
-    fdSRIDFieldLabel.left = new FormAttachment(wSRIDButton, margin);
-    fdSRIDFieldLabel.top = new FormAttachment(wEndiannessGroup, 0);
-    wSRIDFieldLabel.setLayoutData(fdSRIDFieldLabel);
-
-    wSRIDField = new TextVar(variables, wOptionsGroup, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
-    wSRIDField.setToolTipText(BaseMessages.getString(PKG, "WktWkb.SRID.Field.Tooltip"));
-    PropsUi.setLook(wSRIDField);
-    wSRIDField.addModifyListener(lsMod);
-
-    FormData fdSRIDField = new FormData();
-    fdSRIDField.left = new FormAttachment(wSRIDFieldLabel, margin);
-    fdSRIDField.top = new FormAttachment(wEndiannessGroup, 0);
-    fdSRIDField.right = new FormAttachment(100, 0);
-    wSRIDField.setLayoutData(fdSRIDField);
-
-    wSRIDField.addModifyListener(e -> input.setChanged());
-
-    wSRIDField.addListener(
-        SWT.Verify,
-        e -> {
-          if (!e.text.matches("\\d*")) {
-            e.doit = false;
-          }
-        });
-
-    //    wOptionsField = new TextVar(variables, wOptionsGroup, SWT.SINGLE | SWT.BORDER);
-    //    PropsUi.setLook(wOptionsField);
-    //    wOptionsField.addModifyListener(lsMod);
-    //    FormData fdOptionsText = new FormData();
-    //    fdOptionsText.left = new FormAttachment(0, 0);
-
-    Control inputFieldSelection = createInputFieldSelection(lsMod, wOptionsGroup, margin);
-    Control outputFieldSelection = createOutputFieldSelection(lsMod, inputFieldSelection, margin);
-
-    // Some buttons
     wCancel = new Button(shell, SWT.PUSH);
     wCancel.setText(BaseMessages.getString(PKG, "System.Button.Cancel"));
     FormData fdCancel = new FormData();
@@ -331,8 +183,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     input.setChanged(changed);
     setComboValues();
 
-    wBigEndian.setEnabled(wWktToWkb.getSelection());
-    wLilEndian.setEnabled(wWktToWkb.getSelection());
+    wBigEndian.setEnabled(wFromWKTButton.getSelection());
+    wLilEndian.setEnabled(wFromWKTButton.getSelection());
     wSRIDField.setEnabled(wSRIDButton.getSelection());
 
     BaseDialog.defaultShellHandling(shell, c -> ok(), c -> cancel());
@@ -340,8 +192,209 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     return transformName;
   }
 
-  private Control createInputFieldSelection(ModifyListener lsMod, Control attachment, int margin) {
-    Label wlInputFieldLabel = new Label(shell, SWT.RIGHT);
+  private Group createConversionGroup(Control attachment, SelectionAdapter lsSelMod) {
+    Group wConversionGroup = new Group(shell, SWT.SHADOW_NONE);
+    wConversionGroup.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.Label"));
+    PropsUi.setLook(wConversionGroup);
+    FormLayout conversionLayout = new FormLayout();
+    conversionLayout.marginWidth = 10;
+    conversionLayout.marginHeight = 10;
+    wConversionGroup.setLayout(conversionLayout);
+
+    FormData fdConversionGroup = new FormData();
+    fdConversionGroup.left = new FormAttachment(0, 0);
+    fdConversionGroup.top = new FormAttachment(attachment, 10);
+    wConversionGroup.setLayoutData(fdConversionGroup);
+
+    Composite fromComposite = new Composite(wConversionGroup, SWT.NONE);
+    fromComposite.setLayout(new GridLayout(4, false));
+    FormData fdFromComposite = new FormData();
+    fdFromComposite.left = new FormAttachment(0, 0);
+    fdFromComposite.top = new FormAttachment(0, 0);
+    fdFromComposite.right = new FormAttachment(100, 0);
+    fromComposite.setLayoutData(fdFromComposite);
+
+    Label wFromLabel = new Label(fromComposite, SWT.RIGHT);
+    wFromLabel.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.From.Label"));
+    PropsUi.setLook(wFromLabel);
+
+    wFromWKTButton = new Button(fromComposite, SWT.RADIO);
+    wFromWKTButton.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.WKT.Button"));
+    wFromWKTButton.addSelectionListener(lsSelMod);
+    PropsUi.setLook(wFromWKTButton);
+    GridData gdFromWKTButton = new GridData();
+    gdFromWKTButton.horizontalIndent = 20;
+    wFromWKTButton.setLayoutData(gdFromWKTButton);
+
+    wFromWKBButton = new Button(fromComposite, SWT.RADIO);
+    wFromWKBButton.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.WKB.Button"));
+    wFromWKBButton.addSelectionListener(lsSelMod);
+    PropsUi.setLook(wFromWKBButton);
+
+    wFromPCButton = new Button(fromComposite, SWT.RADIO);
+    wFromPCButton.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.PC.Button"));
+    wFromPCButton.addSelectionListener(lsSelMod);
+    PropsUi.setLook(wFromPCButton);
+
+    Composite toComposite = new Composite(wConversionGroup, SWT.NONE);
+    toComposite.setLayout(new GridLayout(4, false));
+    FormData fdToComposite = new FormData();
+    fdToComposite.left = new FormAttachment(0, 0);
+    fdToComposite.top = new FormAttachment(fromComposite, 8); // below the "from" row
+    fdToComposite.right = new FormAttachment(100, 0);
+    toComposite.setLayoutData(fdToComposite);
+
+    Label wToLabel = new Label(toComposite, SWT.RIGHT);
+    wToLabel.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.To.Label"));
+    PropsUi.setLook(wToLabel);
+
+    wToWKTButton = new Button(toComposite, SWT.RADIO);
+    wToWKTButton.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.WKT.Button"));
+    wToWKTButton.addSelectionListener(lsSelMod);
+    PropsUi.setLook(wToWKTButton);
+    GridData gdToWKTButton = new GridData();
+    gdToWKTButton.horizontalIndent = 35;
+    wToWKTButton.setLayoutData(gdToWKTButton);
+
+    wToWKBButton = new Button(toComposite, SWT.RADIO);
+    wToWKBButton.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.WKB.Button"));
+    wToWKBButton.addSelectionListener(lsSelMod);
+    PropsUi.setLook(wToWKBButton);
+
+    wToPCButton = new Button(toComposite, SWT.RADIO);
+    wToPCButton.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.PC.Button"));
+    wToPCButton.addSelectionListener(lsSelMod);
+    PropsUi.setLook(wToPCButton);
+
+    return wConversionGroup;
+  }
+
+  private Group createEndiannessGroup(Group attachment, SelectionAdapter lsSelMod) {
+    Group wEndiannessGroup = new Group(shell, SWT.SHADOW_NONE);
+    wEndiannessGroup.setText(BaseMessages.getString(PKG, "WktWkb.Endianness.Label"));
+    PropsUi.setLook(wEndiannessGroup);
+    FormLayout endiannessLayout = new FormLayout();
+    endiannessLayout.marginWidth = 10;
+    endiannessLayout.marginHeight = 10;
+    wEndiannessGroup.setLayout(endiannessLayout);
+
+    FormData fdEndiannessGroup = new FormData();
+    fdEndiannessGroup.left = new FormAttachment(0, 0);
+    fdEndiannessGroup.top = new FormAttachment(attachment, 10);
+    fdEndiannessGroup.right = new FormAttachment(100, 0);
+    wEndiannessGroup.setLayoutData(fdEndiannessGroup);
+
+    wBigEndian = new Button(wEndiannessGroup, SWT.RADIO);
+    wBigEndian.setText(BaseMessages.getString(PKG, "WktWkb.BigEndian.Button"));
+    PropsUi.setLook(wBigEndian);
+    FormData fdBigEndian = new FormData();
+    fdBigEndian.left = new FormAttachment(0, 0);
+    fdBigEndian.top = new FormAttachment(0, 0);
+    wBigEndian.setLayoutData(fdBigEndian);
+
+    wLilEndian = new Button(wEndiannessGroup, SWT.RADIO);
+    wLilEndian.setText(BaseMessages.getString(PKG, "WktWkb.LittleEndian.Button"));
+    PropsUi.setLook(wLilEndian);
+    FormData fdLilEndian = new FormData();
+    fdLilEndian.left = new FormAttachment(wBigEndian, 20);
+    fdLilEndian.top = new FormAttachment(0, 0);
+    wLilEndian.setLayoutData(fdLilEndian);
+
+    Listener updateEndianness =
+        e -> {
+          boolean enable = wFromWKTButton.getSelection();
+          wEndiannessGroup.setEnabled(enable);
+          wBigEndian.setEnabled(enable);
+          wLilEndian.setEnabled(enable);
+        };
+
+    wFromWKTButton.addListener(SWT.Selection, updateEndianness);
+    wFromWKBButton.addListener(SWT.Selection, updateEndianness);
+
+    wLilEndian.addSelectionListener(lsSelMod);
+    wBigEndian.addSelectionListener(lsSelMod);
+    return wEndiannessGroup;
+  }
+
+  private Group createOptionsGroup(
+      Group attachment, SelectionAdapter lsSelMod, ModifyListener lsMod) {
+    Group wOptionsGroup = new Group(shell, SWT.SHADOW_NONE);
+    wOptionsGroup.setText(BaseMessages.getString(PKG, "WktWkb.Options.Label"));
+    PropsUi.setLook(wOptionsGroup);
+    FormLayout optionsLayout = new FormLayout();
+    optionsLayout.marginWidth = 10;
+    optionsLayout.marginHeight = 10;
+    wOptionsGroup.setLayout(optionsLayout);
+
+    FormData fdOptionsGroup = new FormData();
+    fdOptionsGroup.left = new FormAttachment(0, 0);
+    fdOptionsGroup.top = new FormAttachment(attachment, 10);
+    fdOptionsGroup.right = new FormAttachment(100, 0);
+    wOptionsGroup.setLayoutData(fdOptionsGroup);
+
+    wSRIDButton = new Button(wOptionsGroup, SWT.CHECK);
+    wSRIDButton.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Button"));
+    wSRIDButton.setToolTipText(BaseMessages.getString(PKG, "WktWkb.SRID.Button.Tooltip"));
+    PropsUi.setLook(wSRIDButton);
+    wSRIDButton.addSelectionListener(lsSelMod);
+
+    Listener updateSRIDFieldListener =
+        e -> {
+          wSRIDField.setEnabled(wSRIDButton.getSelection());
+        };
+
+    wSRIDButton.addListener(SWT.Selection, updateSRIDFieldListener);
+
+    FormData fdSRIDButton = new FormData();
+    fdSRIDButton.left = new FormAttachment(0, 0);
+    fdSRIDButton.top = new FormAttachment(0, 0);
+    wSRIDButton.setLayoutData(fdSRIDButton);
+
+    Label wSRIDFieldLabel = new Label(wOptionsGroup, SWT.RIGHT);
+    wSRIDFieldLabel.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Label"));
+    PropsUi.setLook(wSRIDFieldLabel);
+    FormData fdSRIDFieldLabel = new FormData();
+    fdSRIDFieldLabel.left = new FormAttachment(wSRIDButton, margin);
+    fdSRIDFieldLabel.top = new FormAttachment(attachment, 0);
+    wSRIDFieldLabel.setLayoutData(fdSRIDFieldLabel);
+
+    wSRIDField = new TextVar(variables, wOptionsGroup, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
+    wSRIDField.setToolTipText(BaseMessages.getString(PKG, "WktWkb.SRID.Field.Tooltip"));
+    PropsUi.setLook(wSRIDField);
+    wSRIDField.addModifyListener(lsMod);
+    FormData fdSRIDField = new FormData();
+    fdSRIDField.left = new FormAttachment(wSRIDFieldLabel, margin);
+    fdSRIDField.top = new FormAttachment(attachment, 0);
+    fdSRIDField.right = new FormAttachment(100, 0);
+    wSRIDField.setLayoutData(fdSRIDField);
+    wSRIDField.addModifyListener(e -> input.setChanged());
+
+    wSRIDField.addListener(
+        SWT.Verify,
+        e -> {
+          if (!e.text.matches("\\d*")) {
+            e.doit = false;
+          }
+        });
+    return wOptionsGroup;
+  }
+
+  private Group createInputGroup(ModifyListener lsMod, Control attachment) {
+    Group wInputGroup = new Group(shell, SWT.SHADOW_NONE);
+    wInputGroup.setText(BaseMessages.getString(PKG, "WktWkb.Input.Label"));
+    PropsUi.setLook(wInputGroup);
+    FormLayout inputLayout = new FormLayout();
+    inputLayout.marginWidth = 10;
+    inputLayout.marginHeight = 10;
+    wInputGroup.setLayout(inputLayout);
+
+    FormData fdInputGroup = new FormData();
+    fdInputGroup.left = new FormAttachment(0, 0);
+    fdInputGroup.top = new FormAttachment(attachment, 10);
+    fdInputGroup.right = new FormAttachment(100, 0);
+    wInputGroup.setLayoutData(fdInputGroup);
+
+    Label wlInputFieldLabel = new Label(wInputGroup, SWT.RIGHT);
     wlInputFieldLabel.setText(BaseMessages.getString(PKG, "WktWkb.InputFieldSelection.Label"));
     PropsUi.setLook(wlInputFieldLabel);
     FormData fdlFilePathLabel = new FormData();
@@ -349,7 +402,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fdlFilePathLabel.top = new FormAttachment(attachment, margin);
     wlInputFieldLabel.setLayoutData(fdlFilePathLabel);
 
-    wInputFieldCombo = new ComboVar(variables, shell, SWT.DROP_DOWN | SWT.BORDER);
+    wInputFieldCombo = new ComboVar(variables, wInputGroup, SWT.DROP_DOWN | SWT.BORDER);
     wInputFieldCombo.setToolTipText(
         BaseMessages.getString(PKG, "WktWkb.InputFieldSelection.Tooltip"));
     PropsUi.setLook(wInputFieldCombo);
@@ -363,11 +416,25 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wInputFieldCombo.addModifyListener(e -> input.setChanged());
 
-    return wInputFieldCombo;
+    return wInputGroup;
   }
 
-  private Control createOutputFieldSelection(ModifyListener lsMod, Control attachment, int margin) {
-    Label wlOutputFieldLabel = new Label(shell, SWT.RIGHT);
+  private Group createOutputGroup(ModifyListener lsMod, Control attachment) {
+    Group wOutputGroup = new Group(shell, SWT.SHADOW_NONE);
+    wOutputGroup.setText(BaseMessages.getString(PKG, "WktWkb.Output.Label"));
+    PropsUi.setLook(wOutputGroup);
+    FormLayout outputLayout = new FormLayout();
+    outputLayout.marginWidth = 10;
+    outputLayout.marginHeight = 10;
+    wOutputGroup.setLayout(outputLayout);
+
+    FormData fdOutputGroup = new FormData();
+    fdOutputGroup.left = new FormAttachment(0, 0);
+    fdOutputGroup.top = new FormAttachment(attachment, 10);
+    fdOutputGroup.right = new FormAttachment(100, 0);
+    wOutputGroup.setLayoutData(fdOutputGroup);
+
+    Label wlOutputFieldLabel = new Label(wOutputGroup, SWT.RIGHT);
     wlOutputFieldLabel.setText(BaseMessages.getString(PKG, "WktWkb.OutputFieldSelection.Label"));
     PropsUi.setLook(wlOutputFieldLabel);
     FormData fdlOutputFieldLabel = new FormData();
@@ -375,7 +442,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fdlOutputFieldLabel.top = new FormAttachment(attachment, margin);
     wlOutputFieldLabel.setLayoutData(fdlOutputFieldLabel);
 
-    wOutputFieldCombo = new ComboVar(variables, shell, SWT.DROP_DOWN | SWT.BORDER);
+    wOutputFieldCombo = new ComboVar(variables, wOutputGroup, SWT.DROP_DOWN | SWT.BORDER);
     wOutputFieldCombo.setToolTipText(
         BaseMessages.getString(PKG, "WktWkb.OutputFieldSelection.Tooltip"));
     PropsUi.setLook(wOutputFieldCombo);
@@ -388,7 +455,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wOutputFieldCombo.addModifyListener(e -> input.setChanged());
 
-    return wOutputFieldCombo;
+    return wOutputGroup;
   }
 
   private Image getImage() {
@@ -413,13 +480,13 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wTransformName.setFocus();
 
     if (input.isWktToWkb()) {
-      wWktToWkb.setSelection(true);
+      wFromWKTButton.setSelection(true);
     } else {
-      wWkbToWkt.setSelection(true);
+      wFromWKBButton.setSelection(true);
     }
 
     if (input.isAddSRID()) {
-        wSRIDField.setText(Integer.toString(input.getSrid()));
+      wSRIDField.setText(Integer.toString(input.getSrid()));
     }
 
     if (input.getEndianness() == 0) {
@@ -450,7 +517,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private void getInfo(WktWkbConverterMeta in) {
     input.setInputField(wInputFieldCombo.getText());
     input.setOutputField(wOutputFieldCombo.getText());
-    input.setWktToWkb(wWktToWkb.getSelection());
+    input.setWktToWkb(wFromWKTButton.getSelection());
     input.setEndianness(wBigEndian.getSelection() ? 1 : 2);
     input.setAddSRID(wSRIDButton.getSelection());
     input.setSrid(Integer.parseInt(!wSRIDField.getText().isEmpty() ? wSRIDField.getText() : "0"));

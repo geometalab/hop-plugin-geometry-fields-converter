@@ -58,7 +58,7 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
 
   /* Endianness in WKB is defined by its first byte, 1: big endian, 2: little endian */
   @HopMetadataProperty(key = "endianness", injectionKeyDescription = "WktWkb.Injection.Endianness")
-  private int endianness = 0;
+  private int endianness = 1;
 
   @HopMetadataProperty(key = "add_srid", injectionKeyDescription = "WktWkb.Injection.AddSRID")
   private boolean addSRID = false;
