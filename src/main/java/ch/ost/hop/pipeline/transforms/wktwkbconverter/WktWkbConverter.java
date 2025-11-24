@@ -110,11 +110,11 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
             BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.DialogMessage"));
       }
     }
-      Geometry geometry;
+    Geometry geometry;
     try {
-    geometry = new WKTReader().read(geomStr);
+      geometry = new WKTReader().read(geomStr);
     } catch (ParseException e) {
-        throw new HopException("WktWkb.GeometryIncorrectlyFormated.DialogMessage" + wkt, e);
+      throw new HopException("WktWkb.GeometryIncorrectlyFormated.DialogMessage" + wkt, e);
     }
     int outputDimension = getDimensions(geometry);
     var byteOrder = getByteOrder(endianness);
@@ -129,25 +129,34 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
     return new WKBWriter(outputDimension, byteOrder, includeSRID).write(geometry);
   }
 
-  public static String wkbToWkt(byte[] wkb, boolean addSRID, int srid) throws Exception {
-    WKBReader reader = new WKBReader();
-    Geometry geometry = reader.read(wkb);
+  public static String wkbToWkt(byte[] wkb, boolean addSRID, int newSRID) throws Exception {
+    Geometry geometry;
+    try {
+      geometry = new WKBReader().read(wkb);
+    } catch (ParseException e) {
+      throw new HopException("WktWkb.GeometryIncorrectlyFormated.DialogMessage", e);
+    }
     int outputDimension = getDimensions(geometry);
     String wkt = new WKTWriter(outputDimension).write(geometry);
+    int currentSRID = geometry.getSRID();
+    boolean hasSRID = currentSRID != 0;
     if (!addSRID) {
-      if (geometry.getSRID() != 0) {
-        return String.format("SRID=%d;%s", geometry.getSRID(), wkt);
+      if (hasSRID) {
+        return formatEWKT(wkt, currentSRID);
       } else {
         return wkt;
       }
     } else {
-      if (geometry.getSRID() == 0) {
-        return String.format("SRID=%d;%s", srid, wkt);
-      } else {
+      if (hasSRID) {
         throw new HopException(
             BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.DialogMessage"));
       }
+      return formatEWKT(wkt, newSRID);
     }
+  }
+
+  private static String formatEWKT(String wkt, int srid) {
+    return String.format("SRID=%d;%s", srid, wkt);
   }
 
   private static int getByteOrder(int endianness) {

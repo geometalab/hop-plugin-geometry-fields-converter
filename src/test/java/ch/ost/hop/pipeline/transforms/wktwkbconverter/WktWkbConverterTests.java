@@ -1,5 +1,6 @@
 package ch.ost.hop.pipeline.transforms.wktwkbconverter;
 
+import org.apache.hop.core.exception.HopException;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.io.*;
 
@@ -46,7 +47,7 @@ public class WktWkbConverterTests {
   @Test
   public void testFalseWKT() throws ParseException {
     String wkt = "test string you're supposed to fail";
-    assertThrows(ParseException.class, () -> WktWkbConverter.wktToWkb(wkt, 0, false, 0));
+    assertThrows(HopException.class, () -> WktWkbConverter.wktToWkb(wkt, 0, false, 0));
   }
 
   public static byte[] hexStringToByteArray(String s) {
