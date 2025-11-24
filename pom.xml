@@ -21,7 +21,7 @@
         <jandex.version>3.2.3</jandex.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jandex.version>3.1.6</jandex.version>
-        <hop.plugins.dir>C:\Users\simon\workspace\sa\hop\plugins\transforms\wktwkbconverter</hop.plugins.dir>
+        <hop.plugins.dir>C:\Users\simon\workspace\hop\plugins\transforms\wktwkbconverter</hop.plugins.dir>
     </properties>
 
     <build>
@@ -165,7 +165,7 @@
         <dependency>
             <groupId>org.locationtech.jts</groupId>
             <artifactId>jts-core</artifactId>
-            <version>1.19.0</version>
+            <version>1.20.0</version>
         </dependency>
     </dependencies>
 
