@@ -45,7 +45,7 @@ public class WktWkbConverterTests {
   }
 
   @Test
-  public void testFalseWKT() throws ParseException {
+  public void testFalseWKT() {
     String wkt = "test string you're supposed to fail";
     assertThrows(HopException.class, () -> WktWkbConverter.wktToWkb(wkt, 0, false, 0));
   }

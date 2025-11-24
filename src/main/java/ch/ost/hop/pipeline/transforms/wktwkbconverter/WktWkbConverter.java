@@ -105,7 +105,6 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       }
       geomStr = parts[1];
       if (addSRID && oldSrid != newSrid) {
-        addSRID = false;
         throw new HopException(
             BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.DialogMessage"));
       }
