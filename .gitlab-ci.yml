@@ -43,3 +43,10 @@ integration_tests:
     - cp -r integration_test/* /files/
     - cp -r target/* /opt/hop/plugins/transforms/wktwkbconverter/
     - /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl
+
+code_quality:
+  extends: .dockerhub_login
+
+.dockerhub_login:
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
