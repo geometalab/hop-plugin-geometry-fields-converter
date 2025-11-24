@@ -56,7 +56,6 @@
     <header>Y</header>
     <buffer_size>50000</buffer_size>
     <schemaDefinition/>
-    <ignoreFields>N</ignoreFields>
     <lazy_conversion>Y</lazy_conversion>
     <add_filename_result>N</add_filename_result>
     <parallel>N</parallel>
@@ -115,7 +114,6 @@
       <schema_name/>
     </partitioning>
     <schema_definition/>
-    <ignore_fields>N</ignore_fields>
     <separator>;</separator>
     <enclosure>"</enclosure>
     <enclosure_forced>N</enclosure_forced>
@@ -165,11 +163,12 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <add_srid>Y</add_srid>
     <endianness>1</endianness>
     <input_field>content</input_field>
     <is_wkt_to_wkb>Y</is_wkt_to_wkb>
     <output_field>binary-content</output_field>
-    <srid>Y</srid>
+    <srid>0</srid>
     <attributes/>
     <GUI>
       <xloc>528</xloc>
@@ -187,11 +186,12 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <add_srid>Y</add_srid>
     <endianness>1</endianness>
     <input_field>binary-content</input_field>
     <is_wkt_to_wkb>N</is_wkt_to_wkb>
     <output_field>content</output_field>
-    <srid>Y</srid>
+    <srid>0</srid>
     <attributes/>
     <GUI>
       <xloc>688</xloc>
