@@ -79,64 +79,87 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       if (meta.isWktToWkb()) {
         String inWKT = Const.NVL(data.inputMeta.getString(inputRow[data.inputFieldIndex]), "");
         outputRow[data.outputFieldIndex] =
-            wktToWkb(inWKT, meta.getEndianness(), meta.isSRIDIncluded());
+            wktToWkb(inWKT, meta.getEndianness(), meta.isAddSRID(), meta.getSrid());
       } else {
         byte[] inWKB = data.inputMeta.getBinary(inputRow[data.inputFieldIndex]);
-        outputRow[data.outputFieldIndex] = wkbToWkt(inWKB, meta.isSRIDIncluded());
+        outputRow[data.outputFieldIndex] = wkbToWkt(inWKB, meta.isAddSRID(), meta.getSrid());
       }
       putRow(data.outputRowMeta, outputRow);
     } catch (Exception e) {
-      System.out.println(e.getMessage());
       throw new HopException(
           BaseMessages.getString(PKG, "WktWkb.FailedToConvert.DialogMessage"), e);
     }
     return true;
   }
 
-  public static byte[] wktToWkb(String wkt, int endianness, boolean includeSRID) throws Exception {
-    String geomStr = null;
-    int srid = 0;
-    String[] parts = null;
+  public static byte[] wktToWkb(String wkt, int endianness, boolean addSRID, int newSrid)
+      throws Exception {
+    String geomStr = wkt;
+    int oldSrid = 0;
     if (wkt.contains(";")) {
-      parts = wkt.split(";");
-      srid = Integer.parseInt(parts[0].split("=")[1]);
+      String[] parts = wkt.split(";", 2);
+      try {
+        oldSrid = Integer.parseInt(parts[0].split("=")[1]);
+      } catch (NumberFormatException e) {
+        throw new HopException("WktWkb.SRIDIncorrectlyFormatted.DialogMessage", e);
+      }
       geomStr = parts[1];
+      if (addSRID && oldSrid != newSrid) {
+        addSRID = false;
+        throw new HopException(
+            BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.DialogMessage"));
+      }
     }
-    geomStr = geomStr == null ? wkt : geomStr;
-    WKTReader reader = new WKTReader();
-    Geometry geometry = reader.read(geomStr);
-    int outputDimension =
-        geometry
-            .getFactory()
-            .getCoordinateSequenceFactory()
-            .create(geometry.getCoordinates())
-            .getDimension();
-    if (includeSRID && parts != null) geometry.setSRID(srid);
-    var byteOrder = endianness == 0 ? ByteOrderValues.BIG_ENDIAN : ByteOrderValues.LITTLE_ENDIAN;
-    WKBWriter writer = new WKBWriter(outputDimension, byteOrder, includeSRID);
-    return writer.write(geometry);
+      Geometry geometry;
+    try {
+    geometry = new WKTReader().read(geomStr);
+    } catch (ParseException e) {
+        throw new HopException("WktWkb.GeometryIncorrectlyFormated.DialogMessage" + wkt, e);
+    }
+    int outputDimension = getDimensions(geometry);
+    var byteOrder = getByteOrder(endianness);
+    boolean includeSRID = false;
+    if (addSRID) {
+      geometry.setSRID(newSrid);
+      includeSRID = true;
+    } else if (oldSrid != 0) {
+      geometry.setSRID(oldSrid);
+      includeSRID = true;
+    }
+    return new WKBWriter(outputDimension, byteOrder, includeSRID).write(geometry);
   }
 
-  public static String wkbToWkt(byte[] wkb, boolean includeSRID) throws Exception {
+  public static String wkbToWkt(byte[] wkb, boolean addSRID, int srid) throws Exception {
     WKBReader reader = new WKBReader();
     Geometry geometry = reader.read(wkb);
-    int outputDimension =
-        geometry
-            .getFactory()
-            .getCoordinateSequenceFactory()
-            .create(geometry.getCoordinates())
-            .getDimension();
-    WKTWriter writer = new WKTWriter(outputDimension);
-    String wkt = writer.write(geometry);
-    if (!includeSRID) {
-      return wkt;
-    } else {
+    int outputDimension = getDimensions(geometry);
+    String wkt = new WKTWriter(outputDimension).write(geometry);
+    if (!addSRID) {
       if (geometry.getSRID() != 0) {
         return String.format("SRID=%d;%s", geometry.getSRID(), wkt);
       } else {
         return wkt;
       }
+    } else {
+      if (geometry.getSRID() == 0) {
+        return String.format("SRID=%d;%s", srid, wkt);
+      } else {
+        throw new HopException(
+            BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.DialogMessage"));
+      }
     }
+  }
+
+  private static int getByteOrder(int endianness) {
+    return endianness == 1 ? ByteOrderValues.BIG_ENDIAN : ByteOrderValues.LITTLE_ENDIAN;
+  }
+
+  private static int getDimensions(Geometry geometry) {
+    return geometry
+        .getFactory()
+        .getCoordinateSequenceFactory()
+        .create(geometry.getCoordinates())
+        .getDimension();
   }
 
   @Override

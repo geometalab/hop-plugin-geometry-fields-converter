@@ -29,7 +29,9 @@ import org.apache.hop.pipeline.transform.ITransformDialog;
 import org.apache.hop.ui.core.ConstUi;
 import org.apache.hop.ui.core.PropsUi;
 import org.apache.hop.ui.core.dialog.BaseDialog;
+import org.apache.hop.ui.core.dialog.ErrorDialog;
 import org.apache.hop.ui.core.widget.ComboVar;
+import org.apache.hop.ui.core.widget.TextVar;
 import org.apache.hop.ui.pipeline.transform.BaseTransformDialog;
 import org.apache.hop.ui.util.SwtSvgImageUtil;
 import org.eclipse.swt.SWT;
@@ -56,6 +58,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private Button wLilEndian;
   private Button wBigEndian;
   private Button wSRIDButton;
+  private TextVar wSRIDField;
+  private TextVar wOptionsField;
 
   private final Map<String, Integer> fields;
 
@@ -215,34 +219,77 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wLilEndian.addSelectionListener(lsSelMod);
     wBigEndian.addSelectionListener(lsSelMod);
 
-    // SRID Selection
-    Group wSRIDGroup = new Group(shell, SWT.SHADOW_NONE);
-    wSRIDGroup.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Label"));
-    PropsUi.setLook(wSRIDGroup);
-    FormLayout sridLayout = new FormLayout();
-    sridLayout.marginWidth = 10;
-    sridLayout.marginHeight = 10;
-    wSRIDGroup.setLayout(sridLayout);
+    // Options Group
+    Group wOptionsGroup = new Group(shell, SWT.SHADOW_NONE);
+    wOptionsGroup.setText(BaseMessages.getString(PKG, "WktWkb.Options.Label"));
+    PropsUi.setLook(wOptionsGroup);
+    FormLayout optionsLayout = new FormLayout();
+    optionsLayout.marginWidth = 10;
+    optionsLayout.marginHeight = 10;
+    wOptionsGroup.setLayout(optionsLayout);
 
-    FormData fdSRIDGroup = new FormData();
-    fdSRIDGroup.left = new FormAttachment(0, 0);
-    fdSRIDGroup.top = new FormAttachment(wEndiannessGroup, 10);
-    fdSRIDGroup.right = new FormAttachment(100, 0);
-    wSRIDGroup.setLayoutData(fdSRIDGroup);
+    FormData fdOptionsGroup = new FormData();
+    fdOptionsGroup.left = new FormAttachment(0, 0);
+    fdOptionsGroup.top = new FormAttachment(wEndiannessGroup, 10);
+    fdOptionsGroup.right = new FormAttachment(100, 0);
+    wOptionsGroup.setLayoutData(fdOptionsGroup);
 
-    // "SRID" radio button
-    wSRIDButton = new Button(wSRIDGroup, SWT.CHECK);
+    // SRID checkbox
+    wSRIDButton = new Button(wOptionsGroup, SWT.CHECK);
     wSRIDButton.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Button"));
-    wSRIDButton.setToolTipText(BaseMessages.getString(PKG, "WktWkb.SRID.Tooltip"));
+    wSRIDButton.setToolTipText(BaseMessages.getString(PKG, "WktWkb.SRID.Button.Tooltip"));
     PropsUi.setLook(wSRIDButton);
+    wSRIDButton.addSelectionListener(lsSelMod);
+
+    Listener updateSRIDFieldListener =
+        e -> {
+          wSRIDField.setEnabled(wSRIDButton.getSelection());
+        };
+
+    wSRIDButton.addListener(SWT.Selection, updateSRIDFieldListener);
+
     FormData fdSRIDButton = new FormData();
     fdSRIDButton.left = new FormAttachment(0, 0);
     fdSRIDButton.top = new FormAttachment(0, 0);
     wSRIDButton.setLayoutData(fdSRIDButton);
 
-    wSRIDButton.addSelectionListener(lsSelMod);
+    Label wSRIDFieldLabel = new Label(wOptionsGroup, SWT.RIGHT);
+    wSRIDFieldLabel.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Label"));
+    PropsUi.setLook(wSRIDFieldLabel);
 
-    Control inputFieldSelection = createInputFieldSelection(lsMod, wSRIDGroup, margin);
+    FormData fdSRIDFieldLabel = new FormData();
+    fdSRIDFieldLabel.left = new FormAttachment(wSRIDButton, margin);
+    fdSRIDFieldLabel.top = new FormAttachment(wEndiannessGroup, 0);
+    wSRIDFieldLabel.setLayoutData(fdSRIDFieldLabel);
+
+    wSRIDField = new TextVar(variables, wOptionsGroup, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
+    wSRIDField.setToolTipText(BaseMessages.getString(PKG, "WktWkb.SRID.Field.Tooltip"));
+    PropsUi.setLook(wSRIDField);
+    wSRIDField.addModifyListener(lsMod);
+
+    FormData fdSRIDField = new FormData();
+    fdSRIDField.left = new FormAttachment(wSRIDFieldLabel, margin);
+    fdSRIDField.top = new FormAttachment(wEndiannessGroup, 0);
+    fdSRIDField.right = new FormAttachment(100, 0);
+    wSRIDField.setLayoutData(fdSRIDField);
+
+    wSRIDField.addModifyListener(e -> input.setChanged());
+
+    wSRIDField.addListener(
+        SWT.Verify,
+        e -> {
+          if (!e.text.matches("\\d*")) {
+            e.doit = false;
+          }
+        });
+
+    //    wOptionsField = new TextVar(variables, wOptionsGroup, SWT.SINGLE | SWT.BORDER);
+    //    PropsUi.setLook(wOptionsField);
+    //    wOptionsField.addModifyListener(lsMod);
+    //    FormData fdOptionsText = new FormData();
+    //    fdOptionsText.left = new FormAttachment(0, 0);
+
+    Control inputFieldSelection = createInputFieldSelection(lsMod, wOptionsGroup, margin);
     Control outputFieldSelection = createOutputFieldSelection(lsMod, inputFieldSelection, margin);
 
     // Some buttons
@@ -287,6 +334,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wBigEndian.setEnabled(wWktToWkb.getSelection());
     wLilEndian.setEnabled(wWktToWkb.getSelection());
+    wSRIDField.setEnabled(wSRIDButton.getSelection());
 
     BaseDialog.defaultShellHandling(shell, c -> ok(), c -> cancel());
 
@@ -371,13 +419,17 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
       wWkbToWkt.setSelection(true);
     }
 
+    if (input.isAddSRID()) {
+        wSRIDField.setText(Integer.toString(input.getSrid()));
+    }
+
     if (input.getEndianness() == 0) {
       wBigEndian.setSelection(true);
     } else {
       wLilEndian.setSelection(true);
     }
 
-    wSRIDButton.setSelection(input.isSRIDIncluded());
+    wSRIDButton.setSelection(input.isAddSRID());
   }
 
   private void setComboValues() {
@@ -387,8 +439,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
             prevFields = pipelineMeta.getPrevTransformFields(variables, transformName);
           } catch (HopException e) {
             prevFields = new RowMeta();
-            String msg = BaseMessages.getString(PKG, "WktWkb.DoMapping.UnableToFindInput");
-            logError(msg);
+            logError(BaseMessages.getString(PKG, "WktWkb.DoMapping.UnableToFindInput"));
           }
           String[] prevTransformFieldNames =
               prevFields != null ? prevFields.getFieldNames() : new String[0];
@@ -401,8 +452,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     input.setInputField(wInputFieldCombo.getText());
     input.setOutputField(wOutputFieldCombo.getText());
     input.setWktToWkb(wWktToWkb.getSelection());
-    input.setEndianness(wBigEndian.getSelection() ? 0 : 1);
-    input.setSRIDIncluded(wSRIDButton.getSelection());
+    input.setEndianness(wBigEndian.getSelection() ? 1 : 2);
+    input.setAddSRID(wSRIDButton.getSelection());
+    input.setSrid(Integer.parseInt(!wSRIDField.getText().isEmpty() ? wSRIDField.getText() : "0"));
   }
 
   /** Cancel the dialog. */
@@ -414,6 +466,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
   private void ok() {
     if (Utils.isEmpty(wTransformName.getText())) {
+      return;
+    } else if (wSRIDButton.getSelection() && wSRIDField.getText().trim().isEmpty()) {
+      wSRIDField.setFocus();
       return;
     }
 

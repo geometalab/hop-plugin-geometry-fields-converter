@@ -56,12 +56,15 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
   @HopMetadataProperty(key = "is_wkt_to_wkb", injectionKeyDescription = "WktWkb.Injection.WKTtoWKB")
   private boolean wktToWkb = true;
 
-  /* Endianness in WKB is defined by its first byte, 0: big endian, 1: little endian */
+  /* Endianness in WKB is defined by its first byte, 1: big endian, 2: little endian */
   @HopMetadataProperty(key = "endianness", injectionKeyDescription = "WktWkb.Injection.Endianness")
   private int endianness = 0;
 
+  @HopMetadataProperty(key = "add_srid", injectionKeyDescription = "WktWkb.Injection.AddSRID")
+  private boolean addSRID = false;
+
   @HopMetadataProperty(key = "srid", injectionKeyDescription = "WktWkb.Injection.SRID")
-  private boolean SRIDIncluded = true;
+  private int srid = 0;
 
   public String getInputField() {
     return inputField;
@@ -95,12 +98,20 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
     this.endianness = endianness;
   }
 
-  public boolean isSRIDIncluded() {
-    return SRIDIncluded;
+  public boolean isAddSRID() {
+    return addSRID;
   }
 
-  public void setSRIDIncluded(boolean SRIDIncluded) {
-    this.SRIDIncluded = SRIDIncluded;
+  public void setAddSRID(boolean addSRID) {
+    this.addSRID = addSRID;
+  }
+
+  public int getSrid() {
+    return srid;
+  }
+
+  public void setSrid(int srid) {
+    this.srid = srid;
   }
 
   @Override

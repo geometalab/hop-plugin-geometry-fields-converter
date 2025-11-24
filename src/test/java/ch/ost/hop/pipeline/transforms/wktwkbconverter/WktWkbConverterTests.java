@@ -8,12 +8,23 @@ import static org.junit.jupiter.api.Assertions.*;
 public class WktWkbConverterTests {
 
   @Test
-  public void testWktToWkb() throws Exception {
+  public void testWKTToWKB() throws Exception {
     String wkt = "POINT (1 2)";
-    byte[] wkb = WktWkbConverter.wktToWkb(wkt, 0, false);
+    byte[] wkb = WktWkbConverter.wktToWkb(wkt, 0, false, 0);
 
     assertNotNull(wkb);
     assertTrue(wkb.length > 0);
+  }
+
+  @Test
+  public void testEWKTWithSRID() throws Exception {
+    String wkt = "POINT (1 2)";
+    int srid = 4296;
+    String outWkt =
+        WktWkbConverter.wkbToWkt(WktWkbConverter.wktToWkb(wkt, 0, true, srid), false, 0);
+
+    assertNotNull(outWkt);
+    assertEquals("SRID=4296;POINT (1 2)", outWkt);
   }
 
   @Test
@@ -23,19 +34,19 @@ public class WktWkbConverterTests {
         hexStringToByteArray(
             "010300000001000000050000000000000000003E4000000000000024400000000000004440000000000000444000000000000034400000000000004440000000000000244000000000000034400000000000003E400000000000002440");
 
-    assertEquals(wkt, WktWkbConverter.wkbToWkt(wkb, true));
+    assertEquals(wkt, WktWkbConverter.wkbToWkt(wkb, false, 0));
   }
 
   @Test
-  public void testEWKTToEWKBandBack() throws Exception {
+  public void testEWKTToEWKBAndBack() throws Exception {
     String ewkt = "SRID=4326;POINT (-44.3 60.1)";
-    assertEquals(ewkt, WktWkbConverter.wkbToWkt(WktWkbConverter.wktToWkb(ewkt, 0, true), true));
+    assertEquals(ewkt, WktWkbConverter.wkbToWkt(WktWkbConverter.wktToWkb(ewkt, 0, false, 0), false, 0));
   }
 
   @Test
   public void testFalseWKT() throws ParseException {
     String wkt = "test string you're supposed to fail";
-    assertThrows(ParseException.class, () -> WktWkbConverter.wktToWkb(wkt, 0, true));
+    assertThrows(ParseException.class, () -> WktWkbConverter.wktToWkb(wkt, 0, false, 0));
   }
 
   public static byte[] hexStringToByteArray(String s) {
