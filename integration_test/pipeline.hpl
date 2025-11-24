@@ -163,8 +163,8 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <add_srid>Y</add_srid>
-    <endianness>1</endianness>
+    <add_srid>N</add_srid>
+    <endianness>2</endianness>
     <input_field>content</input_field>
     <is_wkt_to_wkb>Y</is_wkt_to_wkb>
     <output_field>binary-content</output_field>
@@ -186,8 +186,8 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <add_srid>Y</add_srid>
-    <endianness>1</endianness>
+    <add_srid>N</add_srid>
+    <endianness>2</endianness>
     <input_field>binary-content</input_field>
     <is_wkt_to_wkb>N</is_wkt_to_wkb>
     <output_field>content</output_field>
