@@ -17,6 +17,7 @@
 
 package ch.ost.hop.pipeline.transforms.wktwkbconverter;
 
+import ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.exception.HopTransformException;
 import org.apache.hop.core.row.IRowMeta;
@@ -42,6 +43,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import java.util.*;
+import java.util.List;
 
 public class WktWkbConverterDialog extends BaseTransformDialog implements ITransformDialog {
 
@@ -49,7 +51,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
   private final WktWkbConverterMeta input;
   private ComboVar wInputFieldCombo;
+  private ComboVar wInputYFieldCombo;
   private ComboVar wOutputFieldCombo;
+  private ComboVar wOutputYFieldCombo;
   private Button wFromWKTButton;
   private Button wFromWKBButton;
   private Button wFromPCButton;
@@ -60,8 +64,10 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private Button wBigEndian;
   private Button wSRIDButton;
   private TextVar wSRIDField;
+  private List<Button> fromFormatButtons = new ArrayList<>();
+  private List<Button> toFormatButtons = new ArrayList<>();
 
-  private int margin;
+    private int margin;
 
   private final Map<String, Integer> fields;
 
@@ -162,21 +168,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     setButtonPositions(new Button[] {wOk, wCancel}, margin, null);
 
-    IRowMeta prevRowMeta;
-    try {
-      prevRowMeta = pipelineMeta.getPrevTransformFields(variables, transformMeta);
-    } catch (HopTransformException e) {
-      throw new RuntimeException(e);
-    }
-    prevFields = prevRowMeta;
-
-    fields.clear();
-    for (int i = 0; i < prevRowMeta.size(); i++) {
-      fields.put(prevRowMeta.getValueMeta(i).getName(), i);
-    }
-
-    wInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
-    wOutputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
+    setComboVars();
 
     setSize();
     getData();
@@ -186,6 +178,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wBigEndian.setEnabled(wFromWKTButton.getSelection());
     wLilEndian.setEnabled(wFromWKTButton.getSelection());
     wSRIDField.setEnabled(wSRIDButton.getSelection());
+    wInputYFieldCombo.setEnabled(wFromWKTButton.getSelection());
+    wOutputYFieldCombo.setEnabled(wToWKTButton.getSelection());
 
     BaseDialog.defaultShellHandling(shell, c -> ok(), c -> cancel());
 
@@ -206,7 +200,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fdConversionGroup.top = new FormAttachment(attachment, 10);
     wConversionGroup.setLayoutData(fdConversionGroup);
 
-    Composite fromComposite = new Composite(wConversionGroup, SWT.NONE);
+      Composite fromComposite = new Composite(wConversionGroup, SWT.NONE);
     fromComposite.setLayout(new GridLayout(4, false));
     FormData fdFromComposite = new FormData();
     fdFromComposite.left = new FormAttachment(0, 0);
@@ -218,29 +212,35 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wFromLabel.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.From.Label"));
     PropsUi.setLook(wFromLabel);
 
-    wFromWKTButton = new Button(fromComposite, SWT.RADIO);
-    wFromWKTButton.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.WKT.Button"));
-    wFromWKTButton.addSelectionListener(lsSelMod);
-    PropsUi.setLook(wFromWKTButton);
-    GridData gdFromWKTButton = new GridData();
-    gdFromWKTButton.horizontalIndent = 20;
-    wFromWKTButton.setLayoutData(gdFromWKTButton);
+    wFromWKTButton =
+        createFormatButton(
+                fromComposite,
+            "WktWkb.Conversion.WKT.Button",
+            GeometryFormat.WKT,
+            fromFormatButtons,
+            lsSelMod);
 
-    wFromWKBButton = new Button(fromComposite, SWT.RADIO);
-    wFromWKBButton.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.WKB.Button"));
-    wFromWKBButton.addSelectionListener(lsSelMod);
-    PropsUi.setLook(wFromWKBButton);
+    wFromWKBButton =
+        createFormatButton(
+                fromComposite,
+            "WktWkb.Conversion.WKB.Button",
+            GeometryFormat.WKB,
+            fromFormatButtons,
+            lsSelMod);
 
-    wFromPCButton = new Button(fromComposite, SWT.RADIO);
-    wFromPCButton.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.PC.Button"));
-    wFromPCButton.addSelectionListener(lsSelMod);
-    PropsUi.setLook(wFromPCButton);
+    wFromPCButton =
+        createFormatButton(
+                fromComposite,
+            "WktWkb.Conversion.PC.Button",
+            GeometryFormat.POINT_COORDINATE,
+            fromFormatButtons,
+            lsSelMod);
 
-    Composite toComposite = new Composite(wConversionGroup, SWT.NONE);
+      Composite toComposite = new Composite(wConversionGroup, SWT.NONE);
     toComposite.setLayout(new GridLayout(4, false));
     FormData fdToComposite = new FormData();
     fdToComposite.left = new FormAttachment(0, 0);
-    fdToComposite.top = new FormAttachment(fromComposite, 8); // below the "from" row
+    fdToComposite.top = new FormAttachment(fromComposite, 8);
     fdToComposite.right = new FormAttachment(100, 0);
     toComposite.setLayoutData(fdToComposite);
 
@@ -248,23 +248,36 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wToLabel.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.To.Label"));
     PropsUi.setLook(wToLabel);
 
-    wToWKTButton = new Button(toComposite, SWT.RADIO);
-    wToWKTButton.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.WKT.Button"));
-    wToWKTButton.addSelectionListener(lsSelMod);
-    PropsUi.setLook(wToWKTButton);
-    GridData gdToWKTButton = new GridData();
-    gdToWKTButton.horizontalIndent = 35;
-    wToWKTButton.setLayoutData(gdToWKTButton);
+    wToWKTButton =
+        createFormatButton(
+                toComposite,
+            "WktWkb.Conversion.WKT.Button",
+            GeometryFormat.WKT,
+            toFormatButtons,
+            lsSelMod);
 
-    wToWKBButton = new Button(toComposite, SWT.RADIO);
-    wToWKBButton.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.WKB.Button"));
-    wToWKBButton.addSelectionListener(lsSelMod);
-    PropsUi.setLook(wToWKBButton);
+    wToWKBButton =
+        createFormatButton(
+                toComposite,
+            "WktWkb.Conversion.WKB.Button",
+            GeometryFormat.WKB,
+            toFormatButtons,
+            lsSelMod);
 
-    wToPCButton = new Button(toComposite, SWT.RADIO);
-    wToPCButton.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.PC.Button"));
-    wToPCButton.addSelectionListener(lsSelMod);
-    PropsUi.setLook(wToPCButton);
+    wToPCButton =
+        createFormatButton(
+                toComposite,
+            "WktWkb.Conversion.PC.Button",
+            GeometryFormat.POINT_COORDINATE,
+            toFormatButtons,
+            lsSelMod);
+
+    Listener enableYInput =
+        e -> wInputYFieldCombo.setEnabled(wFromPCButton.getSelection());
+    wFromPCButton.addListener(SWT.Selection, enableYInput);
+    Listener enableYOutput =
+        e -> wOutputYFieldCombo.setEnabled(wToPCButton.getSelection());
+    wToPCButton.addListener(SWT.Selection, enableYOutput);
 
     return wConversionGroup;
   }
@@ -302,14 +315,15 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     Listener updateEndianness =
         e -> {
-          boolean enable = wFromWKTButton.getSelection();
+          boolean enable = wToWKBButton.getSelection();
           wEndiannessGroup.setEnabled(enable);
           wBigEndian.setEnabled(enable);
           wLilEndian.setEnabled(enable);
         };
 
-    wFromWKTButton.addListener(SWT.Selection, updateEndianness);
-    wFromWKBButton.addListener(SWT.Selection, updateEndianness);
+    for (Button b : toFormatButtons) {
+      b.addListener(SWT.Selection, updateEndianness);
+    }
 
     wLilEndian.addSelectionListener(lsSelMod);
     wBigEndian.addSelectionListener(lsSelMod);
@@ -339,9 +353,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wSRIDButton.addSelectionListener(lsSelMod);
 
     Listener updateSRIDFieldListener =
-        e -> {
-          wSRIDField.setEnabled(wSRIDButton.getSelection());
-        };
+        e -> wSRIDField.setEnabled(wSRIDButton.getSelection());
 
     wSRIDButton.addListener(SWT.Selection, updateSRIDFieldListener);
 
@@ -399,7 +411,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     PropsUi.setLook(wlInputFieldLabel);
     FormData fdlFilePathLabel = new FormData();
     fdlFilePathLabel.left = new FormAttachment(0, 0);
-    fdlFilePathLabel.top = new FormAttachment(attachment, margin);
+    fdlFilePathLabel.top = new FormAttachment(attachment, 0);
     wlInputFieldLabel.setLayoutData(fdlFilePathLabel);
 
     wInputFieldCombo = new ComboVar(variables, wInputGroup, SWT.DROP_DOWN | SWT.BORDER);
@@ -413,8 +425,20 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fdInputField.top = new FormAttachment(attachment, margin);
     fdInputField.right = new FormAttachment(100, 0);
     wInputFieldCombo.setLayoutData(fdInputField);
-
     wInputFieldCombo.addModifyListener(e -> input.setChanged());
+
+    wInputYFieldCombo = new ComboVar(variables, wInputGroup, SWT.DROP_DOWN | SWT.BORDER);
+    wInputYFieldCombo.setToolTipText(
+        BaseMessages.getString(PKG, "WktWkb.InputYFieldSelection.Tooltip"));
+    PropsUi.setLook(wInputYFieldCombo);
+    wInputYFieldCombo.addModifyListener(lsMod);
+    wInputYFieldCombo.setItems(fields.keySet().toArray(new String[0]));
+    FormData fdYInputField = new FormData();
+    fdYInputField.left = new FormAttachment(wlInputFieldLabel, margin);
+    fdYInputField.top = new FormAttachment(wInputFieldCombo, margin);
+    fdYInputField.right = new FormAttachment(100, 0);
+    wInputYFieldCombo.setLayoutData(fdYInputField);
+    wInputYFieldCombo.addModifyListener(e -> input.setChanged());
 
     return wInputGroup;
   }
@@ -452,10 +476,43 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fdSchemaPath.top = new FormAttachment(attachment, margin);
     fdSchemaPath.right = new FormAttachment(100, 0);
     wOutputFieldCombo.setLayoutData(fdSchemaPath);
-
     wOutputFieldCombo.addModifyListener(e -> input.setChanged());
 
+    wOutputYFieldCombo = new ComboVar(variables, wOutputGroup, SWT.DROP_DOWN | SWT.BORDER);
+    wOutputYFieldCombo.setToolTipText(
+        BaseMessages.getString(PKG, "WktWkb.OutputYFieldSelection.Tooltip"));
+    PropsUi.setLook(wOutputYFieldCombo);
+    wOutputYFieldCombo.addModifyListener(lsMod);
+    wOutputYFieldCombo.setItems(fields.keySet().toArray(new String[0]));
+    FormData fdYOutputField = new FormData();
+    fdYOutputField.left = new FormAttachment(wlOutputFieldLabel, margin);
+    fdYOutputField.top = new FormAttachment(wOutputFieldCombo, 0);
+    fdYOutputField.right = new FormAttachment(100, 0);
+    wOutputYFieldCombo.setLayoutData(fdYOutputField);
+    wOutputYFieldCombo.addModifyListener(e -> input.setChanged());
+
     return wOutputGroup;
+  }
+
+  private Button createFormatButton(
+      Composite composite,
+      String messageKey,
+      GeometryFormat format,
+      List<Button> buttonList,
+      SelectionAdapter lsSelMod) {
+    Button button = new Button(composite, SWT.RADIO);
+    button.setText(BaseMessages.getString(PKG, messageKey));
+    button.setData(format);
+    buttonList.add(button);
+    button.addSelectionListener(lsSelMod);
+    PropsUi.setLook(button);
+    GridData gdButton = new GridData();
+    gdButton.horizontalIndent = 20;
+    button.setLayoutData(gdButton);
+    Listener disableFormat =
+        e -> disableSameFormatOppositeDirection();
+    button.addListener(SWT.Selection, disableFormat);
+    return button;
   }
 
   private Image getImage() {
@@ -465,6 +522,26 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
         "sample.svg",
         ConstUi.LARGE_ICON_SIZE,
         ConstUi.LARGE_ICON_SIZE);
+  }
+
+  private void setComboVars() {
+    IRowMeta prevRowMeta;
+    try {
+      prevRowMeta = pipelineMeta.getPrevTransformFields(variables, transformMeta);
+    } catch (HopTransformException e) {
+      throw new RuntimeException(e);
+    }
+    prevFields = prevRowMeta;
+
+    fields.clear();
+    for (int i = 0; i < prevRowMeta.size(); i++) {
+      fields.put(prevRowMeta.getValueMeta(i).getName(), i);
+    }
+
+    wInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
+    wInputYFieldCombo.setItems(fields.keySet().toArray(new String[0]));
+    wOutputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
+    wOutputYFieldCombo.setItems(fields.keySet().toArray(new String[0]));
   }
 
   /** Copy information from the meta-data input to the dialog fields. */
@@ -479,11 +556,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wTransformName.selectAll();
     wTransformName.setFocus();
 
-    if (input.isWktToWkb()) {
-      wFromWKTButton.setSelection(true);
-    } else {
-      wFromWKBButton.setSelection(true);
-    }
+    setSelectedFormat(fromFormatButtons, input.getFromFormat());
+    setSelectedFormat(toFormatButtons, input.getToFormat());
 
     if (input.isAddSRID()) {
       wSRIDField.setText(Integer.toString(input.getSrid()));
@@ -517,10 +591,38 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private void getInfo(WktWkbConverterMeta in) {
     input.setInputField(wInputFieldCombo.getText());
     input.setOutputField(wOutputFieldCombo.getText());
-    input.setWktToWkb(wFromWKTButton.getSelection());
+    input.setFromFormat(getSelectedFormat(fromFormatButtons));
+    input.setToFormat(getSelectedFormat(toFormatButtons));
     input.setEndianness(wBigEndian.getSelection() ? 1 : 2);
     input.setAddSRID(wSRIDButton.getSelection());
     input.setSrid(Integer.parseInt(!wSRIDField.getText().isEmpty() ? wSRIDField.getText() : "0"));
+  }
+
+  private GeometryFormat getSelectedFormat(List<Button> list) {
+    for (Button b : list) {
+      if (b.getSelection()) {
+        return (GeometryFormat) b.getData();
+      }
+    }
+    return null;
+  }
+
+  private void setSelectedFormat(List<Button> list, GeometryFormat format) {
+    for (Button b : list) {
+      b.setSelection(b.getData() == format);
+    }
+  }
+
+  private void disableSameFormatOppositeDirection() {
+    Button fromButton, toButton;
+    for (int i = 0; i < fromFormatButtons.size(); i++) {
+      fromButton = fromFormatButtons.get(i);
+      toButton = toFormatButtons.get(i);
+      boolean enableFromFormat = !toButton.getSelection();
+      boolean enableToFormat = !fromButton.getSelection();
+      fromButton.setEnabled(enableFromFormat);
+      toButton.setEnabled(enableToFormat);
+    }
   }
 
   /** Cancel the dialog. */
@@ -535,6 +637,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
       return;
     } else if (wSRIDButton.getSelection() && wSRIDField.getText().trim().isEmpty()) {
       wSRIDField.setFocus();
+      return;
+    } else if (getSelectedFormat(fromFormatButtons) == null
+        || getSelectedFormat(toFormatButtons) == null) {
       return;
     }
 

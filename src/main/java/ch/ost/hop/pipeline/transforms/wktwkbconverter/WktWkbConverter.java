@@ -17,6 +17,7 @@
 
 package ch.ost.hop.pipeline.transforms.wktwkbconverter;
 
+import ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat;
 import org.apache.hop.core.Const;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.row.RowDataUtil;
@@ -76,7 +77,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
 
     try {
       Object[] outputRow = RowDataUtil.createResizedCopy(inputRow, data.outputRowMeta.size());
-      if (meta.isWktToWkb()) {
+      if (meta.getToFormat() == GeometryFormat.WKB) {
         String inWKT = Const.NVL(data.inputMeta.getString(inputRow[data.inputFieldIndex]), "");
         outputRow[data.outputFieldIndex] =
             wktToWkb(inWKT, meta.getEndianness(), meta.isAddSRID(), meta.getSrid());
