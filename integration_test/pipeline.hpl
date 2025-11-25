@@ -166,8 +166,11 @@
     <add_srid>N</add_srid>
     <endianness>2</endianness>
     <input_field>content</input_field>
-    <is_wkt_to_wkb>Y</is_wkt_to_wkb>
+    <input_format>WKT</input_format>
+    <input_y_field/>
     <output_field>binary-content</output_field>
+    <output_format>WKB</output_format>
+    <output_y_field/>
     <srid>0</srid>
     <attributes/>
     <GUI>
@@ -189,8 +192,11 @@
     <add_srid>N</add_srid>
     <endianness>2</endianness>
     <input_field>binary-content</input_field>
-    <is_wkt_to_wkb>N</is_wkt_to_wkb>
+    <input_format>WKB</input_format>
+    <input_y_field/>
     <output_field>content</output_field>
+    <output_format>WKT</output_format>
+    <output_y_field/>
     <srid>0</srid>
     <attributes/>
     <GUI>
