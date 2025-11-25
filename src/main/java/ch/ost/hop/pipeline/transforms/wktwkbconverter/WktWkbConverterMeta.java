@@ -23,8 +23,7 @@ import org.apache.hop.core.annotations.Transform;
 import org.apache.hop.core.exception.HopTransformException;
 import org.apache.hop.core.row.IRowMeta;
 import org.apache.hop.core.row.IValueMeta;
-import org.apache.hop.core.row.value.ValueMetaBinary;
-import org.apache.hop.core.row.value.ValueMetaString;
+import org.apache.hop.core.row.value.*;
 import org.apache.hop.core.util.Utils;
 import org.apache.hop.core.variables.IVariables;
 import org.apache.hop.metadata.api.HopMetadataProperty;
@@ -34,6 +33,9 @@ import org.apache.hop.pipeline.transform.BaseTransformMeta;
 import org.apache.hop.pipeline.transform.TransformMeta;
 
 import java.util.List;
+import java.util.function.Supplier;
+
+import static ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat.*;
 
 /** Meta data for the sample transform. */
 @Transform(
@@ -171,35 +173,56 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
       IHopMetadataProvider metadataProvider)
       throws HopTransformException {
 
-    IValueMeta extra;
     String resolvedOutputField = variables.resolve(getOutputField());
+    String resolvedOutputYField = variables.resolve(getOutputYField());
+    GeometryFormat outputFormat = getOutputFormat();
 
-    if (getOutputFormat() != GeometryFormat.POINT_COORDINATE) {
-      if (!Utils.isEmpty(getOutputField())) {
-        int outputFieldIndex = rowMeta.indexOfValue(resolvedOutputField);
-        extra =
-            getOutputFormat() == GeometryFormat.WKB
-                ? new ValueMetaBinary(resolvedOutputField)
-                : new ValueMetaString(resolvedOutputField);
-        extra.setOrigin(name);
-        if (outputFieldIndex < 0) {
-          rowMeta.addValueMeta(extra);
-        } else {
-          rowMeta.setValueMeta(outputFieldIndex, extra);
-        }
-      } else {
-        extra =
-            getOutputFormat() == GeometryFormat.WKB
-                ? new ValueMetaBinary("geometry_wkb")
-                : new ValueMetaString("geometry_wkt");
-        extra.setOrigin(getOutputFormat() == GeometryFormat.WKB ? "geometry_wkb" : "geometry_wkt");
-        rowMeta.addValueMeta(extra);
-      }
-
-      extra.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
-    } else {
-      return;
+    switch (outputFormat) {
+      case WKT:
+        addField(
+            rowMeta,
+            name,
+            resolvedOutputField,
+            () ->
+                new ValueMetaString(
+                    Utils.isEmpty(resolvedOutputField) ? "geometry_wkt" : resolvedOutputField));
+        break;
+      case WKB:
+        addField(
+            rowMeta,
+            name,
+            resolvedOutputField,
+            () ->
+                new ValueMetaBinary(
+                    Utils.isEmpty(resolvedOutputField) ? "geometry_wkb" : resolvedOutputField));
+        break;
+      case POINT_COORDINATE:
+        addField(
+            rowMeta,
+            name,
+            Utils.isEmpty(resolvedOutputField) ? "longitude" : resolvedOutputField,
+            () ->
+                new ValueMetaNumber(
+                    Utils.isEmpty(resolvedOutputField) ? "longitude" : resolvedOutputField));
+        String finalY = Utils.isEmpty(resolvedOutputYField) ? "latitude" : resolvedOutputYField;
+        addField(rowMeta, name, finalY, () -> new ValueMetaNumber(finalY));
+        break;
     }
+  }
+
+  private void addField(
+      IRowMeta rowMeta, String origin, String fieldName, Supplier<IValueMeta> metaSupplier) {
+    int id = rowMeta.indexOfValue(fieldName);
+    IValueMeta meta = metaSupplier.get();
+
+    if (id < 0) {
+      rowMeta.addValueMeta(meta);
+    } else {
+      rowMeta.setValueMeta(id, meta);
+    }
+
+    meta.setOrigin(origin);
+    meta.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
   }
 
   @Override

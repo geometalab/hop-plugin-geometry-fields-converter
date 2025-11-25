@@ -45,6 +45,8 @@ import org.eclipse.swt.widgets.*;
 import java.util.*;
 import java.util.List;
 
+import static ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat.*;
+
 public class WktWkbConverterDialog extends BaseTransformDialog implements ITransformDialog {
 
   private static final Class<?> PKG = WktWkbConverterDialog.class; // Needed by Translator
@@ -215,25 +217,17 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wFromWKTButton =
         createFormatButton(
-            fromComposite,
-            "WktWkb.Conversion.WKT.Button",
-            GeometryFormat.WKT,
-            fromFormatButtons,
-            lsSelMod);
+            fromComposite, "WktWkb.Conversion.WKT.Button", WKT, fromFormatButtons, lsSelMod);
 
     wFromWKBButton =
         createFormatButton(
-            fromComposite,
-            "WktWkb.Conversion.WKB.Button",
-            GeometryFormat.WKB,
-            fromFormatButtons,
-            lsSelMod);
+            fromComposite, "WktWkb.Conversion.WKB.Button", WKB, fromFormatButtons, lsSelMod);
 
     wFromPCButton =
         createFormatButton(
             fromComposite,
             "WktWkb.Conversion.PC.Button",
-            GeometryFormat.POINT_COORDINATE,
+            POINT_COORDINATE,
             fromFormatButtons,
             lsSelMod);
 
@@ -251,25 +245,17 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wToWKTButton =
         createFormatButton(
-            toComposite,
-            "WktWkb.Conversion.WKT.Button",
-            GeometryFormat.WKT,
-            toFormatButtons,
-            lsSelMod);
+            toComposite, "WktWkb.Conversion.WKT.Button", WKT, toFormatButtons, lsSelMod);
 
     wToWKBButton =
         createFormatButton(
-            toComposite,
-            "WktWkb.Conversion.WKB.Button",
-            GeometryFormat.WKB,
-            toFormatButtons,
-            lsSelMod);
+            toComposite, "WktWkb.Conversion.WKB.Button", WKB, toFormatButtons, lsSelMod);
 
     wToPCButton =
         createFormatButton(
             toComposite,
             "WktWkb.Conversion.PC.Button",
-            GeometryFormat.POINT_COORDINATE,
+            POINT_COORDINATE,
             toFormatButtons,
             lsSelMod);
 
@@ -566,9 +552,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
       wLilEndian.setSelection(true);
     }
 
-    if (input.getInputFormat() == GeometryFormat.POINT_COORDINATE) {
+    if (input.getInputFormat() == POINT_COORDINATE) {
       wInputYFieldCombo.setText(input.getInputYField());
-    } else if (input.getOutputFormat() == GeometryFormat.POINT_COORDINATE) {
+    } else if (input.getOutputFormat() == POINT_COORDINATE) {
       wOutputYFieldCombo.setText(input.getOutputYField());
     }
 
@@ -595,11 +581,11 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     input.setInputField(wInputFieldCombo.getText());
     input.setOutputField(wOutputFieldCombo.getText());
     input.setInputFormat(getSelectedFormat(fromFormatButtons));
-    if (input.getOutputFormat() == GeometryFormat.POINT_COORDINATE) {
+    if (input.getOutputFormat() == POINT_COORDINATE) {
       input.setInputYField(wInputYFieldCombo.getText());
     }
     input.setOutputFormat(getSelectedFormat(toFormatButtons));
-    if (input.getOutputFormat() == GeometryFormat.POINT_COORDINATE) {
+    if (input.getOutputFormat() == POINT_COORDINATE) {
       input.setOutputYField(wOutputYFieldCombo.getText());
     }
     input.setEndianness(wBigEndian.getSelection() ? 1 : 2);
