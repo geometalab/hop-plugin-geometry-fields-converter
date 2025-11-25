@@ -50,15 +50,29 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
   private String inputField = "";
 
   @HopMetadataProperty(
+      key = "input_y_field",
+      injectionKeyDescription = "WktWkb.Injection.InputYField")
+  private String inputYField = "";
+
+  @HopMetadataProperty(
       key = "output_field",
       injectionKeyDescription = "WktWkb.Injection.OutputField")
   private String outputField = "";
 
-  @HopMetadataProperty(key = "from_format", injectionKeyDescription = "WktWkb.Injection.FromFormat")
-  private GeometryFormat fromFormat;
+  @HopMetadataProperty(
+      key = "output_y_field",
+      injectionKeyDescription = "WktWkb.Injection.OutputYField")
+  private String outputYField = "";
 
-  @HopMetadataProperty(key = "to_format", injectionKeyDescription = "WktWkb.Injection.ToFormat")
-  private GeometryFormat toFormat;
+  @HopMetadataProperty(
+      key = "input_format",
+      injectionKeyDescription = "WktWkb.Injection.InputFormat")
+  private GeometryFormat inputFormat;
+
+  @HopMetadataProperty(
+      key = "output_format",
+      injectionKeyDescription = "WktWkb.Injection.OutputFormat")
+  private GeometryFormat outputFormat;
 
   /* Endianness in WKB is defined by its first byte, 1: big endian, 2: little endian */
   @HopMetadataProperty(key = "endianness", injectionKeyDescription = "WktWkb.Injection.Endianness")
@@ -78,6 +92,14 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
     this.inputField = inputField;
   }
 
+  public String getInputYField() {
+    return inputYField;
+  }
+
+  public void setInputYField(String inputYField) {
+    this.inputYField = inputYField;
+  }
+
   public String getOutputField() {
     return outputField;
   }
@@ -86,20 +108,28 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
     this.outputField = outputField;
   }
 
-  public GeometryFormat getFromFormat() {
-    return fromFormat;
+  public String getOutputYField() {
+    return outputYField;
   }
 
-  public void setFromFormat(GeometryFormat fromFormat) {
-    this.fromFormat = fromFormat;
+  public void setOutputYField(String outputYField) {
+    this.outputYField = outputYField;
   }
 
-  public GeometryFormat getToFormat() {
-    return toFormat;
+  public GeometryFormat getInputFormat() {
+    return inputFormat;
   }
 
-  public void setToFormat(GeometryFormat toFormat) {
-    this.toFormat = toFormat;
+  public void setInputFormat(GeometryFormat inputFormat) {
+    this.inputFormat = inputFormat;
+  }
+
+  public GeometryFormat getOutputFormat() {
+    return outputFormat;
+  }
+
+  public void setOutputFormat(GeometryFormat outputFormat) {
+    this.outputFormat = outputFormat;
   }
 
   public int getEndianness() {
@@ -144,26 +174,32 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
     IValueMeta extra;
     String resolvedOutputField = variables.resolve(getOutputField());
 
-    if (!Utils.isEmpty(getOutputField())) {
-      int outputFieldIndex = rowMeta.indexOfValue(resolvedOutputField);
-      extra =
-          getToFormat() == GeometryFormat.WKB
-              ? new ValueMetaBinary(resolvedOutputField)
-              : new ValueMetaString(resolvedOutputField);
-      extra.setOrigin(name);
-      if (outputFieldIndex < 0) {
-        rowMeta.addValueMeta(extra);
+    if (getOutputFormat() != GeometryFormat.POINT_COORDINATE) {
+      if (!Utils.isEmpty(getOutputField())) {
+        int outputFieldIndex = rowMeta.indexOfValue(resolvedOutputField);
+        extra =
+            getOutputFormat() == GeometryFormat.WKB
+                ? new ValueMetaBinary(resolvedOutputField)
+                : new ValueMetaString(resolvedOutputField);
+        extra.setOrigin(name);
+        if (outputFieldIndex < 0) {
+          rowMeta.addValueMeta(extra);
+        } else {
+          rowMeta.setValueMeta(outputFieldIndex, extra);
+        }
       } else {
-        rowMeta.setValueMeta(outputFieldIndex, extra);
+        extra =
+            getOutputFormat() == GeometryFormat.WKB
+                ? new ValueMetaBinary("geometry_wkb")
+                : new ValueMetaString("geometry_wkt");
+        extra.setOrigin(getOutputFormat() == GeometryFormat.WKB ? "geometry_wkb" : "geometry_wkt");
+        rowMeta.addValueMeta(extra);
       }
-    } else {
-      extra =
-              getToFormat() == GeometryFormat.WKB ? new ValueMetaBinary("geometry_wkb") : new ValueMetaString("geometry_wkt");
-      extra.setOrigin(getToFormat() == GeometryFormat.WKB ? "geometry_wkb" : "geometry_wkt");
-      rowMeta.addValueMeta(extra);
-    }
 
-    extra.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
+      extra.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
+    } else {
+      return;
+    }
   }
 
   @Override

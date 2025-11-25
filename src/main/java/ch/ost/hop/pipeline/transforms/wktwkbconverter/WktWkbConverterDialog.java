@@ -67,7 +67,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private List<Button> fromFormatButtons = new ArrayList<>();
   private List<Button> toFormatButtons = new ArrayList<>();
 
-    private int margin;
+  private int margin;
 
   private final Map<String, Integer> fields;
 
@@ -178,8 +178,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wBigEndian.setEnabled(wFromWKTButton.getSelection());
     wLilEndian.setEnabled(wFromWKTButton.getSelection());
     wSRIDField.setEnabled(wSRIDButton.getSelection());
-    wInputYFieldCombo.setEnabled(wFromWKTButton.getSelection());
-    wOutputYFieldCombo.setEnabled(wToWKTButton.getSelection());
+    wInputYFieldCombo.setEnabled(wFromPCButton.getSelection());
+    wOutputYFieldCombo.setEnabled(wToPCButton.getSelection());
+    toggleFormatButtons();
 
     BaseDialog.defaultShellHandling(shell, c -> ok(), c -> cancel());
 
@@ -200,7 +201,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fdConversionGroup.top = new FormAttachment(attachment, 10);
     wConversionGroup.setLayoutData(fdConversionGroup);
 
-      Composite fromComposite = new Composite(wConversionGroup, SWT.NONE);
+    Composite fromComposite = new Composite(wConversionGroup, SWT.NONE);
     fromComposite.setLayout(new GridLayout(4, false));
     FormData fdFromComposite = new FormData();
     fdFromComposite.left = new FormAttachment(0, 0);
@@ -214,7 +215,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wFromWKTButton =
         createFormatButton(
-                fromComposite,
+            fromComposite,
             "WktWkb.Conversion.WKT.Button",
             GeometryFormat.WKT,
             fromFormatButtons,
@@ -222,7 +223,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wFromWKBButton =
         createFormatButton(
-                fromComposite,
+            fromComposite,
             "WktWkb.Conversion.WKB.Button",
             GeometryFormat.WKB,
             fromFormatButtons,
@@ -230,13 +231,13 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wFromPCButton =
         createFormatButton(
-                fromComposite,
+            fromComposite,
             "WktWkb.Conversion.PC.Button",
             GeometryFormat.POINT_COORDINATE,
             fromFormatButtons,
             lsSelMod);
 
-      Composite toComposite = new Composite(wConversionGroup, SWT.NONE);
+    Composite toComposite = new Composite(wConversionGroup, SWT.NONE);
     toComposite.setLayout(new GridLayout(4, false));
     FormData fdToComposite = new FormData();
     fdToComposite.left = new FormAttachment(0, 0);
@@ -250,7 +251,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wToWKTButton =
         createFormatButton(
-                toComposite,
+            toComposite,
             "WktWkb.Conversion.WKT.Button",
             GeometryFormat.WKT,
             toFormatButtons,
@@ -258,7 +259,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wToWKBButton =
         createFormatButton(
-                toComposite,
+            toComposite,
             "WktWkb.Conversion.WKB.Button",
             GeometryFormat.WKB,
             toFormatButtons,
@@ -266,17 +267,15 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wToPCButton =
         createFormatButton(
-                toComposite,
+            toComposite,
             "WktWkb.Conversion.PC.Button",
             GeometryFormat.POINT_COORDINATE,
             toFormatButtons,
             lsSelMod);
 
-    Listener enableYInput =
-        e -> wInputYFieldCombo.setEnabled(wFromPCButton.getSelection());
+    Listener enableYInput = e -> wInputYFieldCombo.setEnabled(wFromPCButton.getSelection());
     wFromPCButton.addListener(SWT.Selection, enableYInput);
-    Listener enableYOutput =
-        e -> wOutputYFieldCombo.setEnabled(wToPCButton.getSelection());
+    Listener enableYOutput = e -> wOutputYFieldCombo.setEnabled(wToPCButton.getSelection());
     wToPCButton.addListener(SWT.Selection, enableYOutput);
 
     return wConversionGroup;
@@ -352,8 +351,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     PropsUi.setLook(wSRIDButton);
     wSRIDButton.addSelectionListener(lsSelMod);
 
-    Listener updateSRIDFieldListener =
-        e -> wSRIDField.setEnabled(wSRIDButton.getSelection());
+    Listener updateSRIDFieldListener = e -> wSRIDField.setEnabled(wSRIDButton.getSelection());
 
     wSRIDButton.addListener(SWT.Selection, updateSRIDFieldListener);
 
@@ -486,7 +484,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wOutputYFieldCombo.setItems(fields.keySet().toArray(new String[0]));
     FormData fdYOutputField = new FormData();
     fdYOutputField.left = new FormAttachment(wlOutputFieldLabel, margin);
-    fdYOutputField.top = new FormAttachment(wOutputFieldCombo, 0);
+    fdYOutputField.top = new FormAttachment(wOutputFieldCombo, margin);
     fdYOutputField.right = new FormAttachment(100, 0);
     wOutputYFieldCombo.setLayoutData(fdYOutputField);
     wOutputYFieldCombo.addModifyListener(e -> input.setChanged());
@@ -509,8 +507,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     GridData gdButton = new GridData();
     gdButton.horizontalIndent = 20;
     button.setLayoutData(gdButton);
-    Listener disableFormat =
-        e -> disableSameFormatOppositeDirection();
+    Listener disableFormat = e -> toggleFormatButtons();
     button.addListener(SWT.Selection, disableFormat);
     return button;
   }
@@ -556,8 +553,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wTransformName.selectAll();
     wTransformName.setFocus();
 
-    setSelectedFormat(fromFormatButtons, input.getFromFormat());
-    setSelectedFormat(toFormatButtons, input.getToFormat());
+    setSelectedFormat(fromFormatButtons, input.getInputFormat());
+    setSelectedFormat(toFormatButtons, input.getOutputFormat());
 
     if (input.isAddSRID()) {
       wSRIDField.setText(Integer.toString(input.getSrid()));
@@ -567,6 +564,12 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
       wBigEndian.setSelection(true);
     } else {
       wLilEndian.setSelection(true);
+    }
+
+    if (input.getInputFormat() == GeometryFormat.POINT_COORDINATE) {
+      wInputYFieldCombo.setText(input.getInputYField());
+    } else if (input.getOutputFormat() == GeometryFormat.POINT_COORDINATE) {
+      wOutputYFieldCombo.setText(input.getOutputYField());
     }
 
     wSRIDButton.setSelection(input.isAddSRID());
@@ -591,8 +594,14 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private void getInfo(WktWkbConverterMeta in) {
     input.setInputField(wInputFieldCombo.getText());
     input.setOutputField(wOutputFieldCombo.getText());
-    input.setFromFormat(getSelectedFormat(fromFormatButtons));
-    input.setToFormat(getSelectedFormat(toFormatButtons));
+    input.setInputFormat(getSelectedFormat(fromFormatButtons));
+    if (input.getOutputFormat() == GeometryFormat.POINT_COORDINATE) {
+      input.setInputYField(wInputYFieldCombo.getText());
+    }
+    input.setOutputFormat(getSelectedFormat(toFormatButtons));
+    if (input.getOutputFormat() == GeometryFormat.POINT_COORDINATE) {
+      input.setOutputYField(wOutputYFieldCombo.getText());
+    }
     input.setEndianness(wBigEndian.getSelection() ? 1 : 2);
     input.setAddSRID(wSRIDButton.getSelection());
     input.setSrid(Integer.parseInt(!wSRIDField.getText().isEmpty() ? wSRIDField.getText() : "0"));
@@ -613,7 +622,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     }
   }
 
-  private void disableSameFormatOppositeDirection() {
+  private void toggleFormatButtons() {
     Button fromButton, toButton;
     for (int i = 0; i < fromFormatButtons.size(); i++) {
       fromButton = fromFormatButtons.get(i);
