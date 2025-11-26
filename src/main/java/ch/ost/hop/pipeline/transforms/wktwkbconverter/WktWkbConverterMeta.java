@@ -37,7 +37,7 @@ import java.util.function.Supplier;
 
 /** Meta data for the sample transform. */
 @Transform(
-    id = "Wkt/Wkb",
+    id = "WKT/WKB Converter",
     name = "i18n::WktWkb.Name",
     description = "i18n::WktWkb.Description",
     image = "sample.svg",
@@ -174,47 +174,35 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
     String resolvedOutputField = variables.resolve(getOutputField());
     String resolvedYOutputField = variables.resolve(getYOutputField());
     GeometryFormat outputFormat = getOutputFormat();
+    String finalName;
 
     switch (outputFormat) {
       case WKT:
-        {
-          String finalName =
-              Utils.isEmpty(resolvedOutputField) ? "geometry_wkt" : resolvedOutputField;
-          addField(rowMeta, name, finalName, () -> new ValueMetaString(finalName));
-          break;
-        }
+        finalName = Utils.isEmpty(resolvedOutputField) ? "geometry_wkt" : resolvedOutputField;
+        addField(rowMeta, name, finalName, () -> new ValueMetaString(finalName));
+        break;
       case WKB:
-        {
-          String finalName =
-              Utils.isEmpty(resolvedOutputField) ? "geometry_wkb" : resolvedOutputField;
-          addField(rowMeta, name, finalName, () -> new ValueMetaBinary(finalName));
-          break;
-        }
+        finalName = Utils.isEmpty(resolvedOutputField) ? "geometry_wkb" : resolvedOutputField;
+        addField(rowMeta, name, finalName, () -> new ValueMetaBinary(finalName));
+        break;
       case POINT_COORDINATE:
-        {
-          String finalX = Utils.isEmpty(resolvedOutputField) ? "longitude" : resolvedOutputField;
-          String finalY = Utils.isEmpty(resolvedYOutputField) ? "latitude" : resolvedYOutputField;
-          addField(rowMeta, name, finalX, () -> new ValueMetaNumber(finalX));
-          addField(rowMeta, name, finalY, () -> new ValueMetaNumber(finalY));
-          break;
-        }
+        String finalX = Utils.isEmpty(resolvedOutputField) ? "longitude" : resolvedOutputField;
+        String finalY = Utils.isEmpty(resolvedYOutputField) ? "latitude" : resolvedYOutputField;
+        addField(rowMeta, name, finalX, () -> new ValueMetaNumber(finalX));
+        addField(rowMeta, name, finalY, () -> new ValueMetaNumber(finalY));
+        break;
     }
   }
 
   private void addField(
       IRowMeta rowMeta, String origin, String fieldName, Supplier<IValueMeta> metaSupplier) {
-    String lookupName = fieldName == null ? "" : fieldName.trim();
-
-    int id = rowMeta.indexOfValue(lookupName);
+    int id = rowMeta.indexOfValue(fieldName);
+    IValueMeta meta = metaSupplier.get();
+    meta.setOrigin(origin);
+    meta.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
     if (id < 0) {
-      IValueMeta meta = metaSupplier.get();
-      meta.setOrigin(origin);
-      meta.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
       rowMeta.addValueMeta(meta);
     } else {
-      IValueMeta meta = metaSupplier.get();
-      meta.setOrigin(origin);
-      meta.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
       rowMeta.setValueMeta(id, meta);
     }
   }

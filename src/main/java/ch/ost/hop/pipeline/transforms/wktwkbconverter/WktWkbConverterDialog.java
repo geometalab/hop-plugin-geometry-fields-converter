@@ -76,9 +76,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private IRowMeta prevFields;
 
   public WktWkbConverterDialog(
-      Shell parent, IVariables variables, WktWkbConverterMeta in, PipelineMeta pipelineMeta) {
-    super(parent, variables, in, pipelineMeta);
-    input = in;
+      Shell parent, IVariables variables, WktWkbConverterMeta transformMeta, PipelineMeta pipelineMeta) {
+    super(parent, variables, transformMeta, pipelineMeta);
+    input = transformMeta;
     fields = new HashMap<>();
   }
 
@@ -176,12 +176,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     getData();
     input.setChanged(changed);
     setComboValues();
-
-    wBigEndian.setEnabled(wFromWKTButton.getSelection());
-    wLilEndian.setEnabled(wFromWKTButton.getSelection());
-    wSRIDField.setEnabled(wSRIDButton.getSelection());
-    wYInputFieldCombo.setEnabled(wFromPCButton.getSelection());
-    wYOutputFieldCombo.setEnabled(wToPCButton.getSelection());
     toggleFormatButtons();
 
     BaseDialog.defaultShellHandling(shell, c -> ok(), c -> cancel());
@@ -259,15 +253,17 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
             toFormatButtons,
             lsSelMod);
 
-    Listener fromPCListener = e -> {
-        wYInputFieldCombo.setEnabled(wFromPCButton.getSelection());
-        wSRIDButton.setEnabled(!wFromPCButton.getSelection());
-    };
+    Listener fromPCListener =
+        e -> {
+          wYInputFieldCombo.setEnabled(wFromPCButton.getSelection());
+          wSRIDButton.setEnabled(!wFromPCButton.getSelection());
+        };
     wFromPCButton.addListener(SWT.Selection, fromPCListener);
-    Listener toPCListener = e -> {
-        wYOutputFieldCombo.setEnabled(wToPCButton.getSelection());
-        wSRIDButton.setEnabled(!wToPCButton.getSelection());
-    };
+    Listener toPCListener =
+        e -> {
+          wYOutputFieldCombo.setEnabled(wToPCButton.getSelection());
+          wSRIDButton.setEnabled(!wToPCButton.getSelection());
+        };
     wToPCButton.addListener(SWT.Selection, toPCListener);
 
     return wConversionGroup;
@@ -565,6 +561,12 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     }
 
     wSRIDButton.setSelection(input.isAddSRID());
+
+    wBigEndian.setEnabled(wFromWKTButton.getSelection());
+    wLilEndian.setEnabled(wFromWKTButton.getSelection());
+    wSRIDField.setEnabled(wSRIDButton.getSelection());
+    wYInputFieldCombo.setEnabled(wFromPCButton.getSelection());
+    wYOutputFieldCombo.setEnabled(wToPCButton.getSelection());
   }
 
   private void setComboValues() {
@@ -586,14 +588,14 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private void getInfo(WktWkbConverterMeta in) {
     input.setInputField(wInputFieldCombo.getText());
     input.setOutputField(wOutputFieldCombo.getText());
-    input.setInputFormat(getSelectedFormat(fromFormatButtons));
-    if (input.getOutputFormat() == POINT_COORDINATE) {
+    if (input.getInputFormat() == POINT_COORDINATE) {
       input.setYInputField(wYInputFieldCombo.getText());
-    }
-    input.setOutputFormat(getSelectedFormat(toFormatButtons));
-    if (input.getOutputFormat() == POINT_COORDINATE) {
+    } else if (input.getOutputFormat() == POINT_COORDINATE) {
       input.setYOutputField(wYOutputFieldCombo.getText());
     }
+    input.setInputFormat(getSelectedFormat(fromFormatButtons));
+    input.setOutputFormat(getSelectedFormat(toFormatButtons));
+
     input.setEndianness(wBigEndian.getSelection() ? 1 : 2);
     input.setAddSRID(wSRIDButton.getSelection() && wSRIDButton.isEnabled());
     input.setSrid(Integer.parseInt(!wSRIDField.getText().isEmpty() ? wSRIDField.getText() : "0"));
@@ -645,7 +647,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     }
 
     getInfo(input);
-    transformName = wTransformName.getText(); // return value
+    transformName = wTransformName.getText();
     dispose();
   }
 }

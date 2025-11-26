@@ -154,7 +154,7 @@
   </transform>
   <transform>
     <name>WKT/WKB Converter</name>
-    <type>Wkt/Wkb</type>
+    <type>WKT/WKB Converter</type>
     <description/>
     <distribute>N</distribute>
     <custom_distribution/>
@@ -180,7 +180,7 @@
   </transform>
   <transform>
     <name>WKT/WKB Converter 2</name>
-    <type>Wkt/Wkb</type>
+    <type>WKT/WKB Converter</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>

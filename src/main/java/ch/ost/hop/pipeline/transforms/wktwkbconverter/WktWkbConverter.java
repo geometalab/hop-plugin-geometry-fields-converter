@@ -75,17 +75,17 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
         throw new HopException("Field " + realInputField + " not found");
       data.inputMeta = data.inputRowMeta.getValueMeta(data.inputFieldIndex);
 
-      if (meta.getOutputFormat() == POINT_COORDINATE) {
+      if (meta.getInputFormat() == POINT_COORDINATE) {
         String realYInputField = resolve(meta.getYInputField());
-        data.yInputFieldIndex = data.inputRowMeta.indexOfValue(realYInputField);
+        data.yInputFieldIndex = getInputRowMeta().indexOfValue(realYInputField);
         if (data.yInputFieldIndex < 0)
-          throw new HopException("Field " + realInputField + " not found");
+          throw new HopException("Field " + realYInputField + " not found");
         data.yInputMeta = data.inputRowMeta.getValueMeta(data.yInputFieldIndex);
       }
 
       data.outputMeta = data.outputRowMeta.searchValueMeta(realOutputField);
       data.outputFieldIndex = data.outputRowMeta.indexOfValue(realOutputField);
-      if (meta.getOutputFormat() == GeometryFormat.POINT_COORDINATE) {
+      if (meta.getOutputFormat() == POINT_COORDINATE) {
         data.yOutputMeta = data.outputRowMeta.searchValueMeta(realYOutputField);
         data.yOutputFieldIndex = data.outputRowMeta.indexOfValue(realYOutputField);
 
@@ -105,10 +105,6 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
           data.outputFieldIndex = data.outputRowMeta.size() - 1;
         }
       }
-      System.out.println("input x: " + data.inputFieldIndex);
-      System.out.println("input y: " + data.yInputFieldIndex);
-      System.out.println("output x: " + data.outputFieldIndex);
-      System.out.println("output y: " + data.yOutputFieldIndex);
     }
 
     try {
@@ -117,17 +113,15 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       switch (meta.getInputFormat()) {
         case WKT:
           String inWKT = Const.NVL(data.inputMeta.getString(inputRow[data.inputFieldIndex]), "");
-          System.out.println("WKT: " + inWKT);
           geometry = wktToGeometry(inWKT);
           break;
         case WKB:
           byte[] inWKB = data.inputMeta.getBinary(inputRow[data.inputFieldIndex]);
-          System.out.println("WKB: " + Arrays.toString(inWKB));
           geometry = wkbToGeometry(inWKB);
           break;
         case POINT_COORDINATE:
-          double x = (double) inputRow[data.inputFieldIndex];
-          double y = (double) inputRow[data.yInputFieldIndex];
+          double x = data.inputMeta.getNumber(inputRow[data.inputFieldIndex]);
+          double y = data.yInputMeta.getNumber(inputRow[data.yInputFieldIndex]);
           geometry = pcToGeometry(x, y);
           break;
       }
@@ -146,8 +140,6 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
           outputRow[data.yOutputFieldIndex] = pointCoordinates[1];
           break;
       }
-      System.out.println("output : " + Arrays.toString(outputRow));
-
       putRow(data.outputRowMeta, outputRow);
     } catch (Exception e) {
       throw new HopException(

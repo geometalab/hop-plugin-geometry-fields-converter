@@ -44,7 +44,6 @@ public class WktWkbConverterTests {
   public void testEWKTToEWKBAndBack() throws Exception {
     String ewkt = "SRID=4326;POINT (-44.3 60.1)";
     Geometry geometry = WktWkbConverter.wktToGeometry(ewkt);
-    System.out.println(geometry.getSRID());
     String result = WktWkbConverter.geometryToWKT(geometry, false, 0);
     assertEquals(ewkt, result);
   }
