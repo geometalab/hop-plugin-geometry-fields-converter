@@ -35,7 +35,11 @@ public class WktWkbConverterData extends BaseTransformData implements ITransform
   public IRowMeta inputRowMeta;
 
   public int inputFieldIndex = -1;
+  public int yInputFieldIndex = -1;
   public int outputFieldIndex = -1;
+  public int yOutputFieldIndex = -1;
   public IValueMeta inputMeta;
+  public IValueMeta yInputMeta;
   public IValueMeta outputMeta;
+  public IValueMeta yOutputMeta;
 }

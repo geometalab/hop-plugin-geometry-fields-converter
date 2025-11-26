@@ -53,9 +53,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
   private final WktWkbConverterMeta input;
   private ComboVar wInputFieldCombo;
-  private ComboVar wInputYFieldCombo;
+  private ComboVar wYInputFieldCombo;
   private ComboVar wOutputFieldCombo;
-  private ComboVar wOutputYFieldCombo;
+  private ComboVar wYOutputFieldCombo;
   private Button wFromWKTButton;
   private Button wFromWKBButton;
   private Button wFromPCButton;
@@ -180,8 +180,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wBigEndian.setEnabled(wFromWKTButton.getSelection());
     wLilEndian.setEnabled(wFromWKTButton.getSelection());
     wSRIDField.setEnabled(wSRIDButton.getSelection());
-    wInputYFieldCombo.setEnabled(wFromPCButton.getSelection());
-    wOutputYFieldCombo.setEnabled(wToPCButton.getSelection());
+    wYInputFieldCombo.setEnabled(wFromPCButton.getSelection());
+    wYOutputFieldCombo.setEnabled(wToPCButton.getSelection());
     toggleFormatButtons();
 
     BaseDialog.defaultShellHandling(shell, c -> ok(), c -> cancel());
@@ -259,9 +259,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
             toFormatButtons,
             lsSelMod);
 
-    Listener enableYInput = e -> wInputYFieldCombo.setEnabled(wFromPCButton.getSelection());
+    Listener enableYInput = e -> wYInputFieldCombo.setEnabled(wFromPCButton.getSelection());
     wFromPCButton.addListener(SWT.Selection, enableYInput);
-    Listener enableYOutput = e -> wOutputYFieldCombo.setEnabled(wToPCButton.getSelection());
+    Listener enableYOutput = e -> wYOutputFieldCombo.setEnabled(wToPCButton.getSelection());
     wToPCButton.addListener(SWT.Selection, enableYOutput);
 
     return wConversionGroup;
@@ -411,18 +411,18 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wInputFieldCombo.setLayoutData(fdInputField);
     wInputFieldCombo.addModifyListener(e -> input.setChanged());
 
-    wInputYFieldCombo = new ComboVar(variables, wInputGroup, SWT.DROP_DOWN | SWT.BORDER);
-    wInputYFieldCombo.setToolTipText(
-        BaseMessages.getString(PKG, "WktWkb.InputYFieldSelection.Tooltip"));
-    PropsUi.setLook(wInputYFieldCombo);
-    wInputYFieldCombo.addModifyListener(lsMod);
-    wInputYFieldCombo.setItems(fields.keySet().toArray(new String[0]));
+    wYInputFieldCombo = new ComboVar(variables, wInputGroup, SWT.DROP_DOWN | SWT.BORDER);
+    wYInputFieldCombo.setToolTipText(
+        BaseMessages.getString(PKG, "WktWkb.YInputFieldSelection.Tooltip"));
+    PropsUi.setLook(wYInputFieldCombo);
+    wYInputFieldCombo.addModifyListener(lsMod);
+    wYInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
     FormData fdYInputField = new FormData();
     fdYInputField.left = new FormAttachment(wlInputFieldLabel, margin);
     fdYInputField.top = new FormAttachment(wInputFieldCombo, margin);
     fdYInputField.right = new FormAttachment(100, 0);
-    wInputYFieldCombo.setLayoutData(fdYInputField);
-    wInputYFieldCombo.addModifyListener(e -> input.setChanged());
+    wYInputFieldCombo.setLayoutData(fdYInputField);
+    wYInputFieldCombo.addModifyListener(e -> input.setChanged());
 
     return wInputGroup;
   }
@@ -462,18 +462,18 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wOutputFieldCombo.setLayoutData(fdSchemaPath);
     wOutputFieldCombo.addModifyListener(e -> input.setChanged());
 
-    wOutputYFieldCombo = new ComboVar(variables, wOutputGroup, SWT.DROP_DOWN | SWT.BORDER);
-    wOutputYFieldCombo.setToolTipText(
-        BaseMessages.getString(PKG, "WktWkb.OutputYFieldSelection.Tooltip"));
-    PropsUi.setLook(wOutputYFieldCombo);
-    wOutputYFieldCombo.addModifyListener(lsMod);
-    wOutputYFieldCombo.setItems(fields.keySet().toArray(new String[0]));
+    wYOutputFieldCombo = new ComboVar(variables, wOutputGroup, SWT.DROP_DOWN | SWT.BORDER);
+    wYOutputFieldCombo.setToolTipText(
+        BaseMessages.getString(PKG, "WktWkb.YOutputFieldSelection.Tooltip"));
+    PropsUi.setLook(wYOutputFieldCombo);
+    wYOutputFieldCombo.addModifyListener(lsMod);
+    wYOutputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
     FormData fdYOutputField = new FormData();
     fdYOutputField.left = new FormAttachment(wlOutputFieldLabel, margin);
     fdYOutputField.top = new FormAttachment(wOutputFieldCombo, margin);
     fdYOutputField.right = new FormAttachment(100, 0);
-    wOutputYFieldCombo.setLayoutData(fdYOutputField);
-    wOutputYFieldCombo.addModifyListener(e -> input.setChanged());
+    wYOutputFieldCombo.setLayoutData(fdYOutputField);
+    wYOutputFieldCombo.addModifyListener(e -> input.setChanged());
 
     return wOutputGroup;
   }
@@ -522,9 +522,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     }
 
     wInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
-    wInputYFieldCombo.setItems(fields.keySet().toArray(new String[0]));
+    wYInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
     wOutputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
-    wOutputYFieldCombo.setItems(fields.keySet().toArray(new String[0]));
+    wYOutputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
   }
 
   /** Copy information from the meta-data input to the dialog fields. */
@@ -553,9 +553,9 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     }
 
     if (input.getInputFormat() == POINT_COORDINATE) {
-      wInputYFieldCombo.setText(input.getInputYField());
+      wYInputFieldCombo.setText(input.getYInputField());
     } else if (input.getOutputFormat() == POINT_COORDINATE) {
-      wOutputYFieldCombo.setText(input.getOutputYField());
+      wYOutputFieldCombo.setText(input.getYOutputField());
     }
 
     wSRIDButton.setSelection(input.isAddSRID());
@@ -582,11 +582,11 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     input.setOutputField(wOutputFieldCombo.getText());
     input.setInputFormat(getSelectedFormat(fromFormatButtons));
     if (input.getOutputFormat() == POINT_COORDINATE) {
-      input.setInputYField(wInputYFieldCombo.getText());
+      input.setYInputField(wYInputFieldCombo.getText());
     }
     input.setOutputFormat(getSelectedFormat(toFormatButtons));
     if (input.getOutputFormat() == POINT_COORDINATE) {
-      input.setOutputYField(wOutputYFieldCombo.getText());
+      input.setYOutputField(wYOutputFieldCombo.getText());
     }
     input.setEndianness(wBigEndian.getSelection() ? 1 : 2);
     input.setAddSRID(wSRIDButton.getSelection());

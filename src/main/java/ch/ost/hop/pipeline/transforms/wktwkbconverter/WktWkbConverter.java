@@ -29,6 +29,10 @@ import org.apache.hop.pipeline.transform.TransformMeta;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.*;
 
+import java.util.Arrays;
+
+import static ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat.POINT_COORDINATE;
+
 /** Transform That contains the basic skeleton needed to create your own plugin */
 public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbConverterData> {
 
@@ -62,29 +66,84 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
 
       String realInputField = resolve(meta.getInputField());
       String realOutputField = resolve(meta.getOutputField());
+      String realYOutputField = resolve(meta.getYOutputField());
 
       data.inputFieldIndex = getInputRowMeta().indexOfValue(realInputField);
       if (data.inputFieldIndex < 0)
         throw new HopException("Field " + realInputField + " not found");
       data.inputMeta = data.inputRowMeta.getValueMeta(data.inputFieldIndex);
 
+      if (meta.getOutputFormat() == POINT_COORDINATE) {
+        String realYInputField = resolve(meta.getYInputField());
+        data.yInputFieldIndex = data.inputRowMeta.indexOfValue(realYInputField);
+        if (data.yInputFieldIndex < 0)
+          throw new HopException("Field " + realInputField + " not found");
+        data.yInputMeta = data.inputRowMeta.getValueMeta(data.yInputFieldIndex);
+      }
+
       data.outputMeta = data.outputRowMeta.searchValueMeta(realOutputField);
       data.outputFieldIndex = data.outputRowMeta.indexOfValue(realOutputField);
-      if (data.outputFieldIndex < 0) {
-        data.outputFieldIndex = data.outputRowMeta.size() - 1;
-      }
+        if (meta.getOutputFormat() == GeometryFormat.POINT_COORDINATE) {
+            data.yOutputMeta = data.outputRowMeta.searchValueMeta(realYOutputField);
+            data.yOutputFieldIndex = data.outputRowMeta.indexOfValue(realYOutputField);
+
+            if (data.outputFieldIndex < 0 && data.yOutputFieldIndex < 0) {
+                data.outputFieldIndex = data.outputRowMeta.size() - 2;
+                data.yOutputFieldIndex = data.outputRowMeta.size() - 1;
+            }
+
+            else if (data.outputFieldIndex >= 0 && data.yOutputFieldIndex < 0) {
+                data.yOutputFieldIndex = data.outputRowMeta.size() - 1;
+            }
+
+            else if (data.outputFieldIndex < 0) {
+                data.outputFieldIndex = data.outputRowMeta.size() - 1;
+            }
+
+        } else {
+            data.yOutputFieldIndex = -1;
+            data.yOutputMeta = null;
+            if (data.outputFieldIndex < 0) {
+                data.outputFieldIndex = data.outputRowMeta.size() - 1;
+            }
+        }
+      System.out.println("input x: " + data.inputFieldIndex);
+      System.out.println("input y: " + data.yInputFieldIndex);
+      System.out.println("output x: " + data.outputFieldIndex);
+      System.out.println("output y: " + data.yOutputFieldIndex);
     }
 
     try {
       Object[] outputRow = RowDataUtil.createResizedCopy(inputRow, data.outputRowMeta.size());
-      if (meta.getOutputFormat() == GeometryFormat.WKB) {
-        String inWKT = Const.NVL(data.inputMeta.getString(inputRow[data.inputFieldIndex]), "");
-        outputRow[data.outputFieldIndex] =
-            wktToWkb(inWKT, meta.getEndianness(), meta.isAddSRID(), meta.getSrid());
-      } else {
-        byte[] inWKB = data.inputMeta.getBinary(inputRow[data.inputFieldIndex]);
-        outputRow[data.outputFieldIndex] = wkbToWkt(inWKB, meta.isAddSRID(), meta.getSrid());
+      Geometry geometry = null;
+      switch (meta.getInputFormat()) {
+        case WKT:
+          String inWKT = Const.NVL(data.inputMeta.getString(inputRow[data.inputFieldIndex]), "");
+          System.out.println("WKT: " + inWKT);
+          geometry = wktToGeometry(inWKT);
+          break;
+        case WKB:
+          byte[] inWKB = data.inputMeta.getBinary(inputRow[data.inputFieldIndex]);
+          System.out.println("WKB: " + Arrays.toString(inWKB));
+          geometry = wkbToGeometry(inWKB);
+          break;
+        case POINT_COORDINATE:
+          break;
       }
+      switch (meta.getOutputFormat()) {
+        case WKT:
+          outputRow[data.outputFieldIndex] =
+              geometryToWKT(geometry, meta.isAddSRID(), meta.getSrid());
+          break;
+        case WKB:
+          outputRow[data.outputFieldIndex] =
+              geometryToWKB(geometry, meta.getEndianness(), meta.isAddSRID(), meta.getSrid());
+          break;
+        case POINT_COORDINATE:
+          break;
+      }
+      System.out.println("output : " + Arrays.toString(outputRow));
+
       putRow(data.outputRowMeta, outputRow);
     } catch (Exception e) {
       throw new HopException(
@@ -93,8 +152,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
     return true;
   }
 
-  public static byte[] wktToWkb(String wkt, int endianness, boolean addSRID, int newSrid)
-      throws Exception {
+  public static Geometry wktToGeometry(String wkt) throws Exception {
     String geomStr = wkt;
     int oldSrid = 0;
     if (wkt.contains(";")) {
@@ -105,10 +163,6 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
         throw new HopException("WktWkb.SRIDIncorrectlyFormatted.DialogMessage", e);
       }
       geomStr = parts[1];
-      if (addSRID && oldSrid != newSrid) {
-        throw new HopException(
-            BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.DialogMessage"));
-      }
     }
     Geometry geometry;
     try {
@@ -116,26 +170,24 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
     } catch (ParseException e) {
       throw new HopException("WktWkb.GeometryIncorrectlyFormated.DialogMessage" + wkt, e);
     }
-    int outputDimension = getDimensions(geometry);
-    var byteOrder = getByteOrder(endianness);
-    boolean includeSRID = false;
-    if (addSRID) {
-      geometry.setSRID(newSrid);
-      includeSRID = true;
-    } else if (oldSrid != 0) {
+    if (oldSrid != 0) {
       geometry.setSRID(oldSrid);
-      includeSRID = true;
     }
-    return new WKBWriter(outputDimension, byteOrder, includeSRID).write(geometry);
+    return geometry;
   }
 
-  public static String wkbToWkt(byte[] wkb, boolean addSRID, int newSRID) throws Exception {
+  public static Geometry wkbToGeometry(byte[] wkb) throws Exception {
     Geometry geometry;
     try {
       geometry = new WKBReader().read(wkb);
     } catch (ParseException e) {
       throw new HopException("WktWkb.GeometryIncorrectlyFormated.DialogMessage", e);
     }
+    return geometry;
+  }
+
+  public static String geometryToWKT(Geometry geometry, boolean addSRID, int newSRID)
+      throws Exception {
     int outputDimension = getDimensions(geometry);
     String wkt = new WKTWriter(outputDimension).write(geometry);
     int currentSRID = geometry.getSRID();
@@ -153,6 +205,25 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       }
       return formatEWKT(wkt, newSRID);
     }
+  }
+
+  public static byte[] geometryToWKB(
+      Geometry geometry, int endianness, boolean addSRID, int newSRID) throws Exception {
+    int outputDimension = getDimensions(geometry);
+    int oldSRID = geometry.getSRID();
+    var byteOrder = getByteOrder(endianness);
+    boolean includeSRID = false;
+    if (addSRID) {
+      if (oldSRID != 0)
+        throw new HopException(
+            BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.DialogMessage"));
+      geometry.setSRID(newSRID);
+      includeSRID = true;
+    } else if (oldSRID != 0) {
+      geometry.setSRID(oldSRID);
+      includeSRID = true;
+    }
+    return new WKBWriter(outputDimension, byteOrder, includeSRID).write(geometry);
   }
 
   private static String formatEWKT(String wkt, int srid) {

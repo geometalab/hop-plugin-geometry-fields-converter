@@ -35,8 +35,6 @@ import org.apache.hop.pipeline.transform.TransformMeta;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat.*;
-
 /** Meta data for the sample transform. */
 @Transform(
     id = "Wkt/Wkb",
@@ -53,8 +51,8 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
 
   @HopMetadataProperty(
       key = "input_y_field",
-      injectionKeyDescription = "WktWkb.Injection.InputYField")
-  private String inputYField = "";
+      injectionKeyDescription = "WktWkb.Injection.YInputField")
+  private String yInputField = "";
 
   @HopMetadataProperty(
       key = "output_field",
@@ -63,8 +61,8 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
 
   @HopMetadataProperty(
       key = "output_y_field",
-      injectionKeyDescription = "WktWkb.Injection.OutputYField")
-  private String outputYField = "";
+      injectionKeyDescription = "WktWkb.Injection.YOutputField")
+  private String yOutputField = "";
 
   @HopMetadataProperty(
       key = "input_format",
@@ -94,12 +92,12 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
     this.inputField = inputField;
   }
 
-  public String getInputYField() {
-    return inputYField;
+  public String getYInputField() {
+    return yInputField;
   }
 
-  public void setInputYField(String inputYField) {
-    this.inputYField = inputYField;
+  public void setYInputField(String yInputField) {
+    this.yInputField = yInputField;
   }
 
   public String getOutputField() {
@@ -110,12 +108,12 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
     this.outputField = outputField;
   }
 
-  public String getOutputYField() {
-    return outputYField;
+  public String getYOutputField() {
+    return yOutputField;
   }
 
-  public void setOutputYField(String outputYField) {
-    this.outputYField = outputYField;
+  public void setYOutputField(String yOutputField) {
+    this.yOutputField = yOutputField;
   }
 
   public GeometryFormat getInputFormat() {
@@ -174,55 +172,51 @@ public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktW
       throws HopTransformException {
 
     String resolvedOutputField = variables.resolve(getOutputField());
-    String resolvedOutputYField = variables.resolve(getOutputYField());
+    String resolvedYOutputField = variables.resolve(getYOutputField());
     GeometryFormat outputFormat = getOutputFormat();
 
     switch (outputFormat) {
       case WKT:
-        addField(
-            rowMeta,
-            name,
-            resolvedOutputField,
-            () ->
-                new ValueMetaString(
-                    Utils.isEmpty(resolvedOutputField) ? "geometry_wkt" : resolvedOutputField));
-        break;
+        {
+          String finalName =
+              Utils.isEmpty(resolvedOutputField) ? "geometry_wkt" : resolvedOutputField;
+          addField(rowMeta, name, finalName, () -> new ValueMetaString(finalName));
+          break;
+        }
       case WKB:
-        addField(
-            rowMeta,
-            name,
-            resolvedOutputField,
-            () ->
-                new ValueMetaBinary(
-                    Utils.isEmpty(resolvedOutputField) ? "geometry_wkb" : resolvedOutputField));
-        break;
+        {
+          String finalName =
+              Utils.isEmpty(resolvedOutputField) ? "geometry_wkb" : resolvedOutputField;
+          addField(rowMeta, name, finalName, () -> new ValueMetaBinary(finalName));
+          break;
+        }
       case POINT_COORDINATE:
-        addField(
-            rowMeta,
-            name,
-            Utils.isEmpty(resolvedOutputField) ? "longitude" : resolvedOutputField,
-            () ->
-                new ValueMetaNumber(
-                    Utils.isEmpty(resolvedOutputField) ? "longitude" : resolvedOutputField));
-        String finalY = Utils.isEmpty(resolvedOutputYField) ? "latitude" : resolvedOutputYField;
-        addField(rowMeta, name, finalY, () -> new ValueMetaNumber(finalY));
-        break;
+        {
+          String finalX = Utils.isEmpty(resolvedOutputField) ? "longitude" : resolvedOutputField;
+          String finalY = Utils.isEmpty(resolvedYOutputField) ? "latitude" : resolvedYOutputField;
+          addField(rowMeta, name, finalX, () -> new ValueMetaNumber(finalX));
+          addField(rowMeta, name, finalY, () -> new ValueMetaNumber(finalY));
+          break;
+        }
     }
   }
 
   private void addField(
       IRowMeta rowMeta, String origin, String fieldName, Supplier<IValueMeta> metaSupplier) {
-    int id = rowMeta.indexOfValue(fieldName);
-    IValueMeta meta = metaSupplier.get();
+    String lookupName = fieldName == null ? "" : fieldName.trim();
 
+    int id = rowMeta.indexOfValue(lookupName);
     if (id < 0) {
+      IValueMeta meta = metaSupplier.get();
+      meta.setOrigin(origin);
+      meta.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
       rowMeta.addValueMeta(meta);
     } else {
+      IValueMeta meta = metaSupplier.get();
+      meta.setOrigin(origin);
+      meta.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
       rowMeta.setValueMeta(id, meta);
     }
-
-    meta.setOrigin(origin);
-    meta.setStorageType(IValueMeta.STORAGE_TYPE_NORMAL);
   }
 
   @Override
