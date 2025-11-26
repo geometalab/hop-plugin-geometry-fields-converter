@@ -6,7 +6,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>wktwkbconverter</artifactId>
+    <artifactId>hop-transform-wktwkbconverter</artifactId>
     <groupId>com.example.hop</groupId>
     <name>WKT/WKB Converter</name>
     <packaging>jar</packaging>
