@@ -56,6 +56,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private ComboVar wYInputFieldCombo;
   private ComboVar wOutputFieldCombo;
   private ComboVar wYOutputFieldCombo;
+  private TextVar wSRIDField;
   private Button wFromWKTButton;
   private Button wFromWKBButton;
   private Button wFromPCButton;
@@ -65,7 +66,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private Button wLilEndian;
   private Button wBigEndian;
   private Button wSRIDButton;
-  private TextVar wSRIDField;
+  private Button wBinHexButton;
   private List<Button> fromFormatButtons = new ArrayList<>();
   private List<Button> toFormatButtons = new ArrayList<>();
 
@@ -76,7 +77,10 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private IRowMeta prevFields;
 
   public WktWkbConverterDialog(
-      Shell parent, IVariables variables, WktWkbConverterMeta transformMeta, PipelineMeta pipelineMeta) {
+      Shell parent,
+      IVariables variables,
+      WktWkbConverterMeta transformMeta,
+      PipelineMeta pipelineMeta) {
     super(parent, variables, transformMeta, pipelineMeta);
     input = transformMeta;
     fields = new HashMap<>();
@@ -257,12 +261,20 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
         e -> {
           wYInputFieldCombo.setEnabled(wFromPCButton.getSelection());
           wSRIDButton.setEnabled(!wFromPCButton.getSelection());
+          wInputFieldCombo.setToolTipText(
+              wFromPCButton.getSelection()
+                  ? BaseMessages.getString(PKG, "WktWkb.InputXFieldSelection.Tooltip")
+                  : BaseMessages.getString(PKG, "WktWkb.InputFieldSelection.Tooltip"));
         };
     wFromPCButton.addListener(SWT.Selection, fromPCListener);
     Listener toPCListener =
         e -> {
           wYOutputFieldCombo.setEnabled(wToPCButton.getSelection());
           wSRIDButton.setEnabled(!wToPCButton.getSelection());
+          wOutputFieldCombo.setToolTipText(
+              wToPCButton.getSelection()
+                  ? BaseMessages.getString(PKG, "WktWkb.OutputXFieldSelection.Tooltip")
+                  : BaseMessages.getString(PKG, "WktWkb.OutputFieldSelection.Tooltip"));
         };
     wToPCButton.addListener(SWT.Selection, toPCListener);
 
@@ -340,7 +352,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wSRIDButton.addSelectionListener(lsSelMod);
 
     Listener updateSRIDFieldListener = e -> wSRIDField.setEnabled(wSRIDButton.getSelection());
-
     wSRIDButton.addListener(SWT.Selection, updateSRIDFieldListener);
 
     FormData fdSRIDButton = new FormData();
@@ -374,6 +385,17 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
             e.doit = false;
           }
         });
+
+    wBinHexButton = new Button(wOptionsGroup, SWT.CHECK);
+    wBinHexButton.setText(BaseMessages.getString(PKG, "WktWkb.BinHex.Button"));
+    wBinHexButton.setToolTipText(BaseMessages.getString(PKG, "WktWkb.BinHex.Button.Tooltip"));
+    PropsUi.setLook(wBinHexButton);
+    wBinHexButton.addSelectionListener(lsSelMod);
+    FormData fdBinHexButton = new FormData();
+    fdBinHexButton.left = new FormAttachment(0, 0);
+    fdBinHexButton.top = new FormAttachment(wSRIDButton, margin);
+    wBinHexButton.setLayoutData(fdBinHexButton);
+
     return wOptionsGroup;
   }
 
