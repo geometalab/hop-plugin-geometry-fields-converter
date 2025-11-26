@@ -15,7 +15,7 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <hop.version>2.15.0</hop.version>
+        <hop.version>2.16.0</hop.version>
         <jandex.version>3.2.3</jandex.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hop.plugins.dir>C:\Users\simon\workspace\hop\plugins\transforms\wktwkbconverter</hop.plugins.dir>
