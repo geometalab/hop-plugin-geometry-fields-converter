@@ -259,10 +259,16 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
             toFormatButtons,
             lsSelMod);
 
-    Listener enableYInput = e -> wYInputFieldCombo.setEnabled(wFromPCButton.getSelection());
-    wFromPCButton.addListener(SWT.Selection, enableYInput);
-    Listener enableYOutput = e -> wYOutputFieldCombo.setEnabled(wToPCButton.getSelection());
-    wToPCButton.addListener(SWT.Selection, enableYOutput);
+    Listener fromPCListener = e -> {
+        wYInputFieldCombo.setEnabled(wFromPCButton.getSelection());
+        wSRIDButton.setEnabled(!wFromPCButton.getSelection());
+    };
+    wFromPCButton.addListener(SWT.Selection, fromPCListener);
+    Listener toPCListener = e -> {
+        wYOutputFieldCombo.setEnabled(wToPCButton.getSelection());
+        wSRIDButton.setEnabled(!wToPCButton.getSelection());
+    };
+    wToPCButton.addListener(SWT.Selection, toPCListener);
 
     return wConversionGroup;
   }
@@ -589,7 +595,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
       input.setYOutputField(wYOutputFieldCombo.getText());
     }
     input.setEndianness(wBigEndian.getSelection() ? 1 : 2);
-    input.setAddSRID(wSRIDButton.getSelection());
+    input.setAddSRID(wSRIDButton.getSelection() && wSRIDButton.isEnabled());
     input.setSrid(Integer.parseInt(!wSRIDField.getText().isEmpty() ? wSRIDField.getText() : "0"));
   }
 

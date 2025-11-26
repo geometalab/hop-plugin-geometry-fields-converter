@@ -26,7 +26,9 @@ import org.apache.hop.pipeline.Pipeline;
 import org.apache.hop.pipeline.PipelineMeta;
 import org.apache.hop.pipeline.transform.BaseTransform;
 import org.apache.hop.pipeline.transform.TransformMeta;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.io.*;
 
 import java.util.Arrays;
@@ -83,30 +85,26 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
 
       data.outputMeta = data.outputRowMeta.searchValueMeta(realOutputField);
       data.outputFieldIndex = data.outputRowMeta.indexOfValue(realOutputField);
-        if (meta.getOutputFormat() == GeometryFormat.POINT_COORDINATE) {
-            data.yOutputMeta = data.outputRowMeta.searchValueMeta(realYOutputField);
-            data.yOutputFieldIndex = data.outputRowMeta.indexOfValue(realYOutputField);
+      if (meta.getOutputFormat() == GeometryFormat.POINT_COORDINATE) {
+        data.yOutputMeta = data.outputRowMeta.searchValueMeta(realYOutputField);
+        data.yOutputFieldIndex = data.outputRowMeta.indexOfValue(realYOutputField);
 
-            if (data.outputFieldIndex < 0 && data.yOutputFieldIndex < 0) {
-                data.outputFieldIndex = data.outputRowMeta.size() - 2;
-                data.yOutputFieldIndex = data.outputRowMeta.size() - 1;
-            }
-
-            else if (data.outputFieldIndex >= 0 && data.yOutputFieldIndex < 0) {
-                data.yOutputFieldIndex = data.outputRowMeta.size() - 1;
-            }
-
-            else if (data.outputFieldIndex < 0) {
-                data.outputFieldIndex = data.outputRowMeta.size() - 1;
-            }
-
-        } else {
-            data.yOutputFieldIndex = -1;
-            data.yOutputMeta = null;
-            if (data.outputFieldIndex < 0) {
-                data.outputFieldIndex = data.outputRowMeta.size() - 1;
-            }
+        if (data.outputFieldIndex < 0 && data.yOutputFieldIndex < 0) {
+          data.outputFieldIndex = data.outputRowMeta.size() - 2;
+          data.yOutputFieldIndex = data.outputRowMeta.size() - 1;
+        } else if (data.outputFieldIndex >= 0 && data.yOutputFieldIndex < 0) {
+          data.yOutputFieldIndex = data.outputRowMeta.size() - 1;
+        } else if (data.outputFieldIndex < 0) {
+          data.outputFieldIndex = data.outputRowMeta.size() - 1;
         }
+
+      } else {
+        data.yOutputFieldIndex = -1;
+        data.yOutputMeta = null;
+        if (data.outputFieldIndex < 0) {
+          data.outputFieldIndex = data.outputRowMeta.size() - 1;
+        }
+      }
       System.out.println("input x: " + data.inputFieldIndex);
       System.out.println("input y: " + data.yInputFieldIndex);
       System.out.println("output x: " + data.outputFieldIndex);
@@ -128,6 +126,9 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
           geometry = wkbToGeometry(inWKB);
           break;
         case POINT_COORDINATE:
+          double x = (double) inputRow[data.inputFieldIndex];
+          double y = (double) inputRow[data.yInputFieldIndex];
+          geometry = pcToGeometry(x, y);
           break;
       }
       switch (meta.getOutputFormat()) {
@@ -140,6 +141,9 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
               geometryToWKB(geometry, meta.getEndianness(), meta.isAddSRID(), meta.getSrid());
           break;
         case POINT_COORDINATE:
+          double[] pointCoordinates = geometryToPC(geometry);
+          outputRow[data.outputFieldIndex] = pointCoordinates[0];
+          outputRow[data.yOutputFieldIndex] = pointCoordinates[1];
           break;
       }
       System.out.println("output : " + Arrays.toString(outputRow));
@@ -186,6 +190,12 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
     return geometry;
   }
 
+  public static Geometry pcToGeometry(double x, double y) throws Exception {
+    Geometry geometry;
+    geometry = new GeometryFactory().createPoint(new Coordinate(x, y));
+    return geometry;
+  }
+
   public static String geometryToWKT(Geometry geometry, boolean addSRID, int newSRID)
       throws Exception {
     int outputDimension = getDimensions(geometry);
@@ -224,6 +234,11 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       includeSRID = true;
     }
     return new WKBWriter(outputDimension, byteOrder, includeSRID).write(geometry);
+  }
+
+  public static double[] geometryToPC(Geometry geometry) throws Exception {
+    Coordinate coordinate = geometry.getCoordinate();
+    return new double[] {coordinate.getX(), coordinate.getY()};
   }
 
   private static String formatEWKT(String wkt, int srid) {
