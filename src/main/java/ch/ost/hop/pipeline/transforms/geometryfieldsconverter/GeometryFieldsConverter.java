@@ -33,7 +33,8 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.io.*;
 
 /** Transform That contains the basic skeleton needed to create your own plugin */
-public class GeometryFieldsConverter extends BaseTransform<GeometryFieldsMeta, GeometryFieldsConverterData> {
+public class GeometryFieldsConverter
+    extends BaseTransform<GeometryFieldsMeta, GeometryFieldsConverterData> {
 
   private static final Class<?> PKG = GeometryFieldsConverter.class; // Needed by Translator
 
@@ -128,7 +129,8 @@ public class GeometryFieldsConverter extends BaseTransform<GeometryFieldsMeta, G
         case WKT:
           if (geometry.getSRID() != meta.getSrid()) {
             logBasic(
-                geometry.toText() + BaseMessages.getString(PKG, "GeometryFields.SRIDAlreadyPresent.Log"));
+                geometry.toText()
+                    + BaseMessages.getString(PKG, "GeometryFields.SRIDAlreadyPresent.Log"));
           }
           outputRow[data.outputFieldIndex] =
               geometryToWKT(geometry, meta.isAddSRID(), meta.getSrid());
@@ -136,7 +138,8 @@ public class GeometryFieldsConverter extends BaseTransform<GeometryFieldsMeta, G
         case WKB:
           if (geometry.getSRID() != meta.getSrid()) {
             logBasic(
-                geometry.toText() + BaseMessages.getString(PKG, "GeometryFields.SRIDAlreadyPresent.Log"));
+                geometry.toText()
+                    + BaseMessages.getString(PKG, "GeometryFields.SRIDAlreadyPresent.Log"));
           }
           outputRow[data.outputFieldIndex] =
               geometryToWKB(geometry, meta.getEndianness(), meta.isAddSRID(), meta.getSrid());
@@ -195,14 +198,13 @@ public class GeometryFieldsConverter extends BaseTransform<GeometryFieldsMeta, G
     return geometry;
   }
 
-  public static Geometry pcToGeometry(double x, double y) throws Exception {
+  public static Geometry pcToGeometry(double x, double y) {
     Geometry geometry;
     geometry = new GeometryFactory().createPoint(new Coordinate(x, y));
     return geometry;
   }
 
-  public static String geometryToWKT(Geometry geometry, boolean addSRID, int newSRID)
-      throws Exception {
+  public static String geometryToWKT(Geometry geometry, boolean addSRID, int newSRID) {
     int outputDimension = getDimensions(geometry);
     String wkt = new WKTWriter(outputDimension).write(geometry);
     int currentSRID = geometry.getSRID();
@@ -223,7 +225,7 @@ public class GeometryFieldsConverter extends BaseTransform<GeometryFieldsMeta, G
   }
 
   public static byte[] geometryToWKB(
-      Geometry geometry, int endianness, boolean addSRID, int newSRID) throws Exception {
+      Geometry geometry, int endianness, boolean addSRID, int newSRID) {
     int outputDimension = getDimensions(geometry);
     boolean hasSRID = geometry.getSRID() != 0;
     var byteOrder = getByteOrder(endianness);
@@ -233,7 +235,7 @@ public class GeometryFieldsConverter extends BaseTransform<GeometryFieldsMeta, G
     return new WKBWriter(outputDimension, byteOrder, hasSRID || addSRID).write(geometry);
   }
 
-  public static double[] geometryToPC(Geometry geometry) throws Exception {
+  public static double[] geometryToPC(Geometry geometry) {
     Coordinate coordinate = geometry.getCoordinate();
     return new double[] {coordinate.getX(), coordinate.getY()};
   }
