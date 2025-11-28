@@ -17,7 +17,8 @@
 
 package ch.ost.hop.pipeline.transforms.wktwkbconverter;
 
-import ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat;
+import static ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat.POINT_COORDINATE;
+
 import org.apache.hop.core.Const;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.row.RowDataUtil;
@@ -30,10 +31,6 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.io.*;
-
-import java.util.Arrays;
-
-import static ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat.POINT_COORDINATE;
 
 /** Transform That contains the basic skeleton needed to create your own plugin */
 public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbConverterData> {
@@ -136,8 +133,17 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
           break;
         case POINT_COORDINATE:
           double[] pointCoordinates = geometryToPC(geometry);
-          outputRow[data.outputFieldIndex] = pointCoordinates[0];
-          outputRow[data.yOutputFieldIndex] = pointCoordinates[1];
+          if (geometry.getGeometryType().equals(Geometry.TYPENAME_POINT)) {
+            if (!Double.isNaN(geometry.getCoordinate().getZ())
+                || !Double.isNaN(geometry.getCoordinate().getM()))
+              throw new HopException(
+                  BaseMessages.getString(PKG, "WktWkb.FailedToConvert.DialogMessage"));
+            outputRow[data.outputFieldIndex] = pointCoordinates[0];
+            outputRow[data.yOutputFieldIndex] = pointCoordinates[1];
+          } else {
+            outputRow[data.outputFieldIndex] = null;
+            outputRow[data.yOutputFieldIndex] = null;
+          }
           break;
       }
       putRow(data.outputRowMeta, outputRow);
