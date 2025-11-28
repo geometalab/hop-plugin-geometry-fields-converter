@@ -9,6 +9,7 @@
 # Maven
 log/
 target/
+.run/
 
 #VSC
 .vscode/
