@@ -21,17 +21,17 @@
   </notepads>
   <order>
     <hop>
-      <from>WKT/WKB Converter</from>
-      <to>WKT/WKB Converter 2</to>
+      <from>Geometry Fields Converter</from>
+      <to>Geometry Fields Converter 2</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>CSV file input</from>
-      <to>WKT/WKB Converter</to>
+      <to>Geometry Fields Converter</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>WKT/WKB Converter 2</from>
+      <from>Geometry Fields Converter 2</from>
       <to>CSV file output</to>
       <enabled>Y</enabled>
     </hop>
@@ -153,8 +153,8 @@
     </GUI>
   </transform>
   <transform>
-    <name>WKT/WKB Converter</name>
-    <type>WKT/WKB Converter</type>
+    <name>Geometry Fields Converter</name>
+    <type>Geometry Fields Converter</type>
     <description/>
     <distribute>N</distribute>
     <custom_distribution/>
@@ -179,8 +179,8 @@
     </GUI>
   </transform>
   <transform>
-    <name>WKT/WKB Converter 2</name>
-    <type>WKT/WKB Converter</type>
+    <name>Geometry Fields Converter 2</name>
+    <type>Geometry Fields Converter</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>

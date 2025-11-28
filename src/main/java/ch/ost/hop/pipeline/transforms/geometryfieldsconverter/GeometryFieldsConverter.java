@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package ch.ost.hop.pipeline.transforms.wktwkbconverter;
+package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 
-import static ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat.POINT_COORDINATE;
+import static ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat.POINT_COORDINATE;
 
 import org.apache.hop.core.Const;
 import org.apache.hop.core.exception.HopException;
@@ -33,14 +33,14 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.io.*;
 
 /** Transform That contains the basic skeleton needed to create your own plugin */
-public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbConverterData> {
+public class GeometryFieldsConverter extends BaseTransform<GeometryFieldsMeta, GeometryFieldsConverterData> {
 
-  private static final Class<?> PKG = WktWkbConverter.class; // Needed by Translator
+  private static final Class<?> PKG = GeometryFieldsConverter.class; // Needed by Translator
 
-  public WktWkbConverter(
+  public GeometryFieldsConverter(
       TransformMeta transformMeta,
-      WktWkbConverterMeta meta,
-      WktWkbConverterData data,
+      GeometryFieldsMeta meta,
+      GeometryFieldsConverterData data,
       int copyNr,
       PipelineMeta pipelineMeta,
       Pipeline pipeline) {
@@ -128,7 +128,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
         case WKT:
           if (geometry.getSRID() != meta.getSrid()) {
             logBasic(
-                geometry.toText() + BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.Log"));
+                geometry.toText() + BaseMessages.getString(PKG, "GeometryFields.SRIDAlreadyPresent.Log"));
           }
           outputRow[data.outputFieldIndex] =
               geometryToWKT(geometry, meta.isAddSRID(), meta.getSrid());
@@ -136,7 +136,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
         case WKB:
           if (geometry.getSRID() != meta.getSrid()) {
             logBasic(
-                geometry.toText() + BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.Log"));
+                geometry.toText() + BaseMessages.getString(PKG, "GeometryFields.SRIDAlreadyPresent.Log"));
           }
           outputRow[data.outputFieldIndex] =
               geometryToWKB(geometry, meta.getEndianness(), meta.isAddSRID(), meta.getSrid());
@@ -147,7 +147,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
             outputRow[data.outputFieldIndex] = pointCoordinates[0];
             outputRow[data.yOutputFieldIndex] = pointCoordinates[1];
           } else {
-            logBasic(BaseMessages.getString(PKG, "WktWkb.IneligibleForPC.Log"));
+            logBasic(BaseMessages.getString(PKG, "GeometryFields.IneligibleForPC.Log"));
             outputRow[data.outputFieldIndex] = null;
             outputRow[data.yOutputFieldIndex] = null;
           }
@@ -156,7 +156,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       putRow(data.outputRowMeta, outputRow);
     } catch (Exception e) {
       throw new HopException(
-          BaseMessages.getString(PKG, "WktWkb.FailedToConvert.DialogMessage"), e);
+          BaseMessages.getString(PKG, "GeometryFields.FailedToConvert.DialogMessage"), e);
     }
     return true;
   }
@@ -169,7 +169,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       try {
         srid = Integer.parseInt(parts[0].split("=")[1]);
       } catch (NumberFormatException e) {
-        throw new HopException("WktWkb.SRIDIncorrectlyFormatted.DialogMessage", e);
+        throw new HopException("GeometryFields.SRIDIncorrectlyFormatted.DialogMessage", e);
       }
       geomStr = parts[1];
     }
@@ -177,7 +177,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
     try {
       geometry = new WKTReader().read(geomStr);
     } catch (ParseException e) {
-      throw new HopException("WktWkb.GeometryIncorrectlyFormated.DialogMessage" + wkt, e);
+      throw new HopException("GeometryFields.GeometryIncorrectlyFormated.DialogMessage" + wkt, e);
     }
     if (srid != 0) {
       geometry.setSRID(srid);
@@ -190,7 +190,7 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
     try {
       geometry = new WKBReader().read(wkb);
     } catch (ParseException e) {
-      throw new HopException("WktWkb.GeometryIncorrectlyFormated.DialogMessage", e);
+      throw new HopException("GeometryFields.GeometryIncorrectlyFormated.DialogMessage", e);
     }
     return geometry;
   }

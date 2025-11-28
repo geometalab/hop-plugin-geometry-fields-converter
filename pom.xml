@@ -6,11 +6,11 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hop-transform-wktwkbconverter</artifactId>
-    <groupId>com.example.hop</groupId>
-    <name>WKT/WKB Converter</name>
+    <artifactId>hop-transform-geometryfieldsconverter</artifactId>
+    <groupId>ch.ost.hop</groupId>
+    <name>Geometry Fields Converter</name>
     <packaging>jar</packaging>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -18,7 +18,7 @@
         <hop.version>2.16.0</hop.version>
         <jandex.version>3.2.3</jandex.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hop.plugins.dir>C:\Users\simon\workspace\hop\plugins\transforms\wktwkbconverter</hop.plugins.dir>
+        <hop.plugins.dir>C:\Users\simon\workspace\hop\plugins\transforms\geometryfieldsconverter</hop.plugins.dir>
     </properties>
 
     <build>

@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package ch.ost.hop.pipeline.transforms.wktwkbconverter;
+package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 
-import ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat;
+import ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.exception.HopTransformException;
 import org.apache.hop.core.row.IRowMeta;
@@ -45,13 +45,13 @@ import org.eclipse.swt.widgets.*;
 import java.util.*;
 import java.util.List;
 
-import static ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat.*;
+import static ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat.*;
 
-public class WktWkbConverterDialog extends BaseTransformDialog implements ITransformDialog {
+public class GeometryFieldsDialog extends BaseTransformDialog implements ITransformDialog {
 
-  private static final Class<?> PKG = WktWkbConverterDialog.class; // Needed by Translator
+  private static final Class<?> PKG = GeometryFieldsDialog.class; // Needed by Translator
 
-  private final WktWkbConverterMeta input;
+  private final GeometryFieldsMeta input;
   private Group inputGroup;
   private Group outputGroup;
   private ComboVar wInputFieldCombo;
@@ -77,10 +77,10 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
   private IRowMeta prevFields;
 
-  public WktWkbConverterDialog(
+  public GeometryFieldsDialog(
       Shell parent,
       IVariables variables,
-      WktWkbConverterMeta transformMeta,
+      GeometryFieldsMeta transformMeta,
       PipelineMeta pipelineMeta) {
     super(parent, variables, transformMeta, pipelineMeta);
     input = transformMeta;
@@ -113,10 +113,10 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     formLayout.marginHeight = 15;
 
     shell.setLayout(formLayout);
-    shell.setText(BaseMessages.getString(PKG, "WktWkb.Name"));
+    shell.setText(BaseMessages.getString(PKG, "GeometryFields.Name"));
 
     wlTransformName = new Label(shell, SWT.RIGHT);
-    wlTransformName.setText(BaseMessages.getString(PKG, "WktWkb.TransformName.Label"));
+    wlTransformName.setText(BaseMessages.getString(PKG, "GeometryFields.TransformName.Label"));
     PropsUi.setLook(wlTransformName);
     fdlTransformName = new FormData();
     fdlTransformName.left = new FormAttachment(0, 0);
@@ -190,7 +190,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
   private Group createConversionGroup(Control attachment, SelectionAdapter lsSelMod) {
     Group wConversionGroup = new Group(shell, SWT.SHADOW_NONE);
-    wConversionGroup.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.Label"));
+    wConversionGroup.setText(BaseMessages.getString(PKG, "GeometryFields.Conversion.Label"));
     PropsUi.setLook(wConversionGroup);
     FormLayout conversionLayout = new FormLayout();
     conversionLayout.marginWidth = 10;
@@ -211,21 +211,21 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fromComposite.setLayoutData(fdFromComposite);
 
     Label wFromLabel = new Label(fromComposite, SWT.RIGHT);
-    wFromLabel.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.From.Label"));
+    wFromLabel.setText(BaseMessages.getString(PKG, "GeometryFields.Conversion.From.Label"));
     PropsUi.setLook(wFromLabel);
 
     wFromWKTButton =
         createFormatButton(
-            fromComposite, "WktWkb.Conversion.WKT.Button", WKT, fromFormatButtons, lsSelMod);
+            fromComposite, "GeometryFields.Conversion.WKT.Button", WKT, fromFormatButtons, lsSelMod);
 
     wFromWKBButton =
         createFormatButton(
-            fromComposite, "WktWkb.Conversion.WKB.Button", WKB, fromFormatButtons, lsSelMod);
+            fromComposite, "GeometryFields.Conversion.WKB.Button", WKB, fromFormatButtons, lsSelMod);
 
     wFromPCButton =
         createFormatButton(
             fromComposite,
-            "WktWkb.Conversion.PC.Button",
+            "GeometryFields.Conversion.PC.Button",
             POINT_COORDINATE,
             fromFormatButtons,
             lsSelMod);
@@ -239,21 +239,21 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     toComposite.setLayoutData(fdToComposite);
 
     Label wToLabel = new Label(toComposite, SWT.RIGHT);
-    wToLabel.setText(BaseMessages.getString(PKG, "WktWkb.Conversion.To.Label"));
+    wToLabel.setText(BaseMessages.getString(PKG, "GeometryFields.Conversion.To.Label"));
     PropsUi.setLook(wToLabel);
 
     wToWKTButton =
         createFormatButton(
-            toComposite, "WktWkb.Conversion.WKT.Button", WKT, toFormatButtons, lsSelMod);
+            toComposite, "GeometryFields.Conversion.WKT.Button", WKT, toFormatButtons, lsSelMod);
 
     wToWKBButton =
         createFormatButton(
-            toComposite, "WktWkb.Conversion.WKB.Button", WKB, toFormatButtons, lsSelMod);
+            toComposite, "GeometryFields.Conversion.WKB.Button", WKB, toFormatButtons, lsSelMod);
 
     wToPCButton =
         createFormatButton(
             toComposite,
-            "WktWkb.Conversion.PC.Button",
+            "GeometryFields.Conversion.PC.Button",
             POINT_COORDINATE,
             toFormatButtons,
             lsSelMod);
@@ -265,12 +265,12 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
           wSRIDButton.setEnabled(!wFromPCButton.getSelection());
           wInputFieldCombo.setToolTipText(
               wFromPCButton.getSelection()
-                  ? BaseMessages.getString(PKG, "WktWkb.InputXFieldSelection.Tooltip")
-                  : BaseMessages.getString(PKG, "WktWkb.InputFieldSelection.Tooltip"));
+                  ? BaseMessages.getString(PKG, "GeometryFields.InputXFieldSelection.Tooltip")
+                  : BaseMessages.getString(PKG, "GeometryFields.InputFieldSelection.Tooltip"));
           inputGroup.setText(
               wFromPCButton.getSelection()
-                  ? BaseMessages.getString(PKG, "WktWkb.Inputs.Label")
-                  : BaseMessages.getString(PKG, "WktWkb.Input.Label"));
+                  ? BaseMessages.getString(PKG, "GeometryFields.Inputs.Label")
+                  : BaseMessages.getString(PKG, "GeometryFields.Input.Label"));
         };
     wFromPCButton.addListener(SWT.Selection, fromPCListener);
     Listener toPCListener =
@@ -280,12 +280,12 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
           wSRIDButton.setEnabled(!wToPCButton.getSelection());
           wOutputFieldCombo.setToolTipText(
               wToPCButton.getSelection()
-                  ? BaseMessages.getString(PKG, "WktWkb.OutputXFieldSelection.Tooltip")
-                  : BaseMessages.getString(PKG, "WktWkb.OutputFieldSelection.Tooltip"));
+                  ? BaseMessages.getString(PKG, "GeometryFields.OutputXFieldSelection.Tooltip")
+                  : BaseMessages.getString(PKG, "GeometryFields.OutputFieldSelection.Tooltip"));
           outputGroup.setText(
               wToPCButton.getSelection()
-                  ? BaseMessages.getString(PKG, "WktWkb.Outputs.Label")
-                  : BaseMessages.getString(PKG, "WktWkb.Output.Label"));
+                  ? BaseMessages.getString(PKG, "GeometryFields.Outputs.Label")
+                  : BaseMessages.getString(PKG, "GeometryFields.Output.Label"));
         };
     wToPCButton.addListener(SWT.Selection, toPCListener);
 
@@ -294,7 +294,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
   private Group createEndiannessGroup(Group attachment, SelectionAdapter lsSelMod) {
     Group wEndiannessGroup = new Group(shell, SWT.SHADOW_NONE);
-    wEndiannessGroup.setText(BaseMessages.getString(PKG, "WktWkb.Endianness.Label"));
+    wEndiannessGroup.setText(BaseMessages.getString(PKG, "GeometryFields.Endianness.Label"));
     PropsUi.setLook(wEndiannessGroup);
     FormLayout endiannessLayout = new FormLayout();
     endiannessLayout.marginWidth = 10;
@@ -308,7 +308,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wEndiannessGroup.setLayoutData(fdEndiannessGroup);
 
     wBigEndian = new Button(wEndiannessGroup, SWT.RADIO);
-    wBigEndian.setText(BaseMessages.getString(PKG, "WktWkb.BigEndian.Button"));
+    wBigEndian.setText(BaseMessages.getString(PKG, "GeometryFields.BigEndian.Button"));
     PropsUi.setLook(wBigEndian);
     FormData fdBigEndian = new FormData();
     fdBigEndian.left = new FormAttachment(0, 0);
@@ -316,7 +316,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wBigEndian.setLayoutData(fdBigEndian);
 
     wLilEndian = new Button(wEndiannessGroup, SWT.RADIO);
-    wLilEndian.setText(BaseMessages.getString(PKG, "WktWkb.LittleEndian.Button"));
+    wLilEndian.setText(BaseMessages.getString(PKG, "GeometryFields.LittleEndian.Button"));
     PropsUi.setLook(wLilEndian);
     FormData fdLilEndian = new FormData();
     fdLilEndian.left = new FormAttachment(wBigEndian, 20);
@@ -343,7 +343,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private Group createOptionsGroup(
       Group attachment, SelectionAdapter lsSelMod, ModifyListener lsMod) {
     Group wOptionsGroup = new Group(shell, SWT.SHADOW_NONE);
-    wOptionsGroup.setText(BaseMessages.getString(PKG, "WktWkb.Options.Label"));
+    wOptionsGroup.setText(BaseMessages.getString(PKG, "GeometryFields.Options.Label"));
     PropsUi.setLook(wOptionsGroup);
     FormLayout optionsLayout = new FormLayout();
     optionsLayout.marginWidth = 10;
@@ -357,8 +357,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wOptionsGroup.setLayoutData(fdOptionsGroup);
 
     wSRIDButton = new Button(wOptionsGroup, SWT.CHECK);
-    wSRIDButton.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Button"));
-    wSRIDButton.setToolTipText(BaseMessages.getString(PKG, "WktWkb.SRID.Button.Tooltip"));
+    wSRIDButton.setText(BaseMessages.getString(PKG, "GeometryFields.SRID.Button"));
+    wSRIDButton.setToolTipText(BaseMessages.getString(PKG, "GeometryFields.SRID.Button.Tooltip"));
     PropsUi.setLook(wSRIDButton);
     wSRIDButton.addSelectionListener(lsSelMod);
 
@@ -371,7 +371,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wSRIDButton.setLayoutData(fdSRIDButton);
 
     Label wSRIDFieldLabel = new Label(wOptionsGroup, SWT.RIGHT);
-    wSRIDFieldLabel.setText(BaseMessages.getString(PKG, "WktWkb.SRID.Label"));
+    wSRIDFieldLabel.setText(BaseMessages.getString(PKG, "GeometryFields.SRID.Label"));
     PropsUi.setLook(wSRIDFieldLabel);
     FormData fdSRIDFieldLabel = new FormData();
     fdSRIDFieldLabel.left = new FormAttachment(wSRIDButton, margin);
@@ -379,7 +379,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wSRIDFieldLabel.setLayoutData(fdSRIDFieldLabel);
 
     wSRIDField = new TextVar(variables, wOptionsGroup, SWT.SINGLE | SWT.LEFT | SWT.BORDER);
-    wSRIDField.setToolTipText(BaseMessages.getString(PKG, "WktWkb.SRID.Field.Tooltip"));
+    wSRIDField.setToolTipText(BaseMessages.getString(PKG, "GeometryFields.SRID.Field.Tooltip"));
     PropsUi.setLook(wSRIDField);
     wSRIDField.addModifyListener(lsMod);
     FormData fdSRIDField = new FormData();
@@ -402,7 +402,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
   private Group createInputGroup(ModifyListener lsMod, Control attachment) {
     Group wInputGroup = new Group(shell, SWT.SHADOW_NONE);
-    wInputGroup.setText(BaseMessages.getString(PKG, "WktWkb.Input.Label"));
+    wInputGroup.setText(BaseMessages.getString(PKG, "GeometryFields.Input.Label"));
     PropsUi.setLook(wInputGroup);
     FormLayout inputLayout = new FormLayout();
     inputLayout.marginWidth = 10;
@@ -417,7 +417,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wInputFieldCombo = new ComboVar(variables, wInputGroup, SWT.DROP_DOWN | SWT.BORDER);
     wInputFieldCombo.setToolTipText(
-        BaseMessages.getString(PKG, "WktWkb.InputFieldSelection.Tooltip"));
+        BaseMessages.getString(PKG, "GeometryFields.InputFieldSelection.Tooltip"));
     PropsUi.setLook(wInputFieldCombo);
     wInputFieldCombo.addModifyListener(lsMod);
     wInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
@@ -430,7 +430,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wYInputFieldCombo = new ComboVar(variables, wInputGroup, SWT.DROP_DOWN | SWT.BORDER);
     wYInputFieldCombo.setToolTipText(
-        BaseMessages.getString(PKG, "WktWkb.YInputFieldSelection.Tooltip"));
+        BaseMessages.getString(PKG, "GeometryFields.YInputFieldSelection.Tooltip"));
     PropsUi.setLook(wYInputFieldCombo);
     wYInputFieldCombo.addModifyListener(lsMod);
     wYInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
@@ -446,7 +446,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
   private Group createOutputGroup(ModifyListener lsMod, Control attachment) {
     Group wOutputGroup = new Group(shell, SWT.SHADOW_NONE);
-    wOutputGroup.setText(BaseMessages.getString(PKG, "WktWkb.Output.Label"));
+    wOutputGroup.setText(BaseMessages.getString(PKG, "GeometryFields.Output.Label"));
     PropsUi.setLook(wOutputGroup);
     FormLayout outputLayout = new FormLayout();
     outputLayout.marginWidth = 10;
@@ -461,7 +461,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wOutputFieldCombo = new ComboVar(variables, wOutputGroup, SWT.DROP_DOWN | SWT.BORDER);
     wOutputFieldCombo.setToolTipText(
-        BaseMessages.getString(PKG, "WktWkb.OutputFieldSelection.Tooltip"));
+        BaseMessages.getString(PKG, "GeometryFields.OutputFieldSelection.Tooltip"));
     PropsUi.setLook(wOutputFieldCombo);
     wOutputFieldCombo.addModifyListener(lsMod);
     FormData fdSchemaPath = new FormData();
@@ -473,7 +473,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     wYOutputFieldCombo = new ComboVar(variables, wOutputGroup, SWT.DROP_DOWN | SWT.BORDER);
     wYOutputFieldCombo.setToolTipText(
-        BaseMessages.getString(PKG, "WktWkb.YOutputFieldSelection.Tooltip"));
+        BaseMessages.getString(PKG, "GeometryFields.YOutputFieldSelection.Tooltip"));
     PropsUi.setLook(wYOutputFieldCombo);
     wYOutputFieldCombo.addModifyListener(lsMod);
     wYOutputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
@@ -572,12 +572,12 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wYOutputFieldCombo.setVisible(wToPCButton.getSelection());
     inputGroup.setText(
         wFromPCButton.getSelection()
-            ? BaseMessages.getString(PKG, "WktWkb.Inputs.Label")
-            : BaseMessages.getString(PKG, "WktWkb.Input.Label"));
+            ? BaseMessages.getString(PKG, "GeometryFields.Inputs.Label")
+            : BaseMessages.getString(PKG, "GeometryFields.Input.Label"));
     outputGroup.setText(
         wToPCButton.getSelection()
-            ? BaseMessages.getString(PKG, "WktWkb.Outputs.Label")
-            : BaseMessages.getString(PKG, "WktWkb.Output.Label"));
+            ? BaseMessages.getString(PKG, "GeometryFields.Outputs.Label")
+            : BaseMessages.getString(PKG, "GeometryFields.Output.Label"));
   }
 
   private void setComboValues() {
@@ -587,7 +587,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
             prevFields = pipelineMeta.getPrevTransformFields(variables, transformName);
           } catch (HopException e) {
             prevFields = new RowMeta();
-            logError(BaseMessages.getString(PKG, "WktWkb.DoMapping.UnableToFindInput"));
+            logError(BaseMessages.getString(PKG, "GeometryFields.DoMapping.UnableToFindInput"));
           }
           String[] prevTransformFieldNames =
               prevFields != null ? prevFields.getFieldNames() : new String[0];
@@ -596,7 +596,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     shell.getDisplay().asyncExec(fieldLoader);
   }
 
-  private void getInfo(WktWkbConverterMeta in) {
+  private void getInfo(GeometryFieldsMeta in) {
     input.setInputField(wInputFieldCombo.getText());
     input.setOutputField(wOutputFieldCombo.getText());
     if (input.getInputFormat() == POINT_COORDINATE) {

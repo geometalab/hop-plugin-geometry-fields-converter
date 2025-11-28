@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package ch.ost.hop.pipeline.transforms.wktwkbconverter;
+package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 
-import ch.ost.hop.pipeline.transforms.wktwkbconverter.model.GeometryFormat;
+import ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat;
 import org.apache.hop.core.ICheckResult;
 import org.apache.hop.core.annotations.Transform;
 import org.apache.hop.core.exception.HopTransformException;
@@ -37,51 +37,51 @@ import java.util.function.Supplier;
 
 /** Meta data for the sample transform. */
 @Transform(
-    id = "WKT/WKB Converter",
-    name = "i18n::WktWkb.Name",
-    description = "i18n::WktWkb.Description",
+    id = "Geometry Fields Converter",
+    name = "i18n::GeometryFields.Name",
+    description = "i18n::GeometryFields.Description",
     image = "sample.svg",
-    categoryDescription = "WktWkb.Category",
+    categoryDescription = "GeometryFields.Category",
     documentationUrl =
         "https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-wkt-wkb-converter/-/blob/main/README.md")
-public class WktWkbConverterMeta extends BaseTransformMeta<WktWkbConverter, WktWkbConverterData> {
+public class GeometryFieldsMeta extends BaseTransformMeta<GeometryFieldsConverter, GeometryFieldsConverterData> {
 
-  @HopMetadataProperty(key = "input_field", injectionKeyDescription = "WktWkb.Injection.InputField")
+  @HopMetadataProperty(key = "input_field", injectionKeyDescription = "GeometryFields.Injection.InputField")
   private String inputField = "";
 
   @HopMetadataProperty(
       key = "input_y_field",
-      injectionKeyDescription = "WktWkb.Injection.YInputField")
+      injectionKeyDescription = "GeometryFields.Injection.YInputField")
   private String yInputField = "";
 
   @HopMetadataProperty(
       key = "output_field",
-      injectionKeyDescription = "WktWkb.Injection.OutputField")
+      injectionKeyDescription = "GeometryFields.Injection.OutputField")
   private String outputField = "";
 
   @HopMetadataProperty(
       key = "output_y_field",
-      injectionKeyDescription = "WktWkb.Injection.YOutputField")
+      injectionKeyDescription = "GeometryFields.Injection.YOutputField")
   private String yOutputField = "";
 
   @HopMetadataProperty(
       key = "input_format",
-      injectionKeyDescription = "WktWkb.Injection.InputFormat")
+      injectionKeyDescription = "GeometryFields.Injection.InputFormat")
   private GeometryFormat inputFormat;
 
   @HopMetadataProperty(
       key = "output_format",
-      injectionKeyDescription = "WktWkb.Injection.OutputFormat")
+      injectionKeyDescription = "GeometryFields.Injection.OutputFormat")
   private GeometryFormat outputFormat;
 
   /* Endianness in WKB is defined by its first byte, 1: big endian, 2: little endian */
-  @HopMetadataProperty(key = "endianness", injectionKeyDescription = "WktWkb.Injection.Endianness")
+  @HopMetadataProperty(key = "endianness", injectionKeyDescription = "GeometryFields.Injection.Endianness")
   private int endianness = 1;
 
-  @HopMetadataProperty(key = "add_srid", injectionKeyDescription = "WktWkb.Injection.AddSRID")
+  @HopMetadataProperty(key = "add_srid", injectionKeyDescription = "GeometryFields.Injection.AddSRID")
   private boolean addSRID = false;
 
-  @HopMetadataProperty(key = "srid", injectionKeyDescription = "WktWkb.Injection.SRID")
+  @HopMetadataProperty(key = "srid", injectionKeyDescription = "GeometryFields.Injection.SRID")
   private int srid = 0;
 
   public String getInputField() {

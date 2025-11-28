@@ -1,4 +1,4 @@
-package ch.ost.hop.pipeline.transforms.wktwkbconverter;
+package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 
 import org.apache.hop.core.exception.HopException;
 import org.junit.jupiter.api.Test;
@@ -6,13 +6,13 @@ import org.locationtech.jts.geom.Geometry;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class WktWkbConverterTests {
+public class GeometryFieldsConverterTests {
 
   @Test
   public void testWKTToGeometry() throws Exception {
     String wkt = "POINT (1 2)";
-    Geometry geometry = WktWkbConverter.wktToGeometry(wkt);
-    byte[] wkb = WktWkbConverter.geometryToWKB(geometry, 0, false, 0);
+    Geometry geometry = GeometryFieldsConverter.wktToGeometry(wkt);
+    byte[] wkb = GeometryFieldsConverter.geometryToWKB(geometry, 0, false, 0);
 
     assertNotNull(wkb);
     assertTrue(wkb.length > 0);
@@ -22,8 +22,8 @@ public class WktWkbConverterTests {
   public void testEWKTWithSRID() throws Exception {
     String wkt = "POINT (1 2)";
     int srid = 4296;
-    Geometry geometry = WktWkbConverter.wktToGeometry(wkt);
-    String outWkt = WktWkbConverter.geometryToWKT(geometry, true, srid);
+    Geometry geometry = GeometryFieldsConverter.wktToGeometry(wkt);
+    String outWkt = GeometryFieldsConverter.geometryToWKT(geometry, true, srid);
 
     assertNotNull(outWkt);
     assertEquals("SRID=4296;POINT (1 2)", outWkt);
@@ -35,23 +35,23 @@ public class WktWkbConverterTests {
     byte[] wkb =
         hexStringToByteArray(
             "010300000001000000050000000000000000003E4000000000000024400000000000004440000000000000444000000000000034400000000000004440000000000000244000000000000034400000000000003E400000000000002440");
-    Geometry geometry = WktWkbConverter.wkbToGeometry(wkb);
+    Geometry geometry = GeometryFieldsConverter.wkbToGeometry(wkb);
 
-    assertEquals(wkt, WktWkbConverter.geometryToWKT(geometry, false, 0));
+    assertEquals(wkt, GeometryFieldsConverter.geometryToWKT(geometry, false, 0));
   }
 
   @Test
   public void testEWKTToEWKBAndBack() throws Exception {
     String ewkt = "SRID=4326;POINT (-44.3 60.1)";
-    Geometry geometry = WktWkbConverter.wktToGeometry(ewkt);
-    String result = WktWkbConverter.geometryToWKT(geometry, false, 0);
+    Geometry geometry = GeometryFieldsConverter.wktToGeometry(ewkt);
+    String result = GeometryFieldsConverter.geometryToWKT(geometry, false, 0);
     assertEquals(ewkt, result);
   }
 
   @Test
   public void testFalseWKT() {
     String wkt = "test string you're supposed to fail";
-    assertThrows(HopException.class, () -> WktWkbConverter.wktToGeometry(wkt));
+    assertThrows(HopException.class, () -> GeometryFieldsConverter.wktToGeometry(wkt));
   }
 
   public static byte[] hexStringToByteArray(String s) {

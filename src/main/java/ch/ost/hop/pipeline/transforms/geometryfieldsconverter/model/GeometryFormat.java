@@ -1,4 +1,4 @@
-package ch.ost.hop.pipeline.transforms.wktwkbconverter.model;
+package ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model;
 
 public enum GeometryFormat {
     WKT,
