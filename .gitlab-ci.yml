@@ -47,17 +47,23 @@ integration_tests:
 
 prepare_release:
   stage: release
+  rules:
+    - if: $CI_COMMIT_TAG
   script:
+    - apt-get update && apt-get install -y zip
+    - mvn -B package
     - VERSION="$CI_COMMIT_TAG"
     - ZIP_NAME="geometry-fields-converter-$VERSION.zip"
     - cd target
     - zip -r "../$ZIP_NAME" .
   artifacts:
     paths:
-      - geometry-fields-converter-*.zip
+      - "*.zip"
 
 create_release:
   stage: release
+  needs:
+    - prepare_release
   image:
     name: registry.gitlab.com/gitlab-org/cli:latest
   rules:
