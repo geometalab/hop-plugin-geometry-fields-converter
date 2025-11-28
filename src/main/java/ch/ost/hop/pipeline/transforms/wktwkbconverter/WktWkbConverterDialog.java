@@ -66,7 +66,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private Button wLilEndian;
   private Button wBigEndian;
   private Button wSRIDButton;
-  private Button wBinHexButton;
   private List<Button> fromFormatButtons = new ArrayList<>();
   private List<Button> toFormatButtons = new ArrayList<>();
 
@@ -385,16 +384,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
             e.doit = false;
           }
         });
-
-    wBinHexButton = new Button(wOptionsGroup, SWT.CHECK);
-    wBinHexButton.setText(BaseMessages.getString(PKG, "WktWkb.BinHex.Button"));
-    wBinHexButton.setToolTipText(BaseMessages.getString(PKG, "WktWkb.BinHex.Button.Tooltip"));
-    PropsUi.setLook(wBinHexButton);
-    wBinHexButton.addSelectionListener(lsSelMod);
-    FormData fdBinHexButton = new FormData();
-    fdBinHexButton.left = new FormAttachment(0, 0);
-    fdBinHexButton.top = new FormAttachment(wSRIDButton, margin);
-    wBinHexButton.setLayoutData(fdBinHexButton);
 
     return wOptionsGroup;
   }
