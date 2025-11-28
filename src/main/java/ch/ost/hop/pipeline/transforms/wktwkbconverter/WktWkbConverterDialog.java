@@ -52,6 +52,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
   private static final Class<?> PKG = WktWkbConverterDialog.class; // Needed by Translator
 
   private final WktWkbConverterMeta input;
+  private Group inputGroup;
+  private Group outputGroup;
   private ComboVar wInputFieldCombo;
   private ComboVar wYInputFieldCombo;
   private ComboVar wOutputFieldCombo;
@@ -152,8 +154,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     Group wConversionGroup = createConversionGroup(spacer, lsSelMod);
     Group wEndiannessGroup = createEndiannessGroup(wConversionGroup, lsSelMod);
     Group wOptionsGroup = createOptionsGroup(wEndiannessGroup, lsSelMod, lsMod);
-    Group inputGroup = createInputGroup(lsMod, wOptionsGroup);
-    Group outputGroup = createOutputGroup(lsMod, inputGroup);
+    inputGroup = createInputGroup(lsMod, wOptionsGroup);
+    outputGroup = createOutputGroup(lsMod, inputGroup);
 
     wCancel = new Button(shell, SWT.PUSH);
     wCancel.setText(BaseMessages.getString(PKG, "System.Button.Cancel"));
@@ -258,22 +260,30 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
 
     Listener fromPCListener =
         e -> {
-          wYInputFieldCombo.setEnabled(wFromPCButton.getSelection());
+          wYInputFieldCombo.setVisible(wFromPCButton.getSelection());
           wSRIDButton.setEnabled(!wFromPCButton.getSelection());
           wInputFieldCombo.setToolTipText(
               wFromPCButton.getSelection()
                   ? BaseMessages.getString(PKG, "WktWkb.InputXFieldSelection.Tooltip")
                   : BaseMessages.getString(PKG, "WktWkb.InputFieldSelection.Tooltip"));
+          inputGroup.setText(
+              wFromPCButton.getSelection()
+                  ? BaseMessages.getString(PKG, "WktWkb.Inputs.Label")
+                  : BaseMessages.getString(PKG, "WktWkb.Input.Label"));
         };
     wFromPCButton.addListener(SWT.Selection, fromPCListener);
     Listener toPCListener =
         e -> {
-          wYOutputFieldCombo.setEnabled(wToPCButton.getSelection());
+          wYOutputFieldCombo.setVisible(wToPCButton.getSelection());
           wSRIDButton.setEnabled(!wToPCButton.getSelection());
           wOutputFieldCombo.setToolTipText(
               wToPCButton.getSelection()
                   ? BaseMessages.getString(PKG, "WktWkb.OutputXFieldSelection.Tooltip")
                   : BaseMessages.getString(PKG, "WktWkb.OutputFieldSelection.Tooltip"));
+          outputGroup.setText(
+              wToPCButton.getSelection()
+                  ? BaseMessages.getString(PKG, "WktWkb.Outputs.Label")
+                  : BaseMessages.getString(PKG, "WktWkb.Output.Label"));
         };
     wToPCButton.addListener(SWT.Selection, toPCListener);
 
@@ -403,14 +413,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fdInputGroup.right = new FormAttachment(100, 0);
     wInputGroup.setLayoutData(fdInputGroup);
 
-    Label wlInputFieldLabel = new Label(wInputGroup, SWT.RIGHT);
-    wlInputFieldLabel.setText(BaseMessages.getString(PKG, "WktWkb.InputFieldSelection.Label"));
-    PropsUi.setLook(wlInputFieldLabel);
-    FormData fdlFilePathLabel = new FormData();
-    fdlFilePathLabel.left = new FormAttachment(0, 0);
-    fdlFilePathLabel.top = new FormAttachment(attachment, 0);
-    wlInputFieldLabel.setLayoutData(fdlFilePathLabel);
-
     wInputFieldCombo = new ComboVar(variables, wInputGroup, SWT.DROP_DOWN | SWT.BORDER);
     wInputFieldCombo.setToolTipText(
         BaseMessages.getString(PKG, "WktWkb.InputFieldSelection.Tooltip"));
@@ -418,7 +420,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wInputFieldCombo.addModifyListener(lsMod);
     wInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
     FormData fdInputField = new FormData();
-    fdInputField.left = new FormAttachment(wlInputFieldLabel, margin);
+    fdInputField.left = new FormAttachment(0, margin);
     fdInputField.top = new FormAttachment(attachment, margin);
     fdInputField.right = new FormAttachment(100, 0);
     wInputFieldCombo.setLayoutData(fdInputField);
@@ -431,7 +433,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wYInputFieldCombo.addModifyListener(lsMod);
     wYInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
     FormData fdYInputField = new FormData();
-    fdYInputField.left = new FormAttachment(wlInputFieldLabel, margin);
+    fdYInputField.left = new FormAttachment(0, margin);
     fdYInputField.top = new FormAttachment(wInputFieldCombo, margin);
     fdYInputField.right = new FormAttachment(100, 0);
     wYInputFieldCombo.setLayoutData(fdYInputField);
@@ -455,21 +457,13 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     fdOutputGroup.right = new FormAttachment(100, 0);
     wOutputGroup.setLayoutData(fdOutputGroup);
 
-    Label wlOutputFieldLabel = new Label(wOutputGroup, SWT.RIGHT);
-    wlOutputFieldLabel.setText(BaseMessages.getString(PKG, "WktWkb.OutputFieldSelection.Label"));
-    PropsUi.setLook(wlOutputFieldLabel);
-    FormData fdlOutputFieldLabel = new FormData();
-    fdlOutputFieldLabel.left = new FormAttachment(0, 0);
-    fdlOutputFieldLabel.top = new FormAttachment(attachment, margin);
-    wlOutputFieldLabel.setLayoutData(fdlOutputFieldLabel);
-
     wOutputFieldCombo = new ComboVar(variables, wOutputGroup, SWT.DROP_DOWN | SWT.BORDER);
     wOutputFieldCombo.setToolTipText(
         BaseMessages.getString(PKG, "WktWkb.OutputFieldSelection.Tooltip"));
     PropsUi.setLook(wOutputFieldCombo);
     wOutputFieldCombo.addModifyListener(lsMod);
     FormData fdSchemaPath = new FormData();
-    fdSchemaPath.left = new FormAttachment(wlOutputFieldLabel, margin);
+    fdSchemaPath.left = new FormAttachment(0, margin);
     fdSchemaPath.top = new FormAttachment(attachment, margin);
     fdSchemaPath.right = new FormAttachment(100, 0);
     wOutputFieldCombo.setLayoutData(fdSchemaPath);
@@ -482,7 +476,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wYOutputFieldCombo.addModifyListener(lsMod);
     wYOutputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
     FormData fdYOutputField = new FormData();
-    fdYOutputField.left = new FormAttachment(wlOutputFieldLabel, margin);
+    fdYOutputField.left = new FormAttachment(0, margin);
     fdYOutputField.top = new FormAttachment(wOutputFieldCombo, margin);
     fdYOutputField.right = new FormAttachment(100, 0);
     wYOutputFieldCombo.setLayoutData(fdYOutputField);
@@ -545,7 +539,6 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     if (input.getOutputField() == null) {
       input.setOutputField("");
     }
-    // Get sample text and put it on dialog's text field
     wInputFieldCombo.setText(input.getInputField());
     wOutputFieldCombo.setText(input.getOutputField());
 
@@ -576,8 +569,16 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     wBigEndian.setEnabled(wFromWKTButton.getSelection());
     wLilEndian.setEnabled(wFromWKTButton.getSelection());
     wSRIDField.setEnabled(wSRIDButton.getSelection());
-    wYInputFieldCombo.setEnabled(wFromPCButton.getSelection());
-    wYOutputFieldCombo.setEnabled(wToPCButton.getSelection());
+    wYInputFieldCombo.setVisible(wFromPCButton.getSelection());
+    wYOutputFieldCombo.setVisible(wToPCButton.getSelection());
+    inputGroup.setText(
+        wFromPCButton.getSelection()
+            ? BaseMessages.getString(PKG, "WktWkb.Inputs.Label")
+            : BaseMessages.getString(PKG, "WktWkb.Input.Label"));
+    outputGroup.setText(
+        wToPCButton.getSelection()
+            ? BaseMessages.getString(PKG, "WktWkb.Outputs.Label")
+            : BaseMessages.getString(PKG, "WktWkb.Output.Label"));
   }
 
   private void setComboValues() {
