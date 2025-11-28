@@ -42,7 +42,7 @@ import java.util.function.Supplier;
     image = "sample.svg",
     categoryDescription = "GeometryFields.Category",
     documentationUrl =
-        "https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-wkt-wkb-converter/-/blob/main/README.md")
+        "https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/README.md")
 public class GeometryFieldsConverterMeta
     extends BaseTransformMeta<GeometryFieldsConverter, GeometryFieldsConverterData> {
 
