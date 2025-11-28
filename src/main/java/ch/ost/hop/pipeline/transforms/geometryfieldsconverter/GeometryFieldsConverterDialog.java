@@ -546,7 +546,6 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     wYOutputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
   }
 
-  /** Copy information from the meta-data input to the dialog fields. */
   public void getData() {
     if (input.getOutputField() == null) {
       input.setOutputField("");
@@ -666,7 +665,6 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     }
   }
 
-  /** Cancel the dialog. */
   private void cancel() {
     transformName = null;
     input.setChanged(changed);

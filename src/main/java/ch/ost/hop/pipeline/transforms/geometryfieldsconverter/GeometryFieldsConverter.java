@@ -32,7 +32,6 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.io.*;
 
-/** Transform That contains the basic skeleton needed to create your own plugin */
 public class GeometryFieldsConverter
     extends BaseTransform<GeometryFieldsConverterMeta, GeometryFieldsConverterData> {
 

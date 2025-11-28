@@ -35,7 +35,6 @@ import org.apache.hop.pipeline.transform.TransformMeta;
 import java.util.List;
 import java.util.function.Supplier;
 
-/** Meta data for the sample transform. */
 @Transform(
     id = "Geometry Fields Converter",
     name = "i18n::GeometryFields.Name",
@@ -77,7 +76,6 @@ public class GeometryFieldsConverterMeta
       injectionKeyDescription = "GeometryFields.Injection.OutputFormat")
   private GeometryFormat outputFormat;
 
-  /* Endianness in WKB is defined by its first byte, 1: big endian, 2: little endian */
   @HopMetadataProperty(
       key = "endianness",
       injectionKeyDescription = "GeometryFields.Injection.Endianness")

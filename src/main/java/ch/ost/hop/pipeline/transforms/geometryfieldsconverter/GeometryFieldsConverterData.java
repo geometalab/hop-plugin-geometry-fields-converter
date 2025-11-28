@@ -24,9 +24,6 @@ import org.apache.hop.pipeline.transform.ITransformData;
 
 public class GeometryFieldsConverterData extends BaseTransformData implements ITransformData {
 
-  /**
-   * Default constructor for SampleData.
-   */
   public GeometryFieldsConverterData() {
     super();
   }
