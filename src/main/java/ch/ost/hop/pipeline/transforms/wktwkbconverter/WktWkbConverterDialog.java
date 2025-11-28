@@ -559,7 +559,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
       wSRIDField.setText(Integer.toString(input.getSrid()));
     }
 
-    if (input.getEndianness() == 0) {
+    if (input.getEndianness() == 1) {
       wBigEndian.setSelection(true);
     } else {
       wLilEndian.setSelection(true);

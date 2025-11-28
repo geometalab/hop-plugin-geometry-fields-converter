@@ -133,14 +133,11 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
           break;
         case POINT_COORDINATE:
           double[] pointCoordinates = geometryToPC(geometry);
-          if (geometry.getGeometryType().equals(Geometry.TYPENAME_POINT)) {
-            if (!Double.isNaN(geometry.getCoordinate().getZ())
-                || !Double.isNaN(geometry.getCoordinate().getM()))
-              throw new HopException(
-                  BaseMessages.getString(PKG, "WktWkb.FailedToConvert.DialogMessage"));
+          if (is2DPoint(geometry)) {
             outputRow[data.outputFieldIndex] = pointCoordinates[0];
             outputRow[data.yOutputFieldIndex] = pointCoordinates[1];
           } else {
+            logBasic(BaseMessages.getString(PKG, "WktWkb.IneligibleForPC.Log"));
             outputRow[data.outputFieldIndex] = null;
             outputRow[data.yOutputFieldIndex] = null;
           }
@@ -245,6 +242,12 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
 
   private static int getByteOrder(int endianness) {
     return endianness == 1 ? ByteOrderValues.BIG_ENDIAN : ByteOrderValues.LITTLE_ENDIAN;
+  }
+
+  private static boolean is2DPoint(Geometry geometry) {
+    return geometry.getGeometryType().equals(Geometry.TYPENAME_POINT)
+        && Double.isNaN(geometry.getCoordinate().getZ())
+        && Double.isNaN(geometry.getCoordinate().getM());
   }
 
   private static int getDimensions(Geometry geometry) {
