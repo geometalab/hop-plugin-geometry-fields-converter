@@ -15,19 +15,16 @@
  * limitations under the License.
  */
 
-package ch.ost.hop.pipeline.transforms.wktwkbconverter;
+package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 
 import org.apache.hop.core.row.IRowMeta;
 import org.apache.hop.core.row.IValueMeta;
 import org.apache.hop.pipeline.transform.BaseTransformData;
 import org.apache.hop.pipeline.transform.ITransformData;
 
-public class WktWkbConverterData extends BaseTransformData implements ITransformData {
+public class GeometryFieldsConverterData extends BaseTransformData implements ITransformData {
 
-  /**
-   * Default constructor for SampleData.
-   */
-  public WktWkbConverterData() {
+  public GeometryFieldsConverterData() {
     super();
   }
 
@@ -35,7 +32,11 @@ public class WktWkbConverterData extends BaseTransformData implements ITransform
   public IRowMeta inputRowMeta;
 
   public int inputFieldIndex = -1;
+  public int yInputFieldIndex = -1;
   public int outputFieldIndex = -1;
+  public int yOutputFieldIndex = -1;
   public IValueMeta inputMeta;
+  public IValueMeta yInputMeta;
   public IValueMeta outputMeta;
+  public IValueMeta yOutputMeta;
 }

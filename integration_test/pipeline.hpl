@@ -21,17 +21,17 @@
   </notepads>
   <order>
     <hop>
-      <from>WKT/WKB Converter</from>
-      <to>WKT/WKB Converter 2</to>
+      <from>Geometry Fields Converter</from>
+      <to>Geometry Fields Converter 2</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>CSV file input</from>
-      <to>WKT/WKB Converter</to>
+      <to>Geometry Fields Converter</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>WKT/WKB Converter 2</from>
+      <from>Geometry Fields Converter 2</from>
       <to>CSV file output</to>
       <enabled>Y</enabled>
     </hop>
@@ -56,7 +56,6 @@
     <header>Y</header>
     <buffer_size>50000</buffer_size>
     <schemaDefinition/>
-    <ignoreFields>N</ignoreFields>
     <lazy_conversion>Y</lazy_conversion>
     <add_filename_result>N</add_filename_result>
     <parallel>N</parallel>
@@ -115,7 +114,6 @@
       <schema_name/>
     </partitioning>
     <schema_definition/>
-    <ignore_fields>N</ignore_fields>
     <separator>;</separator>
     <enclosure>"</enclosure>
     <enclosure_forced>N</enclosure_forced>
@@ -155,8 +153,8 @@
     </GUI>
   </transform>
   <transform>
-    <name>WKT/WKB Converter</name>
-    <type>Wkt/Wkb</type>
+    <name>Geometry Fields Converter</name>
+    <type>Geometry Fields Converter</type>
     <description/>
     <distribute>N</distribute>
     <custom_distribution/>
@@ -165,11 +163,15 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <endianness>1</endianness>
+    <add_srid>N</add_srid>
+    <endianness>2</endianness>
     <input_field>content</input_field>
-    <is_wkt_to_wkb>Y</is_wkt_to_wkb>
+    <input_format>WKT</input_format>
+    <input_y_field/>
     <output_field>binary-content</output_field>
-    <srid>Y</srid>
+    <output_format>WKB</output_format>
+    <output_y_field/>
+    <srid>0</srid>
     <attributes/>
     <GUI>
       <xloc>528</xloc>
@@ -177,8 +179,8 @@
     </GUI>
   </transform>
   <transform>
-    <name>WKT/WKB Converter 2</name>
-    <type>Wkt/Wkb</type>
+    <name>Geometry Fields Converter 2</name>
+    <type>Geometry Fields Converter</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -187,11 +189,15 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <endianness>1</endianness>
+    <add_srid>N</add_srid>
+    <endianness>2</endianness>
     <input_field>binary-content</input_field>
-    <is_wkt_to_wkb>N</is_wkt_to_wkb>
+    <input_format>WKB</input_format>
+    <input_y_field/>
     <output_field>content</output_field>
-    <srid>Y</srid>
+    <output_format>WKT</output_format>
+    <output_y_field/>
+    <srid>0</srid>
     <attributes/>
     <GUI>
       <xloc>688</xloc>

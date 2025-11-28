@@ -39,7 +39,14 @@ integration_tests:
     entrypoint: [ "" ]
   script:
     - mkdir -p /files
-    - mkdir -p /opt/hop/plugins/transforms/wktwkbconverter
+    - mkdir -p /opt/hop/plugins/transforms/geometryfieldsconverter
     - cp -r integration_test/* /files/
-    - cp -r target/* /opt/hop/plugins/transforms/wktwkbconverter/
+    - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
     - /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl
+
+#code_quality:
+#  extends: .dockerhub_login
+#
+#.dockerhub_login:
+#  script:
+#    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin

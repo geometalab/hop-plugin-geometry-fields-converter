@@ -1,12 +1,12 @@
-# Apache Hop-Plugins WKT-WKB Converter
+# Apache Hop-Plugin Geometry Field Converter
 
 ## Description
 This plugin allows you to convert between the two geometry representation formats well-known text and well-known binary inside [Apache Hop](https://hop.apache.org/) via a Transform.
 
 ***TODO: ADD IMAGE OF DIALOG***
 
-![Pipeline Status](https://gitlab.ost.ch//apache-hop-plugin-sa/apache-hop-plugins-wkt-wkb-converter/badges/main/pipeline.svg)
-![Latest Release](https://gitlab.ost.ch//apache-hop-plugin-sa/apache-hop-plugins-wkt-wkb-converter/badges/-/badges/release.svg)]
+![Pipeline Status](https://gitlab.ost.ch//apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/badges/main/pipeline.svg)
+![Latest Release](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/badges/release.svg)
 
 ## Installation
 Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
