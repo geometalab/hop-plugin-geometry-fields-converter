@@ -122,12 +122,22 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
           geometry = pcToGeometry(x, y);
           break;
       }
+      System.out.println(geometry.toText());
+      System.out.println(geometry.getSRID());
       switch (meta.getOutputFormat()) {
         case WKT:
+          if (geometry.getSRID() != meta.getSrid()) {
+            logBasic(
+                geometry.toText() + BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.Log"));
+          }
           outputRow[data.outputFieldIndex] =
               geometryToWKT(geometry, meta.isAddSRID(), meta.getSrid());
           break;
         case WKB:
+          if (geometry.getSRID() != meta.getSrid()) {
+            logBasic(
+                geometry.toText() + BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.Log"));
+          }
           outputRow[data.outputFieldIndex] =
               geometryToWKB(geometry, meta.getEndianness(), meta.isAddSRID(), meta.getSrid());
           break;
@@ -153,11 +163,11 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
 
   public static Geometry wktToGeometry(String wkt) throws Exception {
     String geomStr = wkt;
-    int oldSrid = 0;
+    int srid = 0;
     if (wkt.contains(";")) {
       String[] parts = wkt.split(";", 2);
       try {
-        oldSrid = Integer.parseInt(parts[0].split("=")[1]);
+        srid = Integer.parseInt(parts[0].split("=")[1]);
       } catch (NumberFormatException e) {
         throw new HopException("WktWkb.SRIDIncorrectlyFormatted.DialogMessage", e);
       }
@@ -169,8 +179,8 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
     } catch (ParseException e) {
       throw new HopException("WktWkb.GeometryIncorrectlyFormated.DialogMessage" + wkt, e);
     }
-    if (oldSrid != 0) {
-      geometry.setSRID(oldSrid);
+    if (srid != 0) {
+      geometry.setSRID(srid);
     }
     return geometry;
   }
@@ -205,30 +215,22 @@ public class WktWkbConverter extends BaseTransform<WktWkbConverterMeta, WktWkbCo
       }
     } else {
       if (hasSRID) {
-        throw new HopException(
-            BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.DialogMessage"));
+        return formatEWKT(wkt, currentSRID);
+      } else {
+        return formatEWKT(wkt, newSRID);
       }
-      return formatEWKT(wkt, newSRID);
     }
   }
 
   public static byte[] geometryToWKB(
       Geometry geometry, int endianness, boolean addSRID, int newSRID) throws Exception {
     int outputDimension = getDimensions(geometry);
-    int oldSRID = geometry.getSRID();
+    boolean hasSRID = geometry.getSRID() != 0;
     var byteOrder = getByteOrder(endianness);
-    boolean includeSRID = false;
-    if (addSRID) {
-      if (oldSRID != 0)
-        throw new HopException(
-            BaseMessages.getString(PKG, "WktWkb.SRIDAlreadyPresent.DialogMessage"));
+    if (addSRID && !hasSRID) {
       geometry.setSRID(newSRID);
-      includeSRID = true;
-    } else if (oldSRID != 0) {
-      geometry.setSRID(oldSRID);
-      includeSRID = true;
     }
-    return new WKBWriter(outputDimension, byteOrder, includeSRID).write(geometry);
+    return new WKBWriter(outputDimension, byteOrder, hasSRID || addSRID).write(geometry);
   }
 
   public static double[] geometryToPC(Geometry geometry) throws Exception {
