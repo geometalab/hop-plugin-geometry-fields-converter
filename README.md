@@ -1,4 +1,4 @@
-# Apache Hop-Plugins WKT-WKB Converter
+# Apache Hop-Plugin Geometry Field Converter
 
 ## Description
 This plugin allows you to convert between the two geometry representation formats well-known text and well-known binary inside [Apache Hop](https://hop.apache.org/) via a Transform.
