@@ -261,7 +261,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     Listener fromPCListener =
         e -> {
           wYInputFieldCombo.setVisible(wFromPCButton.getSelection());
-          if (!wYInputFieldCombo.getText().isEmpty()) wYInputFieldCombo.setText(input.getYInputField());
+          if (wYInputFieldCombo.getText().isEmpty()) wYInputFieldCombo.setText(input.getYInputField());
           wSRIDButton.setEnabled(!wFromPCButton.getSelection());
           wInputFieldCombo.setToolTipText(
               wFromPCButton.getSelection()
@@ -276,7 +276,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     Listener toPCListener =
         e -> {
           wYOutputFieldCombo.setVisible(wToPCButton.getSelection());
-          if (!wYOutputFieldCombo.getText().isEmpty()) wYOutputFieldCombo.setText(input.getYOutputField());
+          if (wYOutputFieldCombo.getText().isEmpty()) wYOutputFieldCombo.setText(input.getYOutputField());
           wSRIDButton.setEnabled(!wToPCButton.getSelection());
           wOutputFieldCombo.setToolTipText(
               wToPCButton.getSelection()
