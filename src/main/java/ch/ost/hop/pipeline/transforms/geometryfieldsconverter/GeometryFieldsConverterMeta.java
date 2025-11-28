@@ -44,9 +44,12 @@ import java.util.function.Supplier;
     categoryDescription = "GeometryFields.Category",
     documentationUrl =
         "https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-wkt-wkb-converter/-/blob/main/README.md")
-public class GeometryFieldsMeta extends BaseTransformMeta<GeometryFieldsConverter, GeometryFieldsConverterData> {
+public class GeometryFieldsConverterMeta
+    extends BaseTransformMeta<GeometryFieldsConverter, GeometryFieldsConverterData> {
 
-  @HopMetadataProperty(key = "input_field", injectionKeyDescription = "GeometryFields.Injection.InputField")
+  @HopMetadataProperty(
+      key = "input_field",
+      injectionKeyDescription = "GeometryFields.Injection.InputField")
   private String inputField = "";
 
   @HopMetadataProperty(
@@ -75,10 +78,14 @@ public class GeometryFieldsMeta extends BaseTransformMeta<GeometryFieldsConverte
   private GeometryFormat outputFormat;
 
   /* Endianness in WKB is defined by its first byte, 1: big endian, 2: little endian */
-  @HopMetadataProperty(key = "endianness", injectionKeyDescription = "GeometryFields.Injection.Endianness")
+  @HopMetadataProperty(
+      key = "endianness",
+      injectionKeyDescription = "GeometryFields.Injection.Endianness")
   private int endianness = 1;
 
-  @HopMetadataProperty(key = "add_srid", injectionKeyDescription = "GeometryFields.Injection.AddSRID")
+  @HopMetadataProperty(
+      key = "add_srid",
+      injectionKeyDescription = "GeometryFields.Injection.AddSRID")
   private boolean addSRID = false;
 
   @HopMetadataProperty(key = "srid", injectionKeyDescription = "GeometryFields.Injection.SRID")

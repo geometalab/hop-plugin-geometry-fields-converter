@@ -34,13 +34,13 @@ import org.locationtech.jts.io.*;
 
 /** Transform That contains the basic skeleton needed to create your own plugin */
 public class GeometryFieldsConverter
-    extends BaseTransform<GeometryFieldsMeta, GeometryFieldsConverterData> {
+    extends BaseTransform<GeometryFieldsConverterMeta, GeometryFieldsConverterData> {
 
   private static final Class<?> PKG = GeometryFieldsConverter.class; // Needed by Translator
 
   public GeometryFieldsConverter(
       TransformMeta transformMeta,
-      GeometryFieldsMeta meta,
+      GeometryFieldsConverterMeta meta,
       GeometryFieldsConverterData data,
       int copyNr,
       PipelineMeta pipelineMeta,
@@ -123,13 +123,12 @@ public class GeometryFieldsConverter
           geometry = pcToGeometry(x, y);
           break;
       }
-      System.out.println(geometry.toText());
-      System.out.println(geometry.getSRID());
       switch (meta.getOutputFormat()) {
         case WKT:
-          if (geometry.getSRID() != meta.getSrid()) {
+          if (meta.isAddSRID() && geometry.getSRID() != meta.getSrid()) {
             logBasic(
                 geometry.toText()
+                    + " "
                     + BaseMessages.getString(PKG, "GeometryFields.SRIDAlreadyPresent.Log"));
           }
           outputRow[data.outputFieldIndex] =
@@ -139,20 +138,24 @@ public class GeometryFieldsConverter
           if (geometry.getSRID() != meta.getSrid()) {
             logBasic(
                 geometry.toText()
+                    + " "
                     + BaseMessages.getString(PKG, "GeometryFields.SRIDAlreadyPresent.Log"));
           }
           outputRow[data.outputFieldIndex] =
               geometryToWKB(geometry, meta.getEndianness(), meta.isAddSRID(), meta.getSrid());
           break;
         case POINT_COORDINATE:
-          double[] pointCoordinates = geometryToPC(geometry);
           if (is2DPoint(geometry)) {
+            double[] pointCoordinates = geometryToPC(geometry);
             outputRow[data.outputFieldIndex] = pointCoordinates[0];
             outputRow[data.yOutputFieldIndex] = pointCoordinates[1];
           } else {
-            logBasic(BaseMessages.getString(PKG, "GeometryFields.IneligibleForPC.Log"));
-            outputRow[data.outputFieldIndex] = null;
-            outputRow[data.yOutputFieldIndex] = null;
+            logBasic(
+                geometry.toText()
+                    + " "
+                    + BaseMessages.getString(
+                        PKG, geometry.toText() + " " + "GeometryFields.IneligibleForPC.Error"));
+            return true;
           }
           break;
       }
@@ -216,11 +219,7 @@ public class GeometryFieldsConverter
         return wkt;
       }
     } else {
-      if (hasSRID) {
-        return formatEWKT(wkt, currentSRID);
-      } else {
-        return formatEWKT(wkt, newSRID);
-      }
+      return formatEWKT(wkt, newSRID);
     }
   }
 
@@ -229,7 +228,7 @@ public class GeometryFieldsConverter
     int outputDimension = getDimensions(geometry);
     boolean hasSRID = geometry.getSRID() != 0;
     var byteOrder = getByteOrder(endianness);
-    if (addSRID && !hasSRID) {
+    if (addSRID) {
       geometry.setSRID(newSRID);
     }
     return new WKBWriter(outputDimension, byteOrder, hasSRID || addSRID).write(geometry);

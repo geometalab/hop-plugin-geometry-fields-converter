@@ -21,6 +21,7 @@ import ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryForm
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.exception.HopTransformException;
 import org.apache.hop.core.row.IRowMeta;
+import org.apache.hop.core.row.IValueMeta;
 import org.apache.hop.core.row.RowMeta;
 import org.apache.hop.core.util.Utils;
 import org.apache.hop.core.variables.IVariables;
@@ -47,11 +48,11 @@ import java.util.List;
 
 import static ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat.*;
 
-public class GeometryFieldsDialog extends BaseTransformDialog implements ITransformDialog {
+public class GeometryFieldsConverterDialog extends BaseTransformDialog implements ITransformDialog {
 
-  private static final Class<?> PKG = GeometryFieldsDialog.class; // Needed by Translator
+  private static final Class<?> PKG = GeometryFieldsConverterDialog.class; // Needed by Translator
 
-  private final GeometryFieldsMeta input;
+  private final GeometryFieldsConverterMeta input;
   private Group inputGroup;
   private Group outputGroup;
   private ComboVar wInputFieldCombo;
@@ -77,10 +78,10 @@ public class GeometryFieldsDialog extends BaseTransformDialog implements ITransf
 
   private IRowMeta prevFields;
 
-  public GeometryFieldsDialog(
+  public GeometryFieldsConverterDialog(
       Shell parent,
       IVariables variables,
-      GeometryFieldsMeta transformMeta,
+      GeometryFieldsConverterMeta transformMeta,
       PipelineMeta pipelineMeta) {
     super(parent, variables, transformMeta, pipelineMeta);
     input = transformMeta;
@@ -216,11 +217,19 @@ public class GeometryFieldsDialog extends BaseTransformDialog implements ITransf
 
     wFromWKTButton =
         createFormatButton(
-            fromComposite, "GeometryFields.Conversion.WKT.Button", WKT, fromFormatButtons, lsSelMod);
+            fromComposite,
+            "GeometryFields.Conversion.WKT.Button",
+            WKT,
+            fromFormatButtons,
+            lsSelMod);
 
     wFromWKBButton =
         createFormatButton(
-            fromComposite, "GeometryFields.Conversion.WKB.Button", WKB, fromFormatButtons, lsSelMod);
+            fromComposite,
+            "GeometryFields.Conversion.WKB.Button",
+            WKB,
+            fromFormatButtons,
+            lsSelMod);
 
     wFromPCButton =
         createFormatButton(
@@ -261,8 +270,8 @@ public class GeometryFieldsDialog extends BaseTransformDialog implements ITransf
     Listener fromPCListener =
         e -> {
           wYInputFieldCombo.setVisible(wFromPCButton.getSelection());
-          if (wYInputFieldCombo.getText().isEmpty()) wYInputFieldCombo.setText(input.getYInputField());
-          wSRIDButton.setEnabled(!wFromPCButton.getSelection());
+          if (wYInputFieldCombo.getText().isEmpty())
+            wYInputFieldCombo.setText(input.getYInputField());
           wInputFieldCombo.setToolTipText(
               wFromPCButton.getSelection()
                   ? BaseMessages.getString(PKG, "GeometryFields.InputXFieldSelection.Tooltip")
@@ -276,7 +285,8 @@ public class GeometryFieldsDialog extends BaseTransformDialog implements ITransf
     Listener toPCListener =
         e -> {
           wYOutputFieldCombo.setVisible(wToPCButton.getSelection());
-          if (wYOutputFieldCombo.getText().isEmpty()) wYOutputFieldCombo.setText(input.getYOutputField());
+          if (wYOutputFieldCombo.getText().isEmpty())
+            wYOutputFieldCombo.setText(input.getYOutputField());
           wSRIDButton.setEnabled(!wToPCButton.getSelection());
           wOutputFieldCombo.setToolTipText(
               wToPCButton.getSelection()
@@ -589,14 +599,31 @@ public class GeometryFieldsDialog extends BaseTransformDialog implements ITransf
             prevFields = new RowMeta();
             logError(BaseMessages.getString(PKG, "GeometryFields.DoMapping.UnableToFindInput"));
           }
-          String[] prevTransformFieldNames =
-              prevFields != null ? prevFields.getFieldNames() : new String[0];
-          Arrays.sort(prevTransformFieldNames);
+          String[] prevTransformFieldNames;
+          if (prevFields != null) {
+            prevTransformFieldNames =
+                prevFields.getValueMetaList().stream()
+                    .filter(Objects::nonNull)
+                    .map(IValueMeta::getName)
+                    .filter(Objects::nonNull)
+                    .toArray(String[]::new);
+          } else {
+            prevTransformFieldNames = new String[0];
+          }
+          shell
+              .getDisplay()
+              .asyncExec(
+                  () -> {
+                    wInputFieldCombo.setItems(prevTransformFieldNames);
+                    wYInputFieldCombo.setItems(prevTransformFieldNames);
+                    wOutputFieldCombo.setItems(prevTransformFieldNames);
+                    wYOutputFieldCombo.setItems(prevTransformFieldNames);
+                  });
         };
     shell.getDisplay().asyncExec(fieldLoader);
   }
 
-  private void getInfo(GeometryFieldsMeta in) {
+  private void getInfo(GeometryFieldsConverterMeta in) {
     input.setInputField(wInputFieldCombo.getText());
     input.setOutputField(wOutputFieldCombo.getText());
     if (input.getInputFormat() == POINT_COORDINATE) {
