@@ -261,6 +261,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     Listener fromPCListener =
         e -> {
           wYInputFieldCombo.setVisible(wFromPCButton.getSelection());
+          if (!wYInputFieldCombo.getText().isEmpty()) wYInputFieldCombo.setText(input.getYInputField());
           wSRIDButton.setEnabled(!wFromPCButton.getSelection());
           wInputFieldCombo.setToolTipText(
               wFromPCButton.getSelection()
@@ -275,6 +276,7 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
     Listener toPCListener =
         e -> {
           wYOutputFieldCombo.setVisible(wToPCButton.getSelection());
+          if (!wYOutputFieldCombo.getText().isEmpty()) wYOutputFieldCombo.setText(input.getYOutputField());
           wSRIDButton.setEnabled(!wToPCButton.getSelection());
           wOutputFieldCombo.setToolTipText(
               wToPCButton.getSelection()
@@ -558,11 +560,8 @@ public class WktWkbConverterDialog extends BaseTransformDialog implements ITrans
       wLilEndian.setSelection(true);
     }
 
-    if (input.getInputFormat() == POINT_COORDINATE) {
-      wYInputFieldCombo.setText(input.getYInputField());
-    } else if (input.getOutputFormat() == POINT_COORDINATE) {
-      wYOutputFieldCombo.setText(input.getYOutputField());
-    }
+    wYInputFieldCombo.setText(input.getYInputField());
+    wYOutputFieldCombo.setText(input.getYOutputField());
 
     wSRIDButton.setSelection(input.isAddSRID());
 
