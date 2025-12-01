@@ -84,7 +84,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.6.0</version>
-
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
@@ -94,12 +93,9 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <excludeGroupIds>
-                                org.junit
-                            </excludeGroupIds>
-                            <excludeArtifactIds>
-                                hop-core,hop-ui,hop-engine
-                            </excludeArtifactIds>
+                            <excludeGroupIds>org.junit</excludeGroupIds>
+                            <excludeArtifactIds>hop-core,hop-ui,hop-engine</excludeArtifactIds>
+                            <excludeTransitive>true</excludeTransitive>
                         </configuration>
                     </execution>
                 </executions>
