@@ -1,13 +1,13 @@
 image: maven:latest
 
-#include:
-#  - template: Jobs/Code-Quality.gitlab-ci.yml
-#  - template: Jobs/SAST.gitlab-ci.yml
-#  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+include:
+  - template: Jobs/Code-Quality.gitlab-ci.yml
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
 
 stages:
   - build
-#  - test
+  - test
   - release
 
 before_script:
@@ -28,22 +28,22 @@ build:
       - target/version.xml
       - target/lib/
 
-#unit_tests:
-#  stage: test
-#  script:
-#    - mvn test
-#
-#integration_tests:
-#  stage: test
-#  image:
-#    name: apache/hop:latest
-#    entrypoint: [ "" ]
-#  script:
-#    - mkdir -p /files
-#    - mkdir -p /opt/hop/plugins/transforms/geometryfieldsconverter
-#    - cp -r integration_test/* /files/
-#    - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
-#    - /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl
+unit_tests:
+  stage: test
+  script:
+    - mvn test
+
+integration_tests:
+  stage: test
+  image:
+    name: apache/hop:latest
+    entrypoint: [ "" ]
+  script:
+    - mkdir -p /files
+    - mkdir -p /opt/hop/plugins/transforms/geometryfieldsconverter
+    - cp -r integration_test/* /files/
+    - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
+    - /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl
 
 prepare_release:
   stage: release
