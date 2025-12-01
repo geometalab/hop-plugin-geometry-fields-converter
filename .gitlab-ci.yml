@@ -72,7 +72,6 @@ create_release:
     - echo "$CI_JOB_TOKEN" | glab auth login --stdin --hostname gitlab.ost.ch
     - |
       glab release create "$CI_COMMIT_TAG" \
-      --name "Release ${VERSION}" \
-      --notes "Automated release for $CI_COMMIT_TAG" \
-      geometry-fields-converter-*.zip \
-      --hostname gitlab.ost.ch
+        --name "Release ${CI_COMMIT_TAG}" \
+        --notes "Automated release for $CI_COMMIT_TAG" \
+        geometry-fields-converter-*.zip
