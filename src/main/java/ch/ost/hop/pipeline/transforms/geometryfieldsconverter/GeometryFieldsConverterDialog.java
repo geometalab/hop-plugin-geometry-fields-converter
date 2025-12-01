@@ -50,7 +50,7 @@ import static ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.Geome
 
 public class GeometryFieldsConverterDialog extends BaseTransformDialog implements ITransformDialog {
 
-  private static final Class<?> PKG = GeometryFieldsConverterDialog.class; // Needed by Translator
+  private static final Class<?> PKG = GeometryFieldsConverterDialog.class;
 
   private final GeometryFieldsConverterMeta input;
   private Group inputGroup;
@@ -193,8 +193,7 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     Group wConversionGroup = new Group(shell, SWT.SHADOW_NONE);
     wConversionGroup.setText(BaseMessages.getString(PKG, "GeometryFields.Conversion.Label"));
     PropsUi.setLook(wConversionGroup);
-
-    GridLayout conversionLayout = new GridLayout(4, false);
+    FormLayout conversionLayout = new FormLayout();
     conversionLayout.marginWidth = 10;
     conversionLayout.marginHeight = 10;
     wConversionGroup.setLayout(conversionLayout);
@@ -204,53 +203,61 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     fdConversionGroup.top = new FormAttachment(attachment, 10);
     wConversionGroup.setLayoutData(fdConversionGroup);
 
-    Label wFromLabel = new Label(wConversionGroup, SWT.RIGHT);
+    Composite fromComposite = new Composite(wConversionGroup, SWT.NONE);
+    fromComposite.setLayout(new GridLayout(4, false));
+    FormData fdFromComposite = new FormData();
+    fdFromComposite.left = new FormAttachment(0, 0);
+    fdFromComposite.top = new FormAttachment(0, 0);
+    fdFromComposite.right = new FormAttachment(100, 0);
+    fromComposite.setLayoutData(fdFromComposite);
+
+    Label wFromLabel = new Label(fromComposite, SWT.RIGHT);
     wFromLabel.setText(BaseMessages.getString(PKG, "GeometryFields.Conversion.From.Label"));
     PropsUi.setLook(wFromLabel);
 
     wFromWKTButton =
         createFormatButton(
-            wConversionGroup,
+            fromComposite,
             "GeometryFields.Conversion.WKT.Button",
             WKT,
             fromFormatButtons,
             lsSelMod);
     wFromWKBButton =
         createFormatButton(
-            wConversionGroup,
+            fromComposite,
             "GeometryFields.Conversion.WKB.Button",
             WKB,
             fromFormatButtons,
             lsSelMod);
     wFromPCButton =
         createFormatButton(
-            wConversionGroup,
+            fromComposite,
             "GeometryFields.Conversion.PC.Button",
             POINT_COORDINATE,
             fromFormatButtons,
             lsSelMod);
 
-    Label wToLabel = new Label(wConversionGroup, SWT.RIGHT);
+    Composite toComposite = new Composite(wConversionGroup, SWT.NONE);
+    toComposite.setLayout(new GridLayout(4, false));
+    FormData fdToComposite = new FormData();
+    fdToComposite.left = new FormAttachment(0, 0);
+    fdToComposite.top = new FormAttachment(fromComposite, 8);
+    fdToComposite.right = new FormAttachment(100, 0);
+    toComposite.setLayoutData(fdToComposite);
+
+    Label wToLabel = new Label(toComposite, SWT.RIGHT);
     wToLabel.setText(BaseMessages.getString(PKG, "GeometryFields.Conversion.To.Label"));
     PropsUi.setLook(wToLabel);
 
     wToWKTButton =
         createFormatButton(
-            wConversionGroup,
-            "GeometryFields.Conversion.WKT.Button",
-            WKT,
-            toFormatButtons,
-            lsSelMod);
+            toComposite, "GeometryFields.Conversion.WKT.Button", WKT, toFormatButtons, lsSelMod);
     wToWKBButton =
         createFormatButton(
-            wConversionGroup,
-            "GeometryFields.Conversion.WKB.Button",
-            WKB,
-            toFormatButtons,
-            lsSelMod);
+            toComposite, "GeometryFields.Conversion.WKB.Button", WKB, toFormatButtons, lsSelMod);
     wToPCButton =
         createFormatButton(
-            wConversionGroup,
+            toComposite,
             "GeometryFields.Conversion.PC.Button",
             POINT_COORDINATE,
             toFormatButtons,
