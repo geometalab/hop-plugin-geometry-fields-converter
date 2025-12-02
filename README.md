@@ -66,16 +66,17 @@ Use examples liberally, and show the expected output if you can. It's helpful to
 
 The code follows the official [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html), which is enforced by the provided [IntelliJ formatting plugin](https://plugins.jetbrains.com/plugin/8527-google-java-format) and the Maven Spotless plugin. Formatting compliance can be verified using ```mvn spotless:check```, and formatting can be applied automatically using ```mvn spotless:apply```.
 
-## Dependencies
+## Dependencies and Plugins
 
-The following dependencies were used throughout this project:
+The following dependencies and Plugins were used throughout this project:
 
 * [The JTS Topology Suite](https://github.com/locationtech/jts)
+* [Hop Group](https://mvnrepository.com/artifact/org.apache.hop) (Core, Engine, UI)
+* [JUnit](https://mvnrepository.com/artifact/junit/junit)
 * [spotless](https://github.com/diffplug/spotless/tree/main)
 * [Apache Maven Dependency Plugin](https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-dependency-plugin)
 * [Jandex](https://github.com/smallrye/jandex)
-* [JUnit](https://mvnrepository.com/artifact/junit/junit)
-* [Hop Group](https://mvnrepository.com/artifact/org.apache.hop) (Core, Engine, UI)
+* [google-java-format](https://plugins.jetbrains.com/plugin/8527-google-java-format)
 
 ## CI/CD Pipeline
 
@@ -86,7 +87,3 @@ This project is licensed under the Apache License, Version 2.0 (the "License"); 
 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-
-## Project status
-
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
