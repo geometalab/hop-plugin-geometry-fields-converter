@@ -521,7 +521,7 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     return SwtSvgImageUtil.getImage(
         shell.getDisplay(),
         getClass().getClassLoader(),
-        "sample.svg",
+            "geometryfieldsconverter.svg",
         ConstUi.LARGE_ICON_SIZE,
         ConstUi.LARGE_ICON_SIZE);
   }
