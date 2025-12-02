@@ -73,17 +73,43 @@ The following dependencies and Plugins were used throughout this project:
 * [The JTS Topology Suite](https://github.com/locationtech/jts)
 * [Hop Group](https://mvnrepository.com/artifact/org.apache.hop) (Core, Engine, UI)
 * [JUnit](https://mvnrepository.com/artifact/junit/junit)
-* [spotless](https://github.com/diffplug/spotless/tree/main)
+* [spotless](https://mvnrepository.com/artifact/com.diffplug.spotless/spotless-maven-plugin)
 * [Apache Maven Dependency Plugin](https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-dependency-plugin)
 * [Jandex](https://github.com/smallrye/jandex)
 * [google-java-format](https://plugins.jetbrains.com/plugin/8527-google-java-format)
 
 ## CI/CD Pipeline
 
+A basic CI/CD pipeline is defined inside the [gitlab yml](.gitlab-ci.yml) file, with the following stages and jobs:
+
+## build
+
+* check_formatting: \
+  Checks formatting via the ```mvn spotless:check``` command.
+* build: \
+  Builds the project via the ```mvn clean package``` command and moves all resulting artifacts into the ```targers/``` directory.
+
+## test
+
+* code_quality: \
+Run the [code quality template job](https://docs.gitlab.com/ci/testing/code_quality/), performing a basic code review, as a prerequisite for merge requests.
+* integration_tests: \
+Run the [Hop Pipeline](integration_test\pipeline.hpl) inside ```integration_test/``` that performs two basic geometry fields conversions to check the integrity of the Plugin. \
+In case the type name of the Transform or the metadata changes, the pipeline has to be manually adjusted.
+* semgrep-sast: \
+Run the [Static application security testing (SAST) template job](https://docs.gitlab.com/user/application_security/sast/), performing a security scan on the repository.
+* unit_tests: \
+Run the [JUnit tests](src\test\java\ch\ost\hop\pipeline\transforms\geometryfieldsconverter\GeometryFieldsConverterTests.java)
+
+## release
+
+* prepare_release: \
+This job only runs once a new tag is created. It creates a ZIP archive containing all necessairy files for installation. This ZIP file is made available as a release.
+
 ## License
 
 This project is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at:
 
-http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
