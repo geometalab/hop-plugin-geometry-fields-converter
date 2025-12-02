@@ -68,7 +68,14 @@ The code follows the official [Google Java Style Guide](https://google.github.io
 
 ## Dependencies
 
-[The JTS Topology Suite](https://github.com/locationtech/jts)
+The following dependencies were used throughout this project:
+
+* [The JTS Topology Suite](https://github.com/locationtech/jts)
+* [spotless](https://github.com/diffplug/spotless/tree/main)
+* [Apache Maven Dependency Plugin](https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-dependency-plugin)
+* [Jandex](https://github.com/smallrye/jandex)
+* [JUnit](https://mvnrepository.com/artifact/junit/junit)
+* [Hop Group](https://mvnrepository.com/artifact/org.apache.hop) (Core, Engine, UI)
 
 ## CI/CD Pipeline
 
