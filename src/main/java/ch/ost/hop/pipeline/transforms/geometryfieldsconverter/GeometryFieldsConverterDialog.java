@@ -17,7 +17,11 @@
 
 package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 
+import static ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat.*;
+
 import ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat;
+import java.util.*;
+import java.util.List;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.exception.HopTransformException;
 import org.apache.hop.core.row.IRowMeta;
@@ -42,11 +46,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
-
-import java.util.*;
-import java.util.List;
-
-import static ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat.*;
 
 public class GeometryFieldsConverterDialog extends BaseTransformDialog implements ITransformDialog {
 

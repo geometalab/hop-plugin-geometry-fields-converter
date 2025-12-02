@@ -18,6 +18,8 @@
 package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 
 import ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat;
+import java.util.List;
+import java.util.function.Supplier;
 import org.apache.hop.core.ICheckResult;
 import org.apache.hop.core.annotations.Transform;
 import org.apache.hop.core.exception.HopTransformException;
@@ -31,9 +33,6 @@ import org.apache.hop.metadata.api.IHopMetadataProvider;
 import org.apache.hop.pipeline.PipelineMeta;
 import org.apache.hop.pipeline.transform.BaseTransformMeta;
 import org.apache.hop.pipeline.transform.TransformMeta;
-
-import java.util.List;
-import java.util.function.Supplier;
 
 @Transform(
     id = "GeometryFieldsConverter",
