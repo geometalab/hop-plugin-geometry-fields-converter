@@ -99,7 +99,7 @@ In case the type name of the Transform or the metadata changes, the pipeline has
 * semgrep-sast: \
 Run the [Static application security testing (SAST) template job](https://docs.gitlab.com/user/application_security/sast/), performing a security scan on the repository.
 * unit_tests: \
-Run the [JUnit tests](src\test\java\ch\ost\hop\pipeline\transforms\geometryfieldsconverter\GeometryFieldsConverterTests.java)
+Run the [JUnit tests](src\test\java\ch\ost\hop\pipeline\transforms\geometryfieldsconverter\GeometryFieldsConverterTests.java).
 
 ## release
 
