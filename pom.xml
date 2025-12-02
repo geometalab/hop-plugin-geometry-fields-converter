@@ -18,7 +18,7 @@
         <hop.version>2.16.0</hop.version>
         <jandex.version>3.2.3</jandex.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hop.plugins.dir>C:\Users\simon\workspace\hop\plugins\transforms\geometryfieldsconverter</hop.plugins.dir>
+        <hop.plugins.dir></hop.plugins.dir>
         <spotless.version>2.43.0</spotless.version>
     </properties>
 
