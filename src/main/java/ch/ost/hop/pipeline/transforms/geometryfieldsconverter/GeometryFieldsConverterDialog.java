@@ -550,6 +550,9 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     if (input.getOutputField() == null) {
       input.setOutputField("");
     }
+    if (input.getYOutputField() == null) {
+      input.setYOutputField("");
+    }
     wInputFieldCombo.setText(input.getInputField());
     wOutputFieldCombo.setText(input.getOutputField());
 
@@ -568,14 +571,17 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     } else {
       wLilEndian.setSelection(true);
     }
+    if (input.getOutputFormat() != WKB) {
+      wBigEndian.setEnabled(false);
+      wLilEndian.setEnabled(false);
+    }
 
     wYInputFieldCombo.setText(input.getYInputField());
     wYOutputFieldCombo.setText(input.getYOutputField());
 
     wSRIDButton.setSelection(input.isAddSRID());
+    wSRIDButton.setEnabled(input.getOutputFormat() == WKB);
 
-    wBigEndian.setEnabled(wFromWKTButton.getSelection());
-    wLilEndian.setEnabled(wFromWKTButton.getSelection());
     wSRIDField.setEnabled(wSRIDButton.getSelection());
     wYInputFieldCombo.setVisible(wFromPCButton.getSelection());
     wYOutputFieldCombo.setVisible(wToPCButton.getSelection());
