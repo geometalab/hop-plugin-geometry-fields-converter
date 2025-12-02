@@ -17,7 +17,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <hop.version>2.16.0</hop.version>
         <jandex.version>3.2.3</jandex.version>
-        <spotless.version>2.46.0</spotless.version>
+        <spotless.version>2.38.0</spotless.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hop.plugins.dir></hop.plugins.dir>
     </properties>
