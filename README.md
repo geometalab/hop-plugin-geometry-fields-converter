@@ -14,6 +14,8 @@ This plugin was developed and tested for Apache Hop version 2.16.
 
 Simply download the ZIP file from the [latest release](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/releases/permalink/latest), extract it, and move the resulting folder (including all its contents) into your hop/plugins/transforms directory.
 
+![release zip](./resources/release.png)
+
 ```bash
 hop
 └── plugins
