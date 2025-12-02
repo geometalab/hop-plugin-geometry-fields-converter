@@ -36,11 +36,12 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @Transform(
-    id = "Geometry Fields Converter",
+    id = "GeometryFieldsConverter",
     name = "i18n::GeometryFields.Name",
     description = "i18n::GeometryFields.Description",
     image = "sample.svg",
     categoryDescription = "GeometryFields.Category",
+    keywords = "i18n::GeometryFields.keyword",
     documentationUrl =
         "https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/README.md")
 public class GeometryFieldsConverterMeta

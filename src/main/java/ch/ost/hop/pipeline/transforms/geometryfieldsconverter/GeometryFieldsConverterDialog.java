@@ -130,8 +130,8 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     wTransformName.addModifyListener(lsMod);
     fdTransformName = new FormData();
     fdTransformName.width = 150;
-    fdTransformName.left = new FormAttachment(0, 0);
-    fdTransformName.top = new FormAttachment(wlTransformName, 5);
+    fdTransformName.left = new FormAttachment(wlTransformName, 0);
+    fdTransformName.top = new FormAttachment(0, 5);
     fdTransformName.width = 250;
     wTransformName.setLayoutData(fdTransformName);
 
