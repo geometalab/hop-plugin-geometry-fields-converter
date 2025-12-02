@@ -3,6 +3,7 @@
 ## Description
 
 This plugin allows you to convert geometries into the well-known text, well-known binary and point coordinates formats in [Apache Hop]([https://hop.apache.org/) via a Transform.
+This plugin was developed and tested for Apache Hop version 2.16.
 
 ![Dialog window of the plugin](resources/dialog.png)
 
