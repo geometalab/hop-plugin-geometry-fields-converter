@@ -17,6 +17,11 @@ cache:
   paths:
     - target/
 
+check_formatting:
+  stage: build
+  script:
+    - mvn spotless:check
+
 build:
   stage: build
   script:
