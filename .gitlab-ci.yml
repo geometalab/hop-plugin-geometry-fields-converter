@@ -65,3 +65,4 @@ prepare_release:
   artifacts:
     paths:
       - "*.zip"
+    expire_in: never
