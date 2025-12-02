@@ -45,7 +45,7 @@ cd apache-hop-plugins-geometry-fields-converter
 
 **Configure the plugin installation path:**
 
-In the [pom.xml](./pom.xml),set the ```<hop.plugins.dir>``` property to the target directory inside your Hop installation where the plugin should be installed. \
+In the [pom.xml](./pom.xml), set the ```<hop.plugins.dir>``` property to the target directory inside your Hop installation where the plugin should be installed. \
 For example: ```<hop.plugins.dir>C:\Users\user\Program Files\hop\plugins\transforms\geometryfieldsconverter</hop.plugins.dir>```. \
 Doing this will automatically update the plugin in Hop after each build.
 
