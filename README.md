@@ -63,7 +63,8 @@ To update the plugin, simply repeat the steps of the installation with the ZIP f
 
 ## Usage
 
-```usage_sample/``` contains a small Hop project with a pipeline that demonstrates a sample use case of converting the geometries of castles in switzerland ([extracted via an overpass query](https://overpass-turbo.eu/)) in a GeoJSON, to point coordinate fields, removes the original geometry field and saves the result in a CSV file.
+```usage_sample/``` contains a small Hop project with a pipeline that demonstrates a sample use case of converting the geometries of castles in switzerland ([extracted via an overpass query](https://overpass-turbo.eu/)) in a GeoJSON, to point coordinate fields, removes the original geometry field and saves the result in a CSV file. \
+**The pipeline uses a Transform from the [Hop GIS Plugins by atol CD](https://github.com/atolcd/hop-gis-plugins/tree/master), This plugin must be installed in Hop for the pipeline to run successfully!**
 
 ![Sample Pipeline](./resources/sample_pipeline.png)
 
