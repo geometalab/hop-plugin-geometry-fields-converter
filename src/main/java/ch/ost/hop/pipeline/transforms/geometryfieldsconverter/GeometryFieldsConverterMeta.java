@@ -38,7 +38,7 @@ import org.apache.hop.pipeline.transform.TransformMeta;
     id = "GeometryFieldsConverter",
     name = "i18n::GeometryFields.Name",
     description = "i18n::GeometryFields.Description",
-    image = "sample.svg",
+    image = "geometryfieldsconverter.svg",
     categoryDescription = "GeometryFields.Category",
     keywords = "i18n::GeometryFields.keyword",
     documentationUrl =
