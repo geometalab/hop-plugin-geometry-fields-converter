@@ -64,8 +64,6 @@ To update the plugin, simply repeat the steps of the installation with the ZIP f
 
 ![Sample Pipeline](./resources/sample_pipeline.png)
 
-![Sample Dialog](./resources/sample_dialog.png)
-
 | Setting              | Description                                                                                                                  |
 |----------------------|------------------------------------------------------------------------------------------------------------------------------|
 | Conversion direction | ```From``` defines the format of the input field(s). The user must ensure that the input data is correct; otherwise the pipeline will fail. ```To``` defines the desired output format. |
