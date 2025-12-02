@@ -3,7 +3,6 @@ image: maven:latest
 include:
   - template: Jobs/Code-Quality.gitlab-ci.yml
   - template: Jobs/SAST.gitlab-ci.yml
-  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
 
 stages:
   - build
