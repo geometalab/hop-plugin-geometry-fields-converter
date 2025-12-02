@@ -19,6 +19,7 @@ cache:
 
 check_formatting:
   stage: build
+  image: maven:3.9.3-openjdk-11
   script:
     - mvn spotless:check
 
