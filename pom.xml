@@ -19,7 +19,7 @@
         <jandex.version>3.2.3</jandex.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hop.plugins.dir></hop.plugins.dir>
-        <spotless.version>2.43.0</spotless.version>
+        <spotless.version>2.46.0</spotless.version>
     </properties>
 
     <build>
