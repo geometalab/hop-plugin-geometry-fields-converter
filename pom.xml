@@ -17,8 +17,9 @@
         <maven.compiler.target>11</maven.compiler.target>
         <hop.version>2.16.0</hop.version>
         <jandex.version>3.2.3</jandex.version>
+        <spotless.version>2.38.0</spotless.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hop.plugins.dir>C:\Users\simon\workspace\hop\plugins\transforms\geometryfieldsconverter</hop.plugins.dir>
+        <hop.plugins.dir></hop.plugins.dir>
     </properties>
 
     <build>
@@ -29,9 +30,33 @@
                     <artifactId>jandex-maven-plugin</artifactId>
                     <version>${jandex.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>com.diffplug.spotless</groupId>
+                    <artifactId>spotless-maven-plugin</artifactId>
+                    <version>${spotless.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <phase>verify</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <java>
+                            <googleJavaFormat>
+                                <version>1.18.1</version>
+                            </googleJavaFormat>
+                        </java>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -54,6 +79,31 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <excludeGroupIds>org.junit</excludeGroupIds>
+                            <excludeArtifactIds>hop-core,hop-ui,hop-engine</excludeArtifactIds>
+                            <excludeTransitive>true</excludeTransitive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>3.1.0</version>
                 <executions>
@@ -66,40 +116,15 @@
                         <configuration>
                             <target>
                                 <mkdir dir="${hop.plugins.dir}"/>
+                                <mkdir dir="${hop.plugins.dir}/lib"/>
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
                                       todir="${hop.plugins.dir}" overwrite="true"/>
                                 <copy file="${project.basedir}/version.xml"
                                       todir="${hop.plugins.dir}" overwrite="true" failonerror="false"/>
+                                <copy todir="${hop.plugins.dir}/lib" overwrite="true">
+                                    <fileset dir="${project.build.directory}/lib" includes="**/*"/>
+                                </copy>
                             </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.6.0</version>
-
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <excludeGroupIds>
-                                org.junit
-                            </excludeGroupIds>
-                            <excludeArtifactIds>
-                                hop-core,hop-ui,hop-engine
-                            </excludeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>

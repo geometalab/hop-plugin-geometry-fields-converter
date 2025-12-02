@@ -1,10 +1,10 @@
 package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.apache.hop.core.exception.HopException;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Geometry;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class GeometryFieldsConverterTests {
 

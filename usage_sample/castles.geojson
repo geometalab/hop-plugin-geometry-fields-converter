@@ -1,0 +1,903 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-turbo",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2025-12-02T12:33:29Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/270412067",
+        "access": "yes",
+        "castle_type": "defensive",
+        "description": "Mauerrest des Wohnturmes einer Wasserburg, der am Ufer des damaligen Tuggener-Sees stand. Erbaut vermutlich im 13. Jh., erwiesen 1358, vermutlich im Alten Zürichkrieg 1444 zerstört. Sondierung 1897, Ausgrabung 1936/37. (Quelle: Burgenverein.ch)",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burgruine Bibiton",
+        "ruins": "yes",
+        "wikidata": "Q1010994",
+        "wikipedia": "de:Burg Bibiton"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.010376,
+          47.2087139
+        ]
+      },
+      "id": "node/270412067"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/278572856",
+        "access": "yes",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Ruine Schloss Alt-Wädenswil",
+        "ruins": "yes",
+        "wheelchair": "no",
+        "wikidata": "Q2175194",
+        "wikipedia": "de:Ruine Alt-Wädenswil"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.6848175,
+          47.2132668
+        ]
+      },
+      "id": "node/278572856"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/313192014",
+        "access": "yes",
+        "castle_type": "defensive",
+        "description": "Mauerspuren eines Turmes. Ehemaliges Städtchen (ohne sichtbare Mauern) als Zentrum für das Tannegger Amt erbaut. Burg um 1240 von Bischof von Konstanz erworben. 1407 durch die Appenzeller zerstört. (Quelle: Burgenverein.ch)",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Ruine Tannegg",
+        "ruins": "yes",
+        "wikidata": "Q29525893",
+        "wikipedia": "de:Ruine Tannegg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.9504574,
+          47.4304134
+        ]
+      },
+      "id": "node/313192014"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/381006614",
+        "access": "yes",
+        "alt_name": "Burgruine Unter-Windegg",
+        "castle_type": "defensive",
+        "description": "Kyburger Lehen der Herren v. Windegg, 1265 habsburgischer Vogteisitz für das Glarnerland, 1359/1384 unter Vogt Eglolf v. Ems neu befestigt, 1406 pfandweise an die Grafen v. Toggenburg, nach 1486 aufgelassen. Sondierung 1953. (Quelle: Burgenverein.ch)",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burgruine Niederwindegg",
+        "ruins": "yes",
+        "wikidata": "Q1013327",
+        "wikimedia_commons": "Category:Burg Niederwindegg",
+        "wikipedia:de": "Burg Niederwindegg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.0532095,
+          47.1438249
+        ]
+      },
+      "id": "node/381006614"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/513751098",
+        "access": "yes",
+        "castle_type": "defensive",
+        "description": "Ehemalige Burg der Ritter v. Werdegg, 1383 Besitz der Herren v. Breitenlandenberg, später der Herren v. Hinwil, 1444 von den Eidgenossen zerstört. 1892, 1902 Ausgrabungen. (Quelle: Burgenverein.ch)",
+        "ele": "705",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burgstelle Werdegg",
+        "start_date": "C13",
+        "wikidata": "Q102884812",
+        "wikipedia": "de:Burg Werdegg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.8329079,
+          47.3668948
+        ]
+      },
+      "id": "node/513751098"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/572206579",
+        "access": "yes",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burg Gräpplang",
+        "opening_hours": "24/7",
+        "ruins": "yes",
+        "wikidata": "Q1012088",
+        "wikipedia": "de:Burg Gräpplang"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.3320483,
+          47.1029189
+        ]
+      },
+      "id": "node/572206579"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/573262035",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "name": "Wildenburg",
+        "ruins": "yes",
+        "wikidata": "Q1014600",
+        "wikipedia": "de:Burg Wildenburg (Zug)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.5571651,
+          47.176796
+        ]
+      },
+      "id": "node/573262035"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/601484095",
+        "alt_name": "Burg Kindhausen",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "name": "Ruine Kindhausen",
+        "ruins": "yes",
+        "source": "knowledge",
+        "wikidata": "Q2175329",
+        "wikipedia": "de:Ruine Kindhausen"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.366162,
+          47.3901874
+        ]
+      },
+      "id": "node/601484095"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/699050152",
+        "access": "yes",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burgruine Moosburg",
+        "ruins": "yes",
+        "wikidata": "Q1421777",
+        "wikipedia": "de:Moosburg (Effretikon)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.6905463,
+          47.4247768
+        ]
+      },
+      "id": "node/699050152"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/823730511",
+        "access": "yes",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burgruine Alt-Eschenbach",
+        "ruins": "yes",
+        "wikidata": "Q29522183"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.3537825,
+          47.1156572
+        ]
+      },
+      "id": "node/823730511"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1081356109",
+        "access": "yes",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burgruine Neu Toggenburg",
+        "ruins": "yes",
+        "wikidata": "Q29786710",
+        "wikimedia_commons": "Category:Neu-Toggenburg",
+        "wikipedia:de": "Neu-Toggenburg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.1126958,
+          47.329706
+        ]
+      },
+      "id": "node/1081356109"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1102444727",
+        "access": "private",
+        "addr:housenumber": "1",
+        "addr:street": "Schloss-Strasse",
+        "castle_type": "stately",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Schloss Hilfikon",
+        "wikidata": "Q2241557",
+        "wikipedia": "de:Schloss Hilfikon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.2469096,
+          47.3307241
+        ]
+      },
+      "id": "node/1102444727"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1267864539",
+        "access": "private",
+        "castle_type": "defensive",
+        "description": "Ordensburg.",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Johanniterkommende Hohenrain",
+        "wikidata": "Q31839275",
+        "wikipedia": "de:Johanniterkommende Hohenrain"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.3186666,
+          47.1796638
+        ]
+      },
+      "id": "node/1267864539"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1358175519",
+        "alt_name": "Friesenburg",
+        "castle_type": "defensive",
+        "ele": "658",
+        "historic": "castle",
+        "name": "Burgruine Friesenberg",
+        "opening_hours": "24/7",
+        "ruins": "yes",
+        "wikidata": "Q1011875",
+        "wikimedia_commons": "Category:Burg Friesenberg",
+        "wikipedia": "de:Burg Friesenberg (Zürich)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.4939223,
+          47.3581745
+        ]
+      },
+      "id": "node/1358175519"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2117906320",
+        "access": "yes",
+        "castle_type": "defensive",
+        "description": "Burgstelle mit Burghügel und Halsgraben, ohne Mauerspuren. Ehem. Burg der Herren v. Meldegg (erwiesen 1312/47). (Quelle: Burgenverein.ch)",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burgstelle Alt Meldegg",
+        "ruins": "yes",
+        "wikidata": "Q67772076"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.3402345,
+          47.4366211
+        ]
+      },
+      "id": "node/2117906320"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2260257903",
+        "access": "yes",
+        "castle_type": "defensive",
+        "description": "Erwiesen 1270 als Sitz der Herren v. Rüdberg, 1272 an die Grafen v. Werdenberg, 1340 an die Grafen v. Toggenburg verpfändet, 1468 von der Abtei St. Gallen zurückgekauft und aufgelassen. Ausgrabung und Konservierung 1949-54. (Quelle: Burgenverein.ch)",
+        "ele": "631",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Ruine_Ruedberg.JPG/960px-Ruine_Ruedberg.JPG",
+        "loc_name": "Schlössli",
+        "name": "Ruine Rüdberg",
+        "name:de": "Ruine Rüdberg",
+        "ruins": "yes",
+        "wikidata": "Q29786711",
+        "wikimedia_commons": "Category:Rüdberg, mittelalterliche Burgruine (Oberhelfenschwil)",
+        "wikipedia:de": "Burg Rüdberg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.0881582,
+          47.3497643
+        ]
+      },
+      "id": "node/2260257903"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2330714364",
+        "access": "private",
+        "castle_type": "stately",
+        "historic": "castle",
+        "name": "Schloss Schwarzenbach",
+        "wikidata": "Q1265744",
+        "wikipedia": "de:Schloss Schwarzenbach (Jonschwil)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.0692744,
+          47.442601
+        ]
+      },
+      "id": "node/2330714364"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2579685626",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "name": "Burg Burgau",
+        "ruins": "yes",
+        "wikidata": "Q67772091"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.2168914,
+          47.3999625
+        ]
+      },
+      "id": "node/2579685626"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2596972796",
+        "access": "yes",
+        "castle_type": "defensive",
+        "description": "Zwei Burggräben im N und E, Burgplatz mit Mauerresten auf zwei Terrassen. Vermutlich Stammburg der Giel, Kämmerer der Abtei St.Gallen, 1226 erwiesen, 1403 beschädigt, 1485 zerstört und 1732 abgebrochen. (Quelle: Burgenverein.ch)",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burgstelle Gielen-Glattburg",
+        "ruins": "yes",
+        "wikidata": "Q67772095"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.1839559,
+          47.4287242
+        ]
+      },
+      "id": "node/2596972796"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3426671299",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "name": "Ruine Breitenlandenberg",
+        "ruins": "yes",
+        "wikidata": "Q2175214",
+        "wikipedia": "de:Ruine Breitenlandenberg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.858604,
+          47.4282352
+        ]
+      },
+      "id": "node/3426671299"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3471347453",
+        "building:condition": "completely_ruinous",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "name": "Ruine Rosenberg",
+        "ruins": "yes",
+        "wikidata": "Q2175404",
+        "wikipedia": "de:Ruine Rosenberg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.2820971,
+          47.3963646
+        ]
+      },
+      "id": "node/3471347453"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3616196589",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "name": "Ruine Lunkhofen",
+        "ruins": "yes",
+        "wikidata": "Q29580240"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.388813,
+          47.318868
+        ]
+      },
+      "id": "node/3616196589"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4686874789",
+        "access": "yes",
+        "building:condition": "completely_ruinous",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Ruine Hohenlandenberg",
+        "ruins": "yes",
+        "wikidata": "Q1806013",
+        "wikipedia": "de:Ruine Hohenlandenberg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.8655403,
+          47.3976322
+        ]
+      },
+      "id": "node/4686874789"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4919285922",
+        "access": "yes",
+        "castle_type": "defensive",
+        "description": "Burgstelle mit Halsgraben und länglicher Burghügel ohne Mauerspuren. Erwiesen 1193 als Sitz der Herren v. Falkenstein, vermutlich 1403 von Appenzell zerstört. (Quelle: Burgenverein.ch)",
+        "ele": "623",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burgstelle Falkenstein",
+        "wikidata": "Q102900152"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.4218969,
+          47.4432961
+        ]
+      },
+      "id": "node/4919285922"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5046427190",
+        "access": "yes",
+        "alt_name": "Burgruine Sola",
+        "castle_type": "defensive",
+        "description": "Erbaut vermutlich 2.Hälfte des 12. Jh., bewohnt bis 1. Hälfte 13. Jh. Keine urkundliche Erwähnung. Nach dem Dorfbrand von Obersool 1713 als Steinbruch genutzt. 1927-29 freigelegt und konserviert. (Quelle: Burgenverein.ch)",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burg Sola",
+        "ruins": "yes",
+        "website": "https://www.hvg.ch/glarner-burgenweg/1-burg-sola/",
+        "wikidata": "Q29784380",
+        "wikimedia_commons": "File:Ruine Sola am Bürgli im Oktober 2020.jpg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.0881602,
+          47.0069631
+        ]
+      },
+      "id": "node/5046427190"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5646107721",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "name": "Burgstelle Sellenbüren",
+        "ruins": "yes",
+        "wikidata": "Q1013983",
+        "wikimedia_commons": "Category:Castle ruin Sellenbüren",
+        "wikipedia": "de:Burg Sellenbüren"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.4866398,
+          47.3447096
+        ]
+      },
+      "id": "node/5646107721"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5965003129",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "name": "Ruine Alt-Wildberg",
+        "wikidata": "Q2175182",
+        "wikipedia": "de:Ruine Alt-Wildberg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.8174647,
+          47.4268326
+        ]
+      },
+      "id": "node/5965003129"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5986984836",
+        "castle_type": "stately",
+        "historic": "castle",
+        "name": "Schloss Bellikon",
+        "wheelchair": "yes",
+        "wikidata": "Q2240231",
+        "wikipedia": "de:Schloss Bellikon"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.3429233,
+          47.3900497
+        ]
+      },
+      "id": "node/5986984836"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5988350249",
+        "access": "permissive",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Ruine Tössegg",
+        "ruins": "yes",
+        "wikidata": "Q1666922",
+        "wikipedia": "de:Ruine Tössegg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.8384157,
+          47.4385991
+        ]
+      },
+      "id": "node/5988350249"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6028494517",
+        "access": "yes",
+        "alt_name": "Burgstelle Liebenberg im Brand",
+        "castle_type": "defensive",
+        "description": "Burghügel mit geringen Mauerspuren, dreiseitig von Graben umgeben. Im 13./14. Jh. Ministerialensitz des Klosters St. Gallen, 1444 von Schwyz zerstört; viereckiger Fundamentsockel mit aufgesetztem Rundturm 1851 eingestürzt. (Quelle: Burgenverein.ch)",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burgstelle Liebenberg",
+        "note": "Siehe auch https://hls-dhs-dss.ch/de/articles/019742/2007-03-29/ und http://www.burgenwelt.org/schweiz/liebenberg_ib/object.php . Nicht verwechseln mit offenbar gleichnamiger Ruine im Tösstal https://www.openstreetmap.org/way/84965808.",
+        "ruins": "yes",
+        "wikidata": "Q67772231"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.7269251,
+          47.2983068
+        ]
+      },
+      "id": "node/6028494517"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6042932644",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "name": "Burgstelle Chranzenberg",
+        "ruins": "yes",
+        "wikidata": "Q67772245"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.9990403,
+          47.4351268
+        ]
+      },
+      "id": "node/6042932644"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6044835067",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "name": "Ruine Clanx",
+        "ruins": "yes",
+        "wikidata": "Q2175234",
+        "wikipedia": "de:Ruine Clanx"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.4113348,
+          47.3472228
+        ]
+      },
+      "id": "node/6044835067"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6405148590",
+        "access": "yes",
+        "castle_type": "defensive",
+        "description": "Burghügel mit Graben und geringen Mauerresten. Ehem. Sitz der Herren v. Meldegg (erwiesen 1312). (Quelle: Burgenverein.ch)",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burgstelle Neu Meldegg",
+        "ruins": "yes",
+        "wikidata": "Q67772265"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.3117302,
+          47.4250072
+        ]
+      },
+      "id": "node/6405148590"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6419800577",
+        "access": "yes",
+        "alt_name": "Römerwarte",
+        "castle_type": "defensive",
+        "description": "Erdbefestigung eines spätrömischen Wachtturmes, wohl im 8./9. Jh. zu Motte und Errichtung einer Holzburg (Schiterburg) umgebaut. (Quelle: Burgenverein.ch)",
+        "ele": "577",
+        "historic": "castle",
+        "historic:civilization": "ancient_roman",
+        "name": "Burgstelle Obere Heidenburg",
+        "start_date": "C4",
+        "wikidata": "Q102250805",
+        "wikipedia": "de:Burgstelle Obere Heidenburg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.648109,
+          47.4588814
+        ]
+      },
+      "id": "node/6419800577"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6980930101",
+        "access": "yes",
+        "alt_name": "Römerwarte",
+        "castle_type": "defensive",
+        "description": "Erdbefestigung eines spätrömischen Wachtturmes",
+        "ele": "546",
+        "historic": "castle",
+        "historic:civilization": "ancient_roman",
+        "name": "Burgstelle Untere Heidenburg",
+        "start_date": "C4",
+        "wikidata": "Q102257347",
+        "wikipedia": "de:Burgstelle Untere Heidenburg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.6450584,
+          47.4566986
+        ]
+      },
+      "id": "node/6980930101"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8169282143",
+        "access": "private",
+        "alt_name": "Wandelburg",
+        "castle_type": "defensive",
+        "description": "Ehemalige Burg auf einem 12 m hohen Sandsteinfelsen, vermutlich durch den Grafen von Rapperswil um 1200 gegründet.",
+        "ele": "423",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/4/44/Burgstelle_Wandelburg.jpg",
+        "name": "Burgstelle Wandelberg",
+        "start_date": "C13",
+        "wikidata": "Q102367418",
+        "wikimedia_commons": "Category:Burg Wandelberg",
+        "wikipedia": "de:Burg Wandelberg"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.0025783,
+          47.1940673
+        ]
+      },
+      "id": "node/8169282143"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8173104333",
+        "access": "yes",
+        "castle_type": "defensive",
+        "description": "Ehemalige Stammburg der Rapperswilerum 1350 von dern Zürchern zerstört. Chor der Kapelle St. Johann steht vermutlich auf dem Fundament der alten runden Burgkapelle.",
+        "ele": "498",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Alt-Rapperswil",
+        "start_date": "C11",
+        "wikidata": "Q4735927",
+        "wikipedia": "en:Alt Rapperswil Castle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.8415268,
+          47.1850507
+        ]
+      },
+      "id": "node/8173104333"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8176951739",
+        "access": "no",
+        "alt_name": "Wasserburg Mülinen",
+        "castle_type": "defensive",
+        "description": "Um 1100 gegründete Wasserburg einer Ministerialfamilie beim Weiler Mülenen. Ab 15.Jh. in bäuerlichen Händen. 1968 beim Bau der Autobahn N3 überdeckt.",
+        "ele": "409",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "layer": "-1",
+        "name": "Burgstelle Mülenen",
+        "start_date": "C12",
+        "wikidata": "Q102512512",
+        "wikipedia": "de:Wasserburg Mülenen"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.9443897,
+          47.1830203
+        ]
+      },
+      "id": "node/8176951739"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11150651230",
+        "access": "private",
+        "castle_type": "defensive",
+        "historic": "castle",
+        "historic:civilization": "medieval",
+        "name": "Burgstelle Langenhard",
+        "ruins": "yes",
+        "start_date": "1200"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.8046002,
+          47.448364
+        ]
+      },
+      "id": "node/11150651230"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12182161558",
+        "access:note": "Gebuchte führungen",
+        "castle_type": "fortress",
+        "contact:email": "daniel.Schwitter@tbgn.ch",
+        "description": "Die Artilleriefestung Niederberg in Näfels, 1941 erbaut, umfasst 400 Meter Gänge. Besucher erleben Militärgeschichte. Dauer: 3 Std., Kosten: CHF 20, Gruppen: 8-30, barrierefrei.",
+        "historic": "castle",
+        "name": "Festung Niederberg",
+        "owner": "Daniel Schwitter"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.0541107,
+          47.0984095
+        ]
+      },
+      "id": "node/12182161558"
+    }
+  ]
+}

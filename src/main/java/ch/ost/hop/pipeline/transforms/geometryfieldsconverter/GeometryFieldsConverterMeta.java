@@ -18,6 +18,8 @@
 package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 
 import ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat;
+import java.util.List;
+import java.util.function.Supplier;
 import org.apache.hop.core.ICheckResult;
 import org.apache.hop.core.annotations.Transform;
 import org.apache.hop.core.exception.HopTransformException;
@@ -32,15 +34,13 @@ import org.apache.hop.pipeline.PipelineMeta;
 import org.apache.hop.pipeline.transform.BaseTransformMeta;
 import org.apache.hop.pipeline.transform.TransformMeta;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 @Transform(
-    id = "Geometry Fields Converter",
+    id = "GeometryFieldsConverter",
     name = "i18n::GeometryFields.Name",
     description = "i18n::GeometryFields.Description",
     image = "sample.svg",
     categoryDescription = "GeometryFields.Category",
+    keywords = "i18n::GeometryFields.keyword",
     documentationUrl =
         "https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/README.md")
 public class GeometryFieldsConverterMeta

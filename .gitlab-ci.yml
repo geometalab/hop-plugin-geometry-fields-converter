@@ -3,11 +3,11 @@ image: maven:latest
 include:
   - template: Jobs/Code-Quality.gitlab-ci.yml
   - template: Jobs/SAST.gitlab-ci.yml
-  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
 
 stages:
   - build
   - test
+  - release
 
 before_script:
   - mkdir -p target
@@ -15,6 +15,12 @@ before_script:
 cache:
   paths:
     - target/
+
+check_formatting:
+  stage: build
+  image: maven:3-openjdk-11
+  script:
+    - mvn spotless:check
 
 build:
   stage: build
@@ -44,9 +50,18 @@ integration_tests:
     - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
     - /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl
 
-#code_quality:
-#  extends: .dockerhub_login
-#
-#.dockerhub_login:
-#  script:
-#    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+prepare_release:
+  stage: release
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - apt-get update && apt-get install -y zip
+    - mvn -B package
+    - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+    - ZIP_NAME="geometry-fields-converter-$VERSION.zip"
+    - cd target
+    - zip -r "../$ZIP_NAME" version.xml lib hop-transform-geometryfieldsconverter-$VERSION.jar
+  artifacts:
+    paths:
+      - "*.zip"
+    expire_in: never

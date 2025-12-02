@@ -154,7 +154,7 @@
   </transform>
   <transform>
     <name>Geometry Fields Converter</name>
-    <type>Geometry Fields Converter</type>
+    <type>GeometryFieldsConverter</type>
     <description/>
     <distribute>N</distribute>
     <custom_distribution/>
@@ -180,7 +180,7 @@
   </transform>
   <transform>
     <name>Geometry Fields Converter 2</name>
-    <type>Geometry Fields Converter</type>
+    <type>GeometryFieldsConverter</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
