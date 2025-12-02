@@ -60,7 +60,19 @@ To update the plugin, simply repeat the steps of the installation with the ZIP f
 
 ## Usage
 
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+```usage_sample/``` contains a small Hop project with a pipeline that demonstrates a sample use case of converting the geometries of castles in switzerland ([extracted via an overpass query](https://overpass-turbo.eu/)) in a GeoJSON, to point coordinate fields, removes the original geometry field and saves the result in a CSV file.
+
+![Sample Pipeline](./resources/sample_pipeline.png)
+
+![Sample Dialog](./resources/sample_dialog.png)
+
+| Setting              | Description                                                                                                                  |
+|----------------------|------------------------------------------------------------------------------------------------------------------------------|
+| Conversion direction | ```From``` defines the format of the input field(s). The user must ensure that the input data is correct; otherwise the pipeline will fail. ```To``` defines the desired output format. |
+| Endianness           | In case ```WKB``` is selected as the output format, the user can choose the byte order of the generated binary. ```Big endian``` is the default. |
+| Additional options   | Currently, only the option to add an SRID is available. This option is only enabled if the output format is either Well-Known Text or Well-Known Binary. If the input already contains an SRID, it will be overwritten, and the user will be notified via a log entry (visible in the Logging tab). |
+| Input field(s)       | The user must define the field that will be converted. If the input format is Point Coordinate Fields, a second field containing the y-coordinate must be specified. The dropdown menu shows all fields provided by the previous Transform (if connected via a Hop). |
+| Output field(s)      | The user may define the field in which the converted value will be stored. If the input format is Point Coordinate Fields, a second output field may be specified. The fields may also be left empty, in which case new fields will be created according to the output format (```WKT```->```geometry_wkt```, ```WKB```->```geometry_wkb```, ```Point coordinate fields```->```longitude```,```latitude```). The user may also define new fields by choosing unique names. A dropdown menu is available showing all fields from the previous Transform. |
 
 ## Code Formatting
 
