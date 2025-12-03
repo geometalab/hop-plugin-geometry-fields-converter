@@ -580,7 +580,7 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     wYOutputFieldCombo.setText(input.getYOutputField());
 
     wSRIDButton.setSelection(input.isAddSRID());
-    wSRIDButton.setEnabled(input.getOutputFormat() == WKB);
+    wSRIDButton.setEnabled(input.getOutputFormat() != POINT_COORDINATE);
 
     wSRIDField.setEnabled(wSRIDButton.getSelection());
     wYInputFieldCombo.setVisible(wFromPCButton.getSelection());
