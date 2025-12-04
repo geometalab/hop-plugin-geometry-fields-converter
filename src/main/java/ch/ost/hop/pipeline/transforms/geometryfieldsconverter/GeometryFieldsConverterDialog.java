@@ -679,9 +679,16 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
 
   private void ok() {
     if (Utils.isEmpty(wTransformName.getText())) {
+      wTransformName.setFocus();
       return;
     } else if (wSRIDButton.getSelection() && wSRIDField.getText().trim().isEmpty()) {
       wSRIDField.setFocus();
+      return;
+    } else if (wInputFieldCombo.getText().isEmpty()) {
+      wInputFieldCombo.setFocus();
+      return;
+    } else if (wYInputFieldCombo.getText().isEmpty() && getSelectedFormat(fromFormatButtons) == POINT_COORDINATE) {
+      wYInputFieldCombo.setFocus();
       return;
     } else if (getSelectedFormat(fromFormatButtons) == null
         || getSelectedFormat(toFormatButtons) == null) {
