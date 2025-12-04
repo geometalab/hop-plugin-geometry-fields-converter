@@ -576,8 +576,8 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
       wLilEndian.setEnabled(false);
     }
 
-    wYInputFieldCombo.setText(input.getYInputField());
-    wYOutputFieldCombo.setText(input.getYOutputField());
+    wYInputFieldCombo.setText(input.getYInputField() == null ? "" : input.getYInputField());
+    wYOutputFieldCombo.setText(input.getYOutputField() == null ? "" : input.getYOutputField());
 
     wSRIDButton.setSelection(input.isAddSRID());
     wSRIDButton.setEnabled(input.getOutputFormat() != POINT_COORDINATE);
@@ -631,11 +631,8 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
   private void getInfo(GeometryFieldsConverterMeta in) {
     input.setInputField(wInputFieldCombo.getText());
     input.setOutputField(wOutputFieldCombo.getText());
-    if (input.getInputFormat() == POINT_COORDINATE) {
-      input.setYInputField(wYInputFieldCombo.getText());
-    } else if (input.getOutputFormat() == POINT_COORDINATE) {
-      input.setYOutputField(wYOutputFieldCombo.getText());
-    }
+    input.setYInputField(wYInputFieldCombo.getText());
+    input.setYOutputField(wYOutputFieldCombo.getText());
     input.setInputFormat(getSelectedFormat(fromFormatButtons));
     input.setOutputFormat(getSelectedFormat(toFormatButtons));
 
@@ -687,7 +684,8 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     } else if (wInputFieldCombo.getText().isEmpty()) {
       wInputFieldCombo.setFocus();
       return;
-    } else if (wYInputFieldCombo.getText().isEmpty() && getSelectedFormat(fromFormatButtons) == POINT_COORDINATE) {
+    } else if (wYInputFieldCombo.getText().isEmpty()
+        && getSelectedFormat(fromFormatButtons) == POINT_COORDINATE) {
       wYInputFieldCombo.setFocus();
       return;
     } else if (getSelectedFormat(fromFormatButtons) == null
