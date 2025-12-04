@@ -151,7 +151,7 @@ public class GeometryFieldsConverter
           } else {
             logBasic(
                 geometry.toText()
-                    + " "
+                    + " : "
                     + BaseMessages.getString(
                         PKG, geometry.toText() + " " + "GeometryFields.IneligibleForPC.Error"));
             return true;
