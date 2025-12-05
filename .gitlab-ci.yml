@@ -66,14 +66,10 @@ speed_test:
   script:
     - /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
     - mkdir result
-    - cp /files/metrics.json result/metrics.json
-    - echo $PWD
-    - ls -la
-    - ls -la result
-    - cat result/metrics.json
+    - cp /files/metrics.json target/metrics.json
   artifacts:
     paths:
-      - result/metrics.json
+      - target/metrics.json
 
 evaluate_performance:
   stage: test
@@ -85,9 +81,7 @@ evaluate_performance:
     - ls -la
     - ls -la speed_test
     - ls -la target
-    - ls -la result
-    - cat result/metrics.json
-    - cat speed_test/metrics.json
+    - cat target/metrics.json
     - bash speed_test/evaluate_performance.sh
 
 prepare_release:
