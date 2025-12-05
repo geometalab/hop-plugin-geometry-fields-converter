@@ -684,7 +684,8 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     } else if (wInputFieldCombo.getText().isEmpty() && wInputFieldCombo.getItemCount() != 0) {
       wInputFieldCombo.setFocus();
       return;
-    } else if (wYInputFieldCombo.getText().isEmpty() && wYInputFieldCombo.getItemCount() != 0
+    } else if (wYInputFieldCombo.getText().isEmpty()
+        && wYInputFieldCombo.getItemCount() != 0
         && getSelectedFormat(fromFormatButtons) == POINT_COORDINATE) {
       wYInputFieldCombo.setFocus();
       return;
