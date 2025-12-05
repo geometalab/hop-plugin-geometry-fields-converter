@@ -63,10 +63,10 @@ speed_test:
     - mkdir -p /opt/hop/plugins/transforms/geometryfieldsconverter
     - cp -r speed_test/* /files/
     - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
-    - /opt/hop/hop-conf.sh -pc -p speed_test -ph /files
+    - /opt/hop/hop-conf.sh -p speed_test -ph /files -pf /files/project-config.json
   script:
     - /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
-    - bash /files/speed_test/evaluate_performance.sh
+    - bash speed_test/evaluate_performance.sh
 
 prepare_release:
   stage: release
