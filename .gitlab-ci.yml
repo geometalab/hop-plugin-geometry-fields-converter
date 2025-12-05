@@ -54,20 +54,19 @@ speed_test:
   stage: test
   image:
     name: apache/hop:latest
-    entrypoint: [ "" ]
+    entrypoint: [""]
   before_script:
-    - chmod +x ./speed_test/evaluate_performance.sh
-    - apt-get update && apt-get install -y wget unzip
+    - apt-get update && apt-get install -y wget unzip jq
     - wget https://github.com/atolcd/hop-gis-plugins/releases/download/v1.4.0/gis-plugin-assemblies-1.4.0.zip -O gis.zip
-  script:
     - unzip gis.zip -d /opt/hop/plugins/
     - mkdir -p /files
     - mkdir -p /opt/hop/plugins/transforms/geometryfieldsconverter
     - cp -r speed_test/* /files/
     - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
     - /opt/hop/hop-conf.sh -pc -p speed_test -ph /files
+  script:
     - /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
-    - ./speed_test/evaluate_performance.sh
+    - bash /files/speed_test/evaluate_performance.sh
 
 prepare_release:
   stage: release
