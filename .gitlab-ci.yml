@@ -65,15 +65,16 @@ speed_test:
     - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
   script:
     - /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
-    - chmod u+w target
-    - cp /files/metrics.json target/metrics.json
+    - mkdir result
+    - cp /files/metrics.json result/metrics.json
   artifacts:
     paths:
-      - target/metrics.json
+      - result/metrics.json
 
 evaluate_performance:
   stage: test
   image: bash:latest
+  needs: [speed_test]
   dependencies:
     - speed_test
   script:
@@ -81,7 +82,9 @@ evaluate_performance:
     - ls -la
     - ls -la speed_test
     - ls -la target
-    - cat target/metrics.json
+    - ls -la result
+    - cat result/metrics.json
+    - cat speed_test/metrics.json
     - bash speed_test/evaluate_performance.sh
 
 prepare_release:
