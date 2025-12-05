@@ -15,4 +15,4 @@ target/
 .vscode/
 
 # Speed Test
-speed_test/out.json
+speed_test/metrics.json

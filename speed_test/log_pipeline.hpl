@@ -59,7 +59,7 @@
     </fields>
     <fileAppended>N</fileAppended>
     <fileAsCommand>N</fileAsCommand>
-    <fileName>${PROJECT_HOME}/out.json</fileName>
+    <fileName>${PROJECT_HOME}/metrics.json</fileName>
     <jsonBloc>data</jsonBloc>
     <nrRowsInBloc>0</nrRowsInBloc>
     <operation_type>writetofile</operation_type>

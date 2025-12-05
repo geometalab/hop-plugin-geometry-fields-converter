@@ -65,9 +65,20 @@ speed_test:
     - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
   script:
     - /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
-    - cat /files/out.json
     - cd speed_test
     - python3 evaluate_performance.py
+  artifacts:
+    paths:
+      - files/metrics.json
+
+evaluate_performance:
+  stage: test
+  image: bash:latest
+  dependencies:
+    - speed_test
+  script:
+    - apt-get update && apt-get install -y jq
+    - bash evaluate_performance.sh
 
 prepare_release:
   stage: release
