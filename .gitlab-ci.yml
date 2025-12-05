@@ -22,16 +22,16 @@ cache:
 #  script:
 #    - mvn spotless:check
 
-build:
-  stage: build
-  script:
-    - mvn clean package
-    - mv version.xml target/version.xml
-  artifacts:
-    paths:
-      - target/*.jar
-      - target/version.xml
-      - target/lib/
+#build:
+#  stage: build
+#  script:
+#    - mvn clean package
+#    - mv version.xml target/version.xml
+#  artifacts:
+#    paths:
+#      - target/*.jar
+#      - target/version.xml
+#      - target/lib/
 
 #unit_tests:
 #  stage: test
@@ -79,6 +79,7 @@ evaluate_performance:
     - apt-get update && apt-get install -y jq
     - ls -la
     - ls -la speed_test
+    - ls -la target
     - cat speed_test/metrics.json
     - bash speed_test/evaluate_performance.sh
 
