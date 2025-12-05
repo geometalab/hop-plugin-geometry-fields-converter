@@ -15,5 +15,5 @@ target/
 .vscode/
 
 # Speed Test
-speed_test/pipeline-log/
+speed_test/metadata/
 speed_test/out.json

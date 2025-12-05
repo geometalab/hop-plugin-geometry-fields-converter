@@ -49,7 +49,7 @@
         <value>FALSE</value>
       </param>
     </params>
-    <inputFileName>C:\Users\simon\workspace\sa\apache-hop-plugins-sa\speed_test\big.geojson</inputFileName>
+    <inputFileName>${PROJECT_HOME}\big.geojson</inputFileName>
     <geometryFieldName>geometry</geometryFieldName>
     <encoding/>
     <rowLimit>0</rowLimit>
@@ -103,7 +103,7 @@
         <value>FALSE</value>
       </param>
     </params>
-    <inputFileName>C:\Users\simon\workspace\sa\apache-hop-plugins-sa\speed_test\small.geojson</inputFileName>
+    <inputFileName>${PROJECT_HOME}\small.geojson</inputFileName>
     <geometryFieldName>geometry</geometryFieldName>
     <encoding/>
     <rowLimit>0</rowLimit>
