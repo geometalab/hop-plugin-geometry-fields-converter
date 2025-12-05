@@ -59,12 +59,12 @@ speed_test:
     - apt-get update && apt-get install -y wget unzip
     - wget https://github.com/atolcd/hop-gis-plugins/releases/download/v1.4.0/gis-plugin-assemblies-1.4.0.zip -O gis.zip
   script:
-    - hop-conf.sh -pc -p speed_test -ph /files
     - unzip gis.zip -d /opt/hop/plugins/
     - mkdir -p /files
     - mkdir -p /opt/hop/plugins/transforms/geometryfieldsconverter
     - cp -r speed_test/* /files/
     - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
+    - /opt/hop/hop-conf.sh -pc -p speed_test -ph /files
     - /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
     - ./evaluate_performance.sh
 
