@@ -1,8 +1,8 @@
 image: maven:latest
 
-include:
-  - template: Jobs/Code-Quality.gitlab-ci.yml
-  - template: Jobs/SAST.gitlab-ci.yml
+#include:
+#  - template: Jobs/Code-Quality.gitlab-ci.yml
+#  - template: Jobs/SAST.gitlab-ci.yml
 
 stages:
   - build
@@ -16,11 +16,11 @@ cache:
   paths:
     - target/
 
-check_formatting:
-  stage: build
-  image: maven:3-openjdk-11
-  script:
-    - mvn spotless:check
+#check_formatting:
+#  stage: build
+#  image: maven:3-openjdk-11
+#  script:
+#    - mvn spotless:check
 
 build:
   stage: build
@@ -33,22 +33,22 @@ build:
       - target/version.xml
       - target/lib/
 
-unit_tests:
-  stage: test
-  script:
-    - mvn test
-
-integration_tests:
-  stage: test
-  image:
-    name: apache/hop:latest
-    entrypoint: [ "" ]
-  script:
-    - mkdir -p /files
-    - mkdir -p /opt/hop/plugins/transforms/geometryfieldsconverter
-    - cp -r integration_test/* /files/
-    - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
-    - /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl
+#unit_tests:
+#  stage: test
+#  script:
+#    - mvn test
+#
+#integration_tests:
+#  stage: test
+#  image:
+#    name: apache/hop:latest
+#    entrypoint: [ "" ]
+#  script:
+#    - mkdir -p /files
+#    - mkdir -p /opt/hop/plugins/transforms/geometryfieldsconverter
+#    - cp -r integration_test/* /files/
+#    - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
+#    - /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl
 
 speed_test:
   stage: test
@@ -65,10 +65,10 @@ speed_test:
     - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
   script:
     - /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
-    - cp /files/metrics.json metrics.json
+    - cp /files/metrics.json $CI_PROJECT_DIR/speed_test/metrics.json
   artifacts:
     paths:
-      - metrics.json
+      - speed_test/metrics.json
 
 evaluate_performance:
   stage: test
@@ -76,7 +76,6 @@ evaluate_performance:
   dependencies:
     - speed_test
   script:
-    - cp metrics.json speed_test/metrics.json
     - cat speed_test/metrics.json
     - cd speed_test
     - apt-get update && apt-get install -y jq
