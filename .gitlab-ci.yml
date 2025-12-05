@@ -65,9 +65,10 @@ speed_test:
     - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
   script:
     - /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
+    - cp /files/metrics.json speed_test/metrics.json
   artifacts:
     paths:
-      - files/metrics.json
+      - speed_test/metrics.json
 
 evaluate_performance:
   stage: test
@@ -75,7 +76,7 @@ evaluate_performance:
   dependencies:
     - speed_test
   script:
-    - cat files/metrics.json
+    - cat speed_test/metrics.json
     - apt-get update && apt-get install -y jq
     - bash speed_test/evaluate_performance.sh
 

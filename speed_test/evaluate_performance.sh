@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-JSON_FILE="/files/out.json"
+JSON_FILE="out.json"
 
 if [[ ! -f "$JSON_FILE" ]]; then
   echo "ERROR: JSON file '$JSON_FILE' not found!"
