@@ -76,7 +76,8 @@ evaluate_performance:
   script:
     - cat speed_test/metrics.json
     - apt-get update && apt-get install -y jq bc
-    - bash speed_test/evaluate_performance.sh
+    - cd speed_test
+    - bash evaluate_performance.sh
 
 prepare_release:
   stage: release
