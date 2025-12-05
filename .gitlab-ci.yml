@@ -76,10 +76,11 @@ evaluate_performance:
   dependencies:
     - speed_test
   script:
-    - cat metrics.json
-    - cd speed_test
     - apt-get update && apt-get install -y jq
-    - bash evaluate_performance.sh
+    - ls -la
+    - ls -la speed_test
+    - cat speed_test/metrics.json
+    - bash speed_test/evaluate_performance.sh
 
 prepare_release:
   stage: release
