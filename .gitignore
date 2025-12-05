@@ -11,5 +11,9 @@ log/
 target/
 .run/
 
-#VSC
+# VSC
 .vscode/
+
+# Speed Test
+speed_test/pipeline-log/
+speed_test/out.json
