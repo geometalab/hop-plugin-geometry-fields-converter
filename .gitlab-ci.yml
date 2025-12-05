@@ -67,6 +67,10 @@ speed_test:
     - /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
     - mkdir result
     - cp /files/metrics.json result/metrics.json
+    - echo "PWD: $PWD"
+    - ls -la
+    - ls -la result
+    - cat result/metrics.json
   artifacts:
     paths:
       - result/metrics.json
