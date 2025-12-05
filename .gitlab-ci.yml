@@ -56,7 +56,6 @@ speed_test:
     name: apache/hop:latest
     entrypoint: [ "" ]
   before_script:
-    - apk add --no-cache wget unzip jq bash
     - /opt/hop/hop-conf.sh -pc -p speed_test -ph /files
     - wget https://github.com/atolcd/hop-gis-plugins/releases/download/v1.4.0/gis-plugin-assemblies-1.4.0.zip -O gis.zip
     - unzip gis.zip -d /opt/hop/plugins/
@@ -68,7 +67,7 @@ speed_test:
     - /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
     - cat /files/out.json
     - cd speed_test
-    - bash evaluate_performance.sh
+    - python3 evaluate_performance.py
 
 prepare_release:
   stage: release
