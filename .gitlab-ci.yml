@@ -65,7 +65,7 @@ speed_test:
     - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
   script:
     - /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
-    - mkdir result
+    - chmod u+w target
     - cp /files/metrics.json target/metrics.json
   artifacts:
     paths:
