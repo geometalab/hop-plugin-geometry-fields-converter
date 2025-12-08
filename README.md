@@ -96,28 +96,32 @@ The following dependencies and Plugins were used throughout this project:
 
 A basic CI/CD pipeline is defined inside the [gitlab yml](.gitlab-ci.yml) file, with the following stages and jobs:
 
-## build
+### build
 
-* check_formatting: \
+* **check_formatting:** \
   Checks formatting via the ```mvn spotless:check``` command.
-* build: \
+* **build:** \
   Builds the project via the ```mvn clean package``` command and moves all resulting artifacts into the ```targers/``` directory.
 
-## test
+### test
 
-* code_quality: \
+* **code_quality:** \
 Run the [code quality template job](https://docs.gitlab.com/ci/testing/code_quality/), performing a basic code review, as a prerequisite for merge requests.
-* integration_tests: \
-Run the [Hop Pipeline](integration_test\pipeline.hpl) inside ```integration_test/``` that performs two basic geometry fields conversions to check the integrity of the Plugin. \
+* **integration_tests:** \
+Run the [Hop Pipeline](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/integration_test/pipeline.hpl) inside ```integration_test/``` that performs two basic geometry fields conversions to check the integrity of the Plugin. \
 In case the type name of the Transform or the metadata changes, the pipeline has to be manually adjusted.
-* semgrep-sast: \
+* **semgrep-sast:** \
 Run the [static application security testing (SAST) template job](https://docs.gitlab.com/user/application_security/sast/), performing a security scan on the repository.
-* unit_tests: \
+* **unit_tests:** \
 Run the [JUnit tests](src\test\java\ch\ost\hop\pipeline\transforms\geometryfieldsconverter\GeometryFieldsConverterTests.java).
+* **speed_test:** \
+Run the [a speed test Hop Pipeline](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/speed_test/speed_test.hpl) inside ```speed_test/```, whose performance metrics get logged via the ```log_pipeline.hpl```, in a JSON file
+* **evaluate_performance:** \
+Calculate the speed per row with the prior JSON file and evaluate the resulting performance via a simple bash script.
 
-## release
+### release
 
-* prepare_release: \
+* **prepare_release:** \
 This job only runs once a new tag is created. It creates a ZIP archive containing all necessairy files for installation. This ZIP file is made available as a release.
 
 ## License

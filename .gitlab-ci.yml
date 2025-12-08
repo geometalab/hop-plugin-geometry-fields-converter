@@ -50,6 +50,35 @@ integration_tests:
     - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
     - /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl
 
+speed_test:
+  stage: test
+  image:
+    name: apache/hop:latest
+    entrypoint: [ "" ]
+  before_script:
+    - /opt/hop/hop-conf.sh -pc -p speed_test -ph /files
+    - wget https://github.com/atolcd/hop-gis-plugins/releases/download/v1.4.0/gis-plugin-assemblies-1.4.0.zip -O gis.zip
+    - unzip gis.zip -d /opt/hop/plugins/
+    - mkdir -p /files
+    - mkdir -p /opt/hop/plugins/transforms/geometryfieldsconverter
+    - cp -r speed_test/* /files/
+    - cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
+  script:
+    - /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
+    - cp /files/metrics.json speed_test/metrics.json
+  artifacts:
+    paths:
+      - speed_test/metrics.json
+
+evaluate_performance:
+  stage: test
+  needs: [speed_test]
+  script:
+    - cat speed_test/metrics.json
+    - apt-get update && apt-get install -y jq bc
+    - cd speed_test
+    - bash evaluate_performance.sh
+
 prepare_release:
   stage: release
   rules:

@@ -134,7 +134,7 @@ public class GeometryFieldsConverter
               geometryToWKT(geometry, meta.isAddSRID(), meta.getSrid());
           break;
         case WKB:
-          if (geometry.getSRID() != meta.getSrid()) {
+          if (meta.isAddSRID() && geometry.getSRID() != meta.getSrid()) {
             logBasic(
                 geometry.toText()
                     + " "
@@ -152,8 +152,7 @@ public class GeometryFieldsConverter
             logBasic(
                 geometry.toText()
                     + ": "
-                    + BaseMessages.getString(
-                        PKG, "GeometryFields.IneligibleForPC.Error"));
+                    + BaseMessages.getString(PKG, "GeometryFields.IneligibleForPC.Error"));
             return true;
           }
           break;

@@ -11,5 +11,8 @@ log/
 target/
 .run/
 
-#VSC
+# VSC
 .vscode/
+
+# Speed Test
+speed_test/metrics.json

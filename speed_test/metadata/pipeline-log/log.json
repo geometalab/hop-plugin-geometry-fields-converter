@@ -1,0 +1,12 @@
+{
+  "virtualPath": "",
+  "pipelinesToLog": [],
+  "loggingParentsOnly": false,
+  "name": "log",
+  "intervalInSeconds": "30",
+  "executingPeriodically": false,
+  "pipelineFilename": "${PROJECT_HOME}/log_pipeline.hpl",
+  "executingAtEnd": true,
+  "enabled": true,
+  "executingAtStart": true
+}
