@@ -43,11 +43,11 @@ echo "Ratio (big/small):   $ratio"
 echo ""
 
 # Threshold evaluation
-if (( $(echo "$ratio >= 0.90" | bc -l) )); then
+if (( $(echo "$ratio >= 2.50" | bc -l) )); then
   echo "Result: OUTSTANDING"
-elif (( $(echo "$ratio >= 0.75" | bc -l) )); then
+elif (( $(echo "$ratio >= 1.50" | bc -l) )); then
   echo "Result: TARGET"
-elif (( $(echo "$ratio >= 0.50" | bc -l) )); then
+elif (( $(echo "$ratio >= 1.00" | bc -l) )); then
   echo "Result: MINIMAL"
 else
   echo "Result: FAIL – Performance too low!"
