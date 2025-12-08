@@ -113,7 +113,7 @@ In case the type name of the Transform or the metadata changes, the pipeline has
 * **semgrep-sast:** \
 Run the [static application security testing (SAST) template job](https://docs.gitlab.com/user/application_security/sast/), performing a security scan on the repository.
 * **unit_tests:** \
-Run the [JUnit tests](src\test\java\ch\ost\hop\pipeline\transforms\geometryfieldsconverter\GeometryFieldsConverterTests.java).
+Run the [JUnit tests](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/src/test/java/ch/ost/hop/pipeline/transforms/geometryfieldsconverter/GeometryFieldsConverterTests.java).
 * **speed_test:** \
 Run the [a speed test Hop Pipeline](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/speed_test/speed_test.hpl) inside ```speed_test/```, whose performance metrics get logged via the ```log_pipeline.hpl```, in a JSON file
 * **evaluate_performance:** \
