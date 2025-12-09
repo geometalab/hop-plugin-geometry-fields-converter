@@ -21,6 +21,7 @@ import static ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.Geome
 
 import org.apache.hop.core.Const;
 import org.apache.hop.core.exception.HopException;
+import org.apache.hop.core.exception.HopTransformException;
 import org.apache.hop.core.row.RowDataUtil;
 import org.apache.hop.i18n.BaseMessages;
 import org.apache.hop.pipeline.Pipeline;
@@ -35,7 +36,7 @@ import org.locationtech.jts.io.*;
 public class GeometryFieldsConverter
     extends BaseTransform<GeometryFieldsConverterMeta, GeometryFieldsConverterData> {
 
-  private static final Class<?> PKG = GeometryFieldsConverter.class; // Needed by Translator
+  private static final Class<?> PKG = GeometryFieldsConverterMeta.class;
 
   public GeometryFieldsConverter(
       TransformMeta transformMeta,
@@ -69,14 +70,18 @@ public class GeometryFieldsConverter
 
       data.inputFieldIndex = getInputRowMeta().indexOfValue(realInputField);
       if (data.inputFieldIndex < 0)
-        throw new HopException("Field " + realInputField + " not found");
+        throw new HopTransformException(
+            BaseMessages.getString(
+                PKG, "GeometryFieldsConverter.Error.UnknownInputField", realInputField));
       data.inputMeta = data.inputRowMeta.getValueMeta(data.inputFieldIndex);
 
       if (meta.getInputFormat() == POINT_COORDINATE) {
         String realYInputField = resolve(meta.getYInputField());
         data.yInputFieldIndex = getInputRowMeta().indexOfValue(realYInputField);
         if (data.yInputFieldIndex < 0)
-          throw new HopException("Field " + realYInputField + " not found");
+          throw new HopTransformException(
+              BaseMessages.getString(
+                  PKG, "GeometryFieldsConverter.Error.UnknownInputField", realYInputField));
         data.yInputMeta = data.inputRowMeta.getValueMeta(data.yInputFieldIndex);
       }
 
@@ -106,29 +111,13 @@ public class GeometryFieldsConverter
 
     try {
       Object[] outputRow = RowDataUtil.createResizedCopy(inputRow, data.outputRowMeta.size());
-      Geometry geometry = null;
-      switch (meta.getInputFormat()) {
-        case WKT:
-          String inWKT = Const.NVL(data.inputMeta.getString(inputRow[data.inputFieldIndex]), "");
-          geometry = wktToGeometry(inWKT);
-          break;
-        case WKB:
-          byte[] inWKB = data.inputMeta.getBinary(inputRow[data.inputFieldIndex]);
-          geometry = wkbToGeometry(inWKB);
-          break;
-        case POINT_COORDINATE:
-          double x = data.inputMeta.getNumber(inputRow[data.inputFieldIndex]);
-          double y = data.yInputMeta.getNumber(inputRow[data.yInputFieldIndex]);
-          geometry = pcToGeometry(x, y);
-          break;
-      }
+      Geometry geometry = getGeometry(inputRow);
       switch (meta.getOutputFormat()) {
         case WKT:
           if (meta.isAddSRID() && geometry.getSRID() != meta.getSrid()) {
             logBasic(
-                geometry.toText()
-                    + " "
-                    + BaseMessages.getString(PKG, "GeometryFields.SRIDAlreadyPresent.Log"));
+                BaseMessages.getString(
+                    PKG, "GeometryFields.SRIDAlreadyPresent.Log", geometry.toText()));
           }
           outputRow[data.outputFieldIndex] =
               geometryToWKT(geometry, meta.isAddSRID(), meta.getSrid());
@@ -136,9 +125,8 @@ public class GeometryFieldsConverter
         case WKB:
           if (meta.isAddSRID() && geometry.getSRID() != meta.getSrid()) {
             logBasic(
-                geometry.toText()
-                    + " "
-                    + BaseMessages.getString(PKG, "GeometryFields.SRIDAlreadyPresent.Log"));
+                BaseMessages.getString(
+                    PKG, "GeometryFields.SRIDAlreadyPresent.Log", geometry.toText()));
           }
           outputRow[data.outputFieldIndex] =
               geometryToWKB(geometry, meta.getEndianness(), meta.isAddSRID(), meta.getSrid());
@@ -150,19 +138,47 @@ public class GeometryFieldsConverter
             outputRow[data.yOutputFieldIndex] = pointCoordinates[1];
           } else {
             logBasic(
-                geometry.toText()
-                    + ": "
-                    + BaseMessages.getString(PKG, "GeometryFields.IneligibleForPC.Error"));
+                BaseMessages.getString(
+                    PKG, "GeometryFields.IneligibleForPC.Error", geometry.toText()));
             return true;
           }
           break;
       }
       putRow(data.outputRowMeta, outputRow);
-    } catch (Exception e) {
-      throw new HopException(
+    } catch (HopException e) {
+      throw new HopTransformException(
           BaseMessages.getString(PKG, "GeometryFields.FailedToConvert.DialogMessage"), e);
     }
     return true;
+  }
+
+  private Geometry getGeometry(Object[] inputRow) throws HopException {
+    Geometry geometry = null;
+    try {
+      switch (meta.getInputFormat()) {
+        case WKT:
+          String inWKT = Const.NVL(data.inputMeta.getString(inputRow[data.inputFieldIndex]), "");
+          geometry = wktToGeometry(inWKT);
+          break;
+        case WKB:
+          byte[] inWKB = data.inputMeta.getBinary(inputRow[data.inputFieldIndex]);
+          geometry = wkbToGeometry(inWKB);
+          break;
+        case POINT_COORDINATE:
+          double x, y;
+          try {
+            x = data.inputMeta.getNumber(inputRow[data.inputFieldIndex]);
+            y = data.yInputMeta.getNumber(inputRow[data.yInputFieldIndex]);
+          } catch (HopException e) {
+            return geometry;
+          }
+          geometry = pcToGeometry(x, y);
+          break;
+      }
+    } catch (Exception e) {
+      throw new HopException(e);
+    }
+    return geometry;
   }
 
   public static Geometry wktToGeometry(String wkt) throws Exception {
