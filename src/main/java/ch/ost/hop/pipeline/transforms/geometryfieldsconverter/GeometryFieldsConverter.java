@@ -115,7 +115,7 @@ public class GeometryFieldsConverter
     try {
       Object[] outputRow = RowDataUtil.createResizedCopy(inputRow, data.outputRowMeta.size());
       Geometry geometry = getGeometry(inputRow);
-      
+
       if (geometry == null) {
         if (meta.getOutputFormat() == POINT_COORDINATE) {
           outputRow[data.outputFieldIndex] = null;
@@ -131,8 +131,13 @@ public class GeometryFieldsConverter
                   BaseMessages.getString(
                       PKG, "GeometryFields.SRIDAlreadyPresent.Log", geometry.toText()));
             }
-            outputRow[data.outputFieldIndex] =
-                geometryToWKT(geometry, meta.isAddSRID(), meta.getSrid());
+            if (meta.isWktAsGeometry()) {
+              if (meta.isAddSRID()) geometry.setSRID(meta.getSrid());
+              outputRow[data.outputFieldIndex] = geometry;
+            } else {
+              outputRow[data.outputFieldIndex] =
+                  geometryToWKT(geometry, meta.isAddSRID(), meta.getSrid());
+            }
             break;
           case WKB:
             if (meta.isAddSRID() && geometry.getSRID() != meta.getSrid()) {

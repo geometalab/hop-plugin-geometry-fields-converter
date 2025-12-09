@@ -68,6 +68,7 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
   private Button wLilEndian;
   private Button wBigEndian;
   private Button wSRIDButton;
+  private Button wWKTAsGeometryButton;
   private List<Button> fromFormatButtons = new ArrayList<>();
   private List<Button> toFormatButtons = new ArrayList<>();
 
@@ -267,6 +268,12 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     wFromLabel.setLayoutData(gdLabel);
     wToLabel.setLayoutData(gdLabel);
 
+    Listener toWKTListener =
+        e -> {
+          wWKTAsGeometryButton.setEnabled(wToWKTButton.getSelection());
+        };
+    wToWKTButton.addListener(SWT.Selection, toWKTListener);
+
     Listener fromPCListener =
         e -> {
           wYInputFieldCombo.setVisible(wFromPCButton.getSelection());
@@ -406,6 +413,18 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
             e.doit = false;
           }
         });
+
+    wWKTAsGeometryButton = new Button(wOptionsGroup, SWT.CHECK);
+    wWKTAsGeometryButton.setText(BaseMessages.getString(PKG, "GeometryFields.WKTAsGeometry.Label"));
+    wWKTAsGeometryButton.setToolTipText(
+        BaseMessages.getString(PKG, "GeometryFields.WKTAsGeometry.Tooltip"));
+    PropsUi.setLook(wWKTAsGeometryButton);
+    wWKTAsGeometryButton.addSelectionListener(lsSelMod);
+
+    FormData fdWKTAsGeometryButton = new FormData();
+    fdWKTAsGeometryButton.left = new FormAttachment(0, 0);
+    fdWKTAsGeometryButton.top = new FormAttachment(wSRIDButton, margin);
+    wWKTAsGeometryButton.setLayoutData(fdWKTAsGeometryButton);
 
     return wOptionsGroup;
   }
@@ -576,6 +595,9 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
       wLilEndian.setEnabled(false);
     }
 
+    wWKTAsGeometryButton.setEnabled(input.getOutputFormat() == WKT);
+    wWKTAsGeometryButton.setSelection(input.isWktAsGeometry());
+
     wYInputFieldCombo.setText(input.getYInputField() == null ? "" : input.getYInputField());
     wYOutputFieldCombo.setText(input.getYOutputField() == null ? "" : input.getYOutputField());
 
@@ -639,6 +661,7 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     input.setEndianness(wBigEndian.getSelection() ? 1 : 2);
     input.setAddSRID(wSRIDButton.getSelection() && wSRIDButton.isEnabled());
     input.setSrid(Integer.parseInt(!wSRIDField.getText().isEmpty() ? wSRIDField.getText() : "0"));
+    input.setWktAsGeometry(wWKTAsGeometryButton.getSelection());
   }
 
   private GeometryFormat getSelectedFormat(List<Button> list) {
