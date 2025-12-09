@@ -17,9 +17,6 @@
 
 package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 
-import static ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat.POINT_COORDINATE;
-
-import org.apache.hop.core.Const;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.exception.HopTransformException;
 import org.apache.hop.core.row.RowDataUtil;
@@ -31,7 +28,14 @@ import org.apache.hop.pipeline.transform.TransformMeta;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.io.*;
+import org.locationtech.jts.io.ByteOrderValues;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKBReader;
+import org.locationtech.jts.io.WKBWriter;
+import org.locationtech.jts.io.WKTReader;
+import org.locationtech.jts.io.WKTWriter;
+
+import static ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat.POINT_COORDINATE;
 
 public class GeometryFieldsConverter
     extends BaseTransform<GeometryFieldsConverterMeta, GeometryFieldsConverterData> {
@@ -99,7 +103,6 @@ public class GeometryFieldsConverter
         } else if (data.outputFieldIndex < 0) {
           data.outputFieldIndex = data.outputRowMeta.size() - 1;
         }
-
       } else {
         data.yOutputFieldIndex = -1;
         data.yOutputMeta = null;
@@ -112,37 +115,47 @@ public class GeometryFieldsConverter
     try {
       Object[] outputRow = RowDataUtil.createResizedCopy(inputRow, data.outputRowMeta.size());
       Geometry geometry = getGeometry(inputRow);
-      switch (meta.getOutputFormat()) {
-        case WKT:
-          if (meta.isAddSRID() && geometry.getSRID() != meta.getSrid()) {
-            logBasic(
-                BaseMessages.getString(
-                    PKG, "GeometryFields.SRIDAlreadyPresent.Log", geometry.toText()));
-          }
-          outputRow[data.outputFieldIndex] =
-              geometryToWKT(geometry, meta.isAddSRID(), meta.getSrid());
-          break;
-        case WKB:
-          if (meta.isAddSRID() && geometry.getSRID() != meta.getSrid()) {
-            logBasic(
-                BaseMessages.getString(
-                    PKG, "GeometryFields.SRIDAlreadyPresent.Log", geometry.toText()));
-          }
-          outputRow[data.outputFieldIndex] =
-              geometryToWKB(geometry, meta.getEndianness(), meta.isAddSRID(), meta.getSrid());
-          break;
-        case POINT_COORDINATE:
-          if (is2DPoint(geometry)) {
-            double[] pointCoordinates = geometryToPC(geometry);
-            outputRow[data.outputFieldIndex] = pointCoordinates[0];
-            outputRow[data.yOutputFieldIndex] = pointCoordinates[1];
-          } else {
-            logBasic(
-                BaseMessages.getString(
-                    PKG, "GeometryFields.IneligibleForPC.Error", geometry.toText()));
-            return true;
-          }
-          break;
+      
+      if (geometry == null) {
+        if (meta.getOutputFormat() == POINT_COORDINATE) {
+          outputRow[data.outputFieldIndex] = null;
+          outputRow[data.yOutputFieldIndex] = null;
+        } else {
+          outputRow[data.outputFieldIndex] = null;
+        }
+      } else {
+        switch (meta.getOutputFormat()) {
+          case WKT:
+            if (meta.isAddSRID() && geometry.getSRID() != meta.getSrid()) {
+              logBasic(
+                  BaseMessages.getString(
+                      PKG, "GeometryFields.SRIDAlreadyPresent.Log", geometry.toText()));
+            }
+            outputRow[data.outputFieldIndex] =
+                geometryToWKT(geometry, meta.isAddSRID(), meta.getSrid());
+            break;
+          case WKB:
+            if (meta.isAddSRID() && geometry.getSRID() != meta.getSrid()) {
+              logBasic(
+                  BaseMessages.getString(
+                      PKG, "GeometryFields.SRIDAlreadyPresent.Log", geometry.toText()));
+            }
+            outputRow[data.outputFieldIndex] =
+                geometryToWKB(geometry, meta.getEndianness(), meta.isAddSRID(), meta.getSrid());
+            break;
+          case POINT_COORDINATE:
+            if (is2DPoint(geometry)) {
+              double[] pointCoordinates = geometryToPC(geometry);
+              outputRow[data.outputFieldIndex] = pointCoordinates[0];
+              outputRow[data.yOutputFieldIndex] = pointCoordinates[1];
+            } else {
+              logBasic(
+                  BaseMessages.getString(
+                      PKG, "GeometryFields.IneligibleForPC.Error", geometry.toText()));
+              return true;
+            }
+            break;
+        }
       }
       putRow(data.outputRowMeta, outputRow);
     } catch (HopException e) {
@@ -157,20 +170,31 @@ public class GeometryFieldsConverter
     try {
       switch (meta.getInputFormat()) {
         case WKT:
-          String inWKT = Const.NVL(data.inputMeta.getString(inputRow[data.inputFieldIndex]), "");
+          String inWKT = data.inputMeta.getString(inputRow[data.inputFieldIndex]);
+          if (inWKT == null || inWKT.isEmpty()) {
+            return null;
+          }
           geometry = wktToGeometry(inWKT);
           break;
         case WKB:
           byte[] inWKB = data.inputMeta.getBinary(inputRow[data.inputFieldIndex]);
+          if (inWKB == null) {
+            return null;
+          }
           geometry = wkbToGeometry(inWKB);
           break;
         case POINT_COORDINATE:
+          Object xObj = inputRow[data.inputFieldIndex];
+          Object yObj = inputRow[data.yInputFieldIndex];
+          if (xObj == null || yObj == null) {
+            return null;
+          }
           double x, y;
           try {
             x = data.inputMeta.getNumber(inputRow[data.inputFieldIndex]);
             y = data.yInputMeta.getNumber(inputRow[data.yInputFieldIndex]);
           } catch (HopException e) {
-            return geometry;
+            return null;
           }
           geometry = pcToGeometry(x, y);
           break;
@@ -181,7 +205,7 @@ public class GeometryFieldsConverter
     return geometry;
   }
 
-  public static Geometry wktToGeometry(String wkt) throws Exception {
+  public static Geometry wktToGeometry(String wkt) throws HopException {
     String geomStr = wkt;
     int srid = 0;
     if (wkt.contains(";")) {
@@ -205,7 +229,7 @@ public class GeometryFieldsConverter
     return geometry;
   }
 
-  public static Geometry wkbToGeometry(byte[] wkb) throws Exception {
+  public static Geometry wkbToGeometry(byte[] wkb) throws HopException {
     Geometry geometry;
     try {
       geometry = new WKBReader().read(wkb);
