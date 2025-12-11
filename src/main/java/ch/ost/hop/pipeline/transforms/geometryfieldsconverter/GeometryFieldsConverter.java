@@ -19,6 +19,7 @@ package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 
 import static ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat.POINT_COORDINATE;
 
+import java.util.Arrays;
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.exception.HopTransformException;
 import org.apache.hop.core.row.RowDataUtil;
@@ -154,7 +155,7 @@ public class GeometryFieldsConverter
     data.outputFieldIndex = data.outputRowMeta.indexOfValue(realOutputField);
 
     if (meta.getOutputFormat() == POINT_COORDINATE) {
-      initializePointCoordinateOutputFields(realOutputField, realYOutputField);
+      initializePointCoordinateOutputFields(realYOutputField);
     } else {
       data.yOutputFieldIndex = -1;
       data.yOutputMeta = null;
@@ -164,7 +165,7 @@ public class GeometryFieldsConverter
     }
   }
 
-  private void initializePointCoordinateOutputFields(String realOutputField, String realYOutputField) {
+  private void initializePointCoordinateOutputFields(String realYOutputField) {
     data.yOutputMeta = data.outputRowMeta.searchValueMeta(realYOutputField);
     data.yOutputFieldIndex = data.outputRowMeta.indexOfValue(realYOutputField);
 
@@ -226,7 +227,10 @@ public class GeometryFieldsConverter
       try {
         srid = Integer.parseInt(parts[0].split("=")[1]);
       } catch (NumberFormatException e) {
-        throw new HopException("GeometryFields.SRIDIncorrectlyFormatted.DialogMessage", e);
+        throw new HopException(
+            BaseMessages.getString(
+                PKG, "GeometryFields.SRIDIncorrectlyFormatted.DialogMessage", wkt),
+            e);
       }
       geomStr = parts[1];
     }
@@ -234,7 +238,10 @@ public class GeometryFieldsConverter
     try {
       geometry = new WKTReader().read(geomStr);
     } catch (ParseException e) {
-      throw new HopException("GeometryFields.GeometryIncorrectlyFormated.DialogMessage" + wkt, e);
+      throw new HopException(
+          BaseMessages.getString(
+              PKG, "GeometryFields.GeometryIncorrectlyFormated.DialogMessage", wkt),
+          e);
     }
     if (srid != 0) {
       geometry.setSRID(srid);
@@ -247,7 +254,12 @@ public class GeometryFieldsConverter
     try {
       geometry = new WKBReader().read(wkb);
     } catch (ParseException e) {
-      throw new HopException("GeometryFields.GeometryIncorrectlyFormated.DialogMessage", e);
+      throw new HopException(
+          BaseMessages.getString(
+              PKG,
+              "GeometryFields.GeometryIncorrectlyFormated.DialogMessage",
+              Arrays.toString(wkb)),
+          e);
     }
     return geometry;
   }
