@@ -87,9 +87,8 @@ prepare_release:
     - apt-get update && apt-get install -y zip
     - mvn -B package
     - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-    - ZIP_NAME="geometry-fields-converter-$VERSION.zip"
     - cd target
-    - zip -r "../$ZIP_NAME" version.xml lib hop-transform-geometryfieldsconverter-$VERSION.jar
+    - zip -r "../geometryfieldsconverter.zip" version.xml lib hop-transform-geometryfieldsconverter-$VERSION.jar
   artifacts:
     paths:
       - "*.zip"
