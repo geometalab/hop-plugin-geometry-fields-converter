@@ -178,10 +178,9 @@ public class GeometryFieldsConverterMeta
 
     String resolvedOutputField = variables.resolve(getOutputField());
     String resolvedYOutputField = variables.resolve(getYOutputField());
-    GeometryFormat outputFormat = getOutputFormat();
     String finalName;
 
-    switch (outputFormat) {
+    switch (getOutputFormat()) {
       case WKT:
         finalName = Utils.isEmpty(resolvedOutputField) ? "geometry_wkt" : resolvedOutputField;
         addField(rowMeta, name, finalName, () -> new ValueMetaString(finalName));

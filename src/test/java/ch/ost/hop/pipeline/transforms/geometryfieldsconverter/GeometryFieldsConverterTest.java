@@ -6,7 +6,7 @@ import org.apache.hop.core.exception.HopException;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Geometry;
 
-public class GeometryFieldsConverterTests {
+public class GeometryFieldsConverterTest {
 
   @Test
   public void testWKTToGeometry() throws Exception {
