@@ -17,6 +17,8 @@
 
 package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 
+import static ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat.POINT_COORDINATE;
+
 import org.apache.hop.core.exception.HopException;
 import org.apache.hop.core.exception.HopTransformException;
 import org.apache.hop.core.row.RowDataUtil;
@@ -34,8 +36,6 @@ import org.locationtech.jts.io.WKBReader;
 import org.locationtech.jts.io.WKBWriter;
 import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.io.WKTWriter;
-
-import static ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat.POINT_COORDINATE;
 
 public class GeometryFieldsConverter
     extends BaseTransform<GeometryFieldsConverterMeta, GeometryFieldsConverterData> {
@@ -131,13 +131,8 @@ public class GeometryFieldsConverter
                   BaseMessages.getString(
                       PKG, "GeometryFields.SRIDAlreadyPresent.Log", geometry.toText()));
             }
-            if (meta.isWktAsGeometry()) {
-              if (meta.isAddSRID()) geometry.setSRID(meta.getSrid());
-              outputRow[data.outputFieldIndex] = geometry;
-            } else {
-              outputRow[data.outputFieldIndex] =
-                  geometryToWKT(geometry, meta.isAddSRID(), meta.getSrid());
-            }
+            outputRow[data.outputFieldIndex] =
+                geometryToWKT(geometry, meta.isAddSRID(), meta.getSrid());
             break;
           case WKB:
             if (meta.isAddSRID() && geometry.getSRID() != meta.getSrid()) {
