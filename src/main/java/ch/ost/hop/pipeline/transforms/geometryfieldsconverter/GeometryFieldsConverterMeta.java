@@ -20,7 +20,6 @@ package ch.ost.hop.pipeline.transforms.geometryfieldsconverter;
 import ch.ost.hop.pipeline.transforms.geometryfieldsconverter.model.GeometryFormat;
 import java.util.List;
 import java.util.function.Supplier;
-
 import org.apache.hop.core.ICheckResult;
 import org.apache.hop.core.annotations.Transform;
 import org.apache.hop.core.exception.HopTransformException;
@@ -86,11 +85,6 @@ public class GeometryFieldsConverterMeta
       key = "add_srid",
       injectionKeyDescription = "GeometryFields.Injection.AddSRID")
   private boolean addSRID = false;
-
-  @HopMetadataProperty(
-      key = "wkt_as_geometry",
-      injectionKeyDescription = "GeometryFields.Injection.WKTAsGeometry")
-  private boolean wktAsGeometry = false;
 
   @HopMetadataProperty(key = "srid", injectionKeyDescription = "GeometryFields.Injection.SRID")
   private int srid = 0;
@@ -167,14 +161,6 @@ public class GeometryFieldsConverterMeta
     this.srid = srid;
   }
 
-  public boolean isWktAsGeometry() {
-    return wktAsGeometry;
-  }
-
-  public void setWktAsGeometry(boolean wktAsGeometry) {
-    this.wktAsGeometry = wktAsGeometry;
-  }
-
   @Override
   public boolean supportsErrorHandling() {
     return true;
@@ -195,16 +181,9 @@ public class GeometryFieldsConverterMeta
     String finalName;
 
     switch (getOutputFormat()) {
-        new ValueMeta
       case WKT:
         finalName = Utils.isEmpty(resolvedOutputField) ? "geometry_wkt" : resolvedOutputField;
-        addField(
-            rowMeta,
-            name,
-            finalName,
-            wktAsGeometry
-                ? () -> createValueMetaGeometry(finalName)
-                : () -> new ValueMetaString(finalName));
+        addField(rowMeta, name, finalName, () -> new ValueMetaString(finalName));
         break;
       case WKB:
         finalName = Utils.isEmpty(resolvedOutputField) ? "geometry_wkb" : resolvedOutputField;
@@ -244,20 +223,5 @@ public class GeometryFieldsConverterMeta
       IVariables variables,
       IHopMetadataProvider metadataProvider) {
     // Checks to perform when validating a transform
-  }
-
-  /**
-   * Create a ValueMetaGeometry using reflection (GIS plugin may not be loaded). Falls back to
-   * ValueMetaSerializable if GIS plugin is unavailable.
-   */
-  private IValueMeta createValueMetaGeometry(String fieldName) {
-    try {
-      Class<?> vmgClass =
-          Class.forName("com.atolcd.hop.core.row.value.ValueMetaGeometry");
-      return (IValueMeta) vmgClass.getConstructor(String.class).newInstance(fieldName);
-    } catch (ClassNotFoundException | ReflectiveOperationException e) {
-      // GIS plugin not available, fallback to serializable type for Geometry objects
-      return new ValueMetaSerializable(fieldName, org.locationtech.jts.geom.Geometry.class);
-    }
   }
 }
