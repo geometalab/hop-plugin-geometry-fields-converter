@@ -76,6 +76,13 @@ To update the plugin, simply repeat the steps of the installation with the ZIP f
 | Input field(s)       | The user must define the field that will be converted. If the input format is Point Coordinate Fields, a second field containing the y-coordinate must be specified. The dropdown menu shows all fields provided by the previous Transform (if connected via a Hop). |
 | Output field(s)      | The user may define the field in which the converted value will be stored. If the input format is Point Coordinate Fields, a second output field may be specified. The fields may also be left empty, in which case new fields will be created according to the output format (```WKT```->```geometry_wkt```, ```WKB```->```geometry_wkb```, ```Point coordinate fields```->```longitude```,```latitude```). The user may also define new fields by choosing unique names. A dropdown menu is available showing all fields from the previous Transform. |
 
+### Compatibility with atol CD Hop GIS Plugins
+
+Currently, WKT geometries are saved as String fields in Hop, however GIS operation Transforms from atol CD require a Geometry field type. \
+To circumvent this, the WKT field has to have their metadata type changed to a geometry type via the Select Value Transform.
+
+![Changing the metadata via the Select Values Transform ](./resources/selectvalues.png)
+
 ## Code Formatting
 
 The code follows the official [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html), which is enforced by the provided [IntelliJ formatting plugin](https://plugins.jetbrains.com/plugin/8527-google-java-format) and the Maven Spotless plugin. Formatting compliance can be verified using ```mvn spotless:check```, and formatting can be applied automatically using ```mvn spotless:apply```.
