@@ -5,7 +5,7 @@
 This plugin allows you to convert geometries into the well-known text, well-known binary and point coordinates formats in [Apache Hop]([https://hop.apache.org/) via a Transform.
 This plugin was developed and tested for Apache Hop version 2.16.
 
-![Dialog window of the plugin](resources/dialog.png)
+<img src="resources/dialog.png" alt="Dialog window of the plugin" width="481"/>
 
 ![Pipeline Status](https://gitlab.ost.ch//apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/badges/main/pipeline.svg)
 ![Latest Release](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/badges/release.svg)
