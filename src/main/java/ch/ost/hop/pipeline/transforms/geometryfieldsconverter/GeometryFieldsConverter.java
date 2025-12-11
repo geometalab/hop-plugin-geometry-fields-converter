@@ -68,48 +68,8 @@ public class GeometryFieldsConverter
 
       meta.getFields(data.outputRowMeta, getTransformName(), null, null, this, metadataProvider);
 
-      String realInputField = resolve(meta.getInputField());
-      String realOutputField = resolve(meta.getOutputField());
-      String realYOutputField = resolve(meta.getYOutputField());
-
-      data.inputFieldIndex = getInputRowMeta().indexOfValue(realInputField);
-      if (data.inputFieldIndex < 0)
-        throw new HopTransformException(
-            BaseMessages.getString(
-                PKG, "GeometryFieldsConverter.Error.UnknownInputField", realInputField));
-      data.inputMeta = data.inputRowMeta.getValueMeta(data.inputFieldIndex);
-
-      if (meta.getInputFormat() == POINT_COORDINATE) {
-        String realYInputField = resolve(meta.getYInputField());
-        data.yInputFieldIndex = getInputRowMeta().indexOfValue(realYInputField);
-        if (data.yInputFieldIndex < 0)
-          throw new HopTransformException(
-              BaseMessages.getString(
-                  PKG, "GeometryFieldsConverter.Error.UnknownInputField", realYInputField));
-        data.yInputMeta = data.inputRowMeta.getValueMeta(data.yInputFieldIndex);
-      }
-
-      data.outputMeta = data.outputRowMeta.searchValueMeta(realOutputField);
-      data.outputFieldIndex = data.outputRowMeta.indexOfValue(realOutputField);
-      if (meta.getOutputFormat() == POINT_COORDINATE) {
-        data.yOutputMeta = data.outputRowMeta.searchValueMeta(realYOutputField);
-        data.yOutputFieldIndex = data.outputRowMeta.indexOfValue(realYOutputField);
-
-        if (data.outputFieldIndex < 0 && data.yOutputFieldIndex < 0) {
-          data.outputFieldIndex = data.outputRowMeta.size() - 2;
-          data.yOutputFieldIndex = data.outputRowMeta.size() - 1;
-        } else if (data.outputFieldIndex >= 0 && data.yOutputFieldIndex < 0) {
-          data.yOutputFieldIndex = data.outputRowMeta.size() - 1;
-        } else if (data.outputFieldIndex < 0) {
-          data.outputFieldIndex = data.outputRowMeta.size() - 1;
-        }
-      } else {
-        data.yOutputFieldIndex = -1;
-        data.yOutputMeta = null;
-        if (data.outputFieldIndex < 0) {
-          data.outputFieldIndex = data.outputRowMeta.size() - 1;
-        }
-      }
+      initializeInputFields();
+      initializeOutputFields();
     }
 
     try {
@@ -163,6 +123,59 @@ public class GeometryFieldsConverter
           BaseMessages.getString(PKG, "GeometryFields.FailedToConvert.DialogMessage"), e);
     }
     return true;
+  }
+
+  private void initializeInputFields() throws HopTransformException {
+    String realInputField = resolve(meta.getInputField());
+    String realYInputField = resolve(meta.getYInputField());
+
+    data.inputFieldIndex = getInputRowMeta().indexOfValue(realInputField);
+    if (data.inputFieldIndex < 0)
+      throw new HopTransformException(
+          BaseMessages.getString(
+              PKG, "GeometryFieldsConverter.Error.UnknownInputField", realInputField));
+    data.inputMeta = data.inputRowMeta.getValueMeta(data.inputFieldIndex);
+
+    if (meta.getInputFormat() == POINT_COORDINATE) {
+      data.yInputFieldIndex = getInputRowMeta().indexOfValue(realYInputField);
+      if (data.yInputFieldIndex < 0)
+        throw new HopTransformException(
+            BaseMessages.getString(
+                PKG, "GeometryFieldsConverter.Error.UnknownInputField", realYInputField));
+      data.yInputMeta = data.inputRowMeta.getValueMeta(data.yInputFieldIndex);
+    }
+  }
+
+  private void initializeOutputFields() {
+    String realOutputField = resolve(meta.getOutputField());
+    String realYOutputField = resolve(meta.getYOutputField());
+
+    data.outputMeta = data.outputRowMeta.searchValueMeta(realOutputField);
+    data.outputFieldIndex = data.outputRowMeta.indexOfValue(realOutputField);
+
+    if (meta.getOutputFormat() == POINT_COORDINATE) {
+      initializePointCoordinateOutputFields(realOutputField, realYOutputField);
+    } else {
+      data.yOutputFieldIndex = -1;
+      data.yOutputMeta = null;
+      if (data.outputFieldIndex < 0) {
+        data.outputFieldIndex = data.outputRowMeta.size() - 1;
+      }
+    }
+  }
+
+  private void initializePointCoordinateOutputFields(String realOutputField, String realYOutputField) {
+    data.yOutputMeta = data.outputRowMeta.searchValueMeta(realYOutputField);
+    data.yOutputFieldIndex = data.outputRowMeta.indexOfValue(realYOutputField);
+
+    if (data.outputFieldIndex < 0 && data.yOutputFieldIndex < 0) {
+      data.outputFieldIndex = data.outputRowMeta.size() - 2;
+      data.yOutputFieldIndex = data.outputRowMeta.size() - 1;
+    } else if (data.outputFieldIndex >= 0 && data.yOutputFieldIndex < 0) {
+      data.yOutputFieldIndex = data.outputRowMeta.size() - 1;
+    } else if (data.outputFieldIndex < 0) {
+      data.outputFieldIndex = data.outputRowMeta.size() - 1;
+    }
   }
 
   private Geometry getGeometry(Object[] inputRow) throws HopException {
