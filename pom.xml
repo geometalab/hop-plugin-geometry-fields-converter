@@ -19,7 +19,7 @@
         <jandex.version>3.2.3</jandex.version>
         <spotless.version>2.38.0</spotless.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hop.plugins.dir></hop.plugins.dir>
+        <hop.plugins.dir>C:\Users\simon\workspace\hop\plugins\transforms\geometryfieldsconverter</hop.plugins.dir>
     </properties>
 
     <build>
@@ -136,16 +136,19 @@
             <groupId>org.apache.hop</groupId>
             <artifactId>hop-core</artifactId>
             <version>${hop.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.hop</groupId>
             <artifactId>hop-engine</artifactId>
             <version>${hop.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.hop</groupId>
             <artifactId>hop-ui</artifactId>
             <version>${hop.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -163,6 +166,7 @@
             <groupId>org.locationtech.jts</groupId>
             <artifactId>jts-core</artifactId>
             <version>1.20.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
