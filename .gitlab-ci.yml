@@ -33,12 +33,12 @@ build:
       - target/version.xml
       - target/lib/
 
-unit_tests:
+unit_test:
   stage: test
   script:
     - mvn test
 
-integration_tests:
+integration_test:
   stage: test
   image:
     name: apache/hop:latest

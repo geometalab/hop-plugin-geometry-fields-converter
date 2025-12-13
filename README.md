@@ -114,15 +114,15 @@ A basic CI/CD pipeline is defined inside the [gitlab yml](.gitlab-ci.yml) file, 
 
 * **code_quality:** \
 Run the [code quality template job](https://docs.gitlab.com/ci/testing/code_quality/), performing a basic code review, as a prerequisite for merge requests.
-* **integration_tests:** \
+* **integration_test:** \
 Run the [Hop Pipeline](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/integration_test/pipeline.hpl) inside ```integration_test/``` that performs two basic geometry fields conversions to check the integrity of the Plugin. \
 In case the type name of the Transform or the metadata changes, the pipeline has to be manually adjusted.
 * **semgrep-sast:** \
 Run the [static application security testing (SAST) template job](https://docs.gitlab.com/user/application_security/sast/), performing a security scan on the repository.
-* **unit_tests:** \
+* **unit_test:** \
 Run the [JUnit tests](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/src/test/java/ch/ost/hop/pipeline/transforms/geometryfieldsconverter/GeometryFieldsConverterTests.java).
 * **speed_test:** \
-Run the [a speed test Hop Pipeline](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/speed_test/speed_test.hpl) inside ```speed_test/```, whose performance metrics get logged via the ```log_pipeline.hpl```, in a JSON file
+Run the [speed test Hop Pipeline](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/speed_test/speed_test.hpl) inside ```speed_test/```, whose performance metrics get logged via the ```log_pipeline.hpl```, in a JSON file
 * **evaluate_performance:** \
 Calculate the speed per row with the prior JSON file and evaluate the resulting performance via a simple bash script.
 
