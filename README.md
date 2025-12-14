@@ -98,6 +98,48 @@ To circumvent this, the WKT field has to have their metadata type changed to a g
 
 ![Changing the metadata via the Select Values Transform ](./resources/selectvalues.png)
 
+## Software Architecture
+
+[Apache Hop's official plugin sample](https://github.com/project-hop/hop-plugin-sample) forms the basis for this repository, using the ``hop-transform-sample`` skeleton. The plugin follows the basic architectural definitions set by existing Apache Hop plugins.
+
+### Classes
+
+#### GeometryFieldsConverter
+
+Contains the business logic of the Transform.
+Upon processing the first row, it attempts to initialise the indexes for the input and output fields.
+The actual transformation is performed by converting the input into a JTS geometry and then into the desired output format.
+
+#### Data Class
+
+The Data class contains the field information for the input and output rows of the Transform, mainly the indexes of the input and output field(s) and their field types.
+
+#### Meta Class
+
+Contains all relevant properties for the Transform, ranging from formats to field names and settings. The most important function here is ``getFields()``, which is responsible for creating the output row.
+
+#### Dialog Class
+
+The Dialog class defines the GUI of the Transform using the SWT library.
+Of particular importance are the ``getInfo()`` function, which sets all Transform data in the Meta class, and the ``getData()``function, which maps the stored values from the Meta class to the Dialog when the window is opened.
+
+#### Geometry Format Enums
+
+Defines the supported format types (``WKB``, ``WKT`` and ``POINT_COORDINATE``). This allows for the easy addition of further formats.
+
+### Folder Structure
+
+```bash
+├───integration_test # Hop files and sample data to perform an integration test
+├───resources # Images used in this readme
+├───speed_test # Hop files and sample data to perform a speed test
+├───src
+│   ├───main/java/ch/ost/hop/pipeline/transforms/geometryfieldsconverter # Java source code
+│   │   └───resources/ch/ost/hop/pipeline/transforms/geometryfieldsconverter/messages # Localisation messages
+│   └───test/java/ch/ost/hop/pipeline/transforms/geometryfieldsconverter # Java unit tests
+└───usage_sample # Hop files and data for the example
+```
+
 ## Code Formatting
 
 The code follows the official [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html), which is enforced by the provided [IntelliJ formatting plugin](https://plugins.jetbrains.com/plugin/8527-google-java-format) and the Maven Spotless plugin. Formatting compliance can be verified using ``mvn spotless:check``, and formatting can be applied automatically using ``mvn spotless:apply``.
@@ -145,6 +187,14 @@ Calculate the speed per row with the prior JSON file and evaluate the resulting 
 
 * **prepare_release:** \
 This job only runs once a new tag is created. It creates a ZIP archive containing all necessary files for installation. This ZIP file is made available as a release.
+
+## Language Support
+
+This plugin supports French, German, and English languages.
+The localisation files containing the messages are located in the [``src/main/resources/ch/ost/hop/pipeline/transforms/geometryfieldsconverter/messages``](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/tree/24d2ac3cefbd886b67c2e2cee6dc0fb40e14f1f5/src/main/resources/ch/ost/hop/pipeline/transforms/geometryfieldsconverter/messages) directory.
+Adding a new language is done by creating an additional file following the naming scheme ``[messages_xx_XX.properties]`` and translating all messages accordingly.
+It is important to note that these files are not UTF-8 encoded, but use ISO-8859-1 (Latin-1).
+Therefore, characters not contained in Latin-1 must be escaped using their Unicode notation (``\uXXXX``).
 
 ## Licence
 
