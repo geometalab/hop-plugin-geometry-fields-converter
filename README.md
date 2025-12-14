@@ -81,7 +81,7 @@ To update the plugin, simply repeat the steps of the installation with the ZIP f
 
 The user is responsible for ensuring that all input field values are valid; otherwise, the pipeline will fail.
 
-**Empty Values:** If the input field (both input fields for point coordinates) in the current row are empty (``<null>``), the output will also empty as well. For point coordinates, both input fields must be empty; otherwise, an error is raised and the pipeline will fail.
+**Empty Values:** If the input field (both input fields for point coordinates) in the current row are empty (``<null>``), the output will be empty as well. For point coordinates, both input fields must be empty; otherwise, an error is raised and the pipeline will fail.
 
 **Point Coordinates:** Both input fields must be of a numeric type (``BigNumber``, ``Integer`` or ``Number``).
 
