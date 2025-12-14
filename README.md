@@ -1,5 +1,7 @@
 # Apache Hop-Plugin Geometry Fields Converter
 
+<img src="resources/logo.png" alt="Logo of the plugin" width="105"/>
+
 ## Description
 
 This plugin allows you to convert geometries into the well-known text, well-known binary and point coordinates formats in [Apache Hop]([https://hop.apache.org/) via a Transform.
