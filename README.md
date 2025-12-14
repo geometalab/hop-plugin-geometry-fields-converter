@@ -4,7 +4,9 @@
 
 ## Description
 
-This plugin allows you to convert geometries into the well-known text, well-known binary and point coordinates formats in [Apache Hop]([https://hop.apache.org/) via a Transform.
+The Geometry Fields Converter users to convert geometries into Well-Known Text (WKT), Well-Known Binary (WKB), and point coordinate formats and back in [Apache Hop]([https://hop.apache.org/) via a Transform.
+This enables users to perform geospatial operations using the [Hop GIS Plugins by Atol CD](https://github.com/atolcd/hop-gis-plugins/tree/master) without having to work directly with GIS files.
+The Transform treats fields of the type ``Geometry`` as WKT. \
 This plugin was developed and tested for Apache Hop version 2.16.
 
 <img src="resources/dialog.png" alt="Dialog window of the plugin" width="481"/>
