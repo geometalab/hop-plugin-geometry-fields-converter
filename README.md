@@ -12,7 +12,7 @@ This plugin was developed and tested for Apache Hop version 2.16.
 ![Pipeline Status](https://gitlab.ost.ch//apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/badges/main/pipeline.svg)
 ![Latest Release](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/badges/release.svg)
 
-## Installation
+## Installation 
 
 Simply download the ZIP file from the [latest release](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/releases/permalink/latest), extract it, and move the resulting folder (including all its contents) into your hop/plugins/transforms directory.
 
@@ -25,8 +25,7 @@ hop
         └── geometryfieldsconverter
             ├── hop-transform-geometryfieldsconverter-version.jar
             ├── lib
-            │   ├── dependencies.jar
-            │   └── moredependencies.jar
+            │   └── jts-core-1.20.0.jar
             └── version.xml
 ```
 
@@ -40,24 +39,24 @@ hop
 
 Download the source code and checkout into the folder.
 
-```bash
+``bash
 git clone https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter.git
 cd apache-hop-plugins-geometry-fields-converter
-```
+``
 
 **Configure the plugin installation path:**
 
-In the [pom.xml](./pom.xml), set the ```<hop.plugins.dir>``` property to the target directory inside your Hop installation where the plugin should be installed. \
-For example: ```<hop.plugins.dir>C:\Users\user\Program Files\hop\plugins\transforms\geometryfieldsconverter</hop.plugins.dir>```. \
+In the [pom.xml](./pom.xml), set the ``<hop.plugins.dir>`` property to the target directory inside your Hop installation where the plugin should be installed. \
+For example: ``<hop.plugins.dir>C:\Users\user\Program Files\hop\plugins\transforms\geometryfieldsconverter</hop.plugins.dir>``. \
 Doing this will automatically update the plugin in Hop after each build.
 
 **Build the plugin:**
 
 Run the following Maven command to clean, build, test, and install/update the plugin.
 
-```bash
+``bash
 mvn clean package
-```
+``
 
 ### Updating
 
@@ -65,18 +64,30 @@ To update the plugin, simply repeat the steps of the installation with the ZIP f
 
 ## Usage
 
-```usage_sample/``` contains a small Hop project with a pipeline that demonstrates a sample use case of converting the geometries of castles in switzerland ([extracted via an overpass query](https://overpass-turbo.eu/)) in a GeoJSON, to point coordinate fields, removes the original geometry field and saves the result in a CSV file. \
+``usage_sample/`` contains a small Hop project with a pipeline that demonstrates a sample use case of converting the geometries of castles in switzerland ([extracted via an overpass query](https://overpass-turbo.eu/)) in a GeoJSON, to point coordinate fields, removes the original geometry field and saves the result in a CSV file. \
 **The pipeline uses a Transform from the [Hop GIS Plugins by Atol CD](https://github.com/atolcd/hop-gis-plugins/tree/master), This plugin must be installed in Hop for the pipeline to run successfully!**
 
 ![Sample Pipeline](./resources/sample_pipeline.png)
 
-| Setting              | Description                                                                                                                  |
-|----------------------|------------------------------------------------------------------------------------------------------------------------------|
-| Conversion direction | ```From``` defines the format of the input field(s). The user must ensure that the input data is correct; otherwise the pipeline will fail. ```To``` defines the desired output format. |
-| Endianness           | In case ```WKB``` is selected as the output format, the user can choose the byte order of the generated binary. ```Big endian``` is the default. |
-| Additional options   | Currently, only the option to add an SRID is available. This option is only enabled if the output format is either Well-Known Text or Well-Known Binary. If the input already contains an SRID, it will be overwritten, and the user will be notified via a log entry (visible in the Logging tab). |
-| Input field(s)       | The user must define the field that will be converted. If the input format is Point Coordinate Fields, a second field containing the y-coordinate must be specified. The dropdown menu shows all fields provided by the previous Transform (if connected via a Hop). |
-| Output field(s)      | The user may define the field in which the converted value will be stored. If the input format is Point Coordinate Fields, a second output field may be specified. The fields may also be left empty, in which case new fields will be created according to the output format (```WKT```->```geometry_wkt```, ```WKB```->```geometry_wkb```, ```Point coordinate fields```->```longitude```,```latitude```). The user may also define new fields by choosing unique names. A dropdown menu is available showing all fields from the previous Transform. |
+| Setting              | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Conversion direction | ``From`` defines the format of the input field(s). The user must ensure that the input data is correct; otherwise the pipeline will fail. ``To`` defines the desired output format.                                                                                                                                                                                                                                                                                                                                                                 |
+| Endianness           | In case ``WKB`` is selected as the output format, the user can choose the byte order of the generated binary. ``Big endian`` is the default.                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Additional options   | Currently, only the option to add an SRID is available. This option is only enabled if the output format is either Well-Known Text or Well-Known Binary. If the input already contains an SRID, it will be overwritten, and the user will be notified via a log entry (visible in the Logging tab).                                                                                                                                                                                                                                                     |
+| Input field(s)       | The user must define the field that will be converted. If point coordinate fields are selected as input format, a second field containing the y-coordinate must be specified. The dropdown menu shows all fields provided by the previous Transform (if connected via a Hop).                                                                                                                                                                                                                                                                           |
+| Output field(s)      | The user may define the field in which the converted value will be stored. If the input format is point Coordinate Fields, a second output field may be specified. The fields may also be left empty, in which case new fields will be created according to the output format (``WKT``->``geometry_wkt``, ``WKB``->``geometry_wkb``, ``Point coordinate fields``->``longitude``,``latitude``). The user may also define new fields by choosing unique names. A dropdown menu is available showing all fields from the previous Transform. |
+
+### Behaviour
+
+The user is responsible for ensuring that all input field values are valid; otherwise, the pipeline will fail.
+
+**Empty Values:** If one or more input fields in the current row are empty (``<null>``), the output will also be ``null``. For point coordinates, both input fields must be empty; otherwise, an error is raised and the pipeline will fail.
+
+**Point Coordinates:** Both input fields must be of a numeric type (``BigNumber``, ``Integer`` or ``Number``).
+
+**SRID:** SRID handling is implicit. Any pre-existing SRID is retained in any case. If a new SRID is specified, the existing SRID is overwritten and the change is logged. The geometry is not reprojected, and the SRID value is not validated.
+
+**Well-Known Binary:** When WKB is selected as the output format, the resulting geometry is stored as a hexadecimal value in a ``Binary`` field.
 
 ### Compatibility with Atol CD Hop GIS Plugins
 
@@ -87,7 +98,7 @@ To circumvent this, the WKT field has to have their metadata type changed to a g
 
 ## Code Formatting
 
-The code follows the official [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html), which is enforced by the provided [IntelliJ formatting plugin](https://plugins.jetbrains.com/plugin/8527-google-java-format) and the Maven Spotless plugin. Formatting compliance can be verified using ```mvn spotless:check```, and formatting can be applied automatically using ```mvn spotless:apply```.
+The code follows the official [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html), which is enforced by the provided [IntelliJ formatting plugin](https://plugins.jetbrains.com/plugin/8527-google-java-format) and the Maven Spotless plugin. Formatting compliance can be verified using ``mvn spotless:check``, and formatting can be applied automatically using ``mvn spotless:apply``.
 
 ## Dependencies and Plugins
 
@@ -108,23 +119,23 @@ A basic CI/CD pipeline is defined inside the [gitlab yml](.gitlab-ci.yml) file, 
 ### build
 
 * **check_formatting:** \
-  Checks formatting via the ```mvn spotless:check``` command.
+  Checks formatting via the ``mvn spotless:check`` command.
 * **build:** \
-  Builds the project via the ```mvn clean package``` command and moves all resulting artifacts into the ```targers/``` directory.
+  Builds the project via the ``mvn clean package`` command and moves all resulting artifacts into the ``targers/`` directory.
 
 ### test
 
 * **code_quality:** \
 Run the [code quality template job](https://docs.gitlab.com/ci/testing/code_quality/), performing a basic code review, as a prerequisite for merge requests.
 * **integration_test:** \
-Run the [Hop Pipeline](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/integration_test/pipeline.hpl) inside ```integration_test/``` that performs two basic geometry fields conversions to check the integrity of the Plugin. \
+Run the [Hop Pipeline](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/integration_test/pipeline.hpl) inside ``integration_test/`` that performs two basic geometry fields conversions to check the integrity of the Plugin. \
 In case the type name of the Transform or the metadata changes, the pipeline has to be manually adjusted.
 * **semgrep-sast:** \
 Run the [static application security testing (SAST) template job](https://docs.gitlab.com/user/application_security/sast/), performing a security scan on the repository.
 * **unit_test:** \
 Run the [JUnit tests](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/src/test/java/ch/ost/hop/pipeline/transforms/geometryfieldsconverter/GeometryFieldsConverterTests.java).
 * **speed_test:** \
-Run the [speed test Hop Pipeline](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/speed_test/speed_test.hpl) inside ```speed_test/```, whose performance metrics get logged via the ```log_pipeline.hpl```, in a JSON file
+Run the [speed test Hop Pipeline](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/speed_test/speed_test.hpl) inside ``speed_test/``, whose performance metrics get logged via the ``log_pipeline.hpl``, in a JSON file
 * **evaluate_performance:** \
 Calculate the speed per row with the prior JSON file and evaluate the resulting performance via a simple bash script.
 
