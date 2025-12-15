@@ -20,7 +20,7 @@ Simply download the ZIP file from the [latest release](https://gitlab.ost.ch/apa
 
 ![release zip](./resources/release.png)
 
-```bash
+```console
 hop
 └── plugins
     └── transforms
