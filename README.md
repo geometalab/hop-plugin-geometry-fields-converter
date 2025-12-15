@@ -41,10 +41,10 @@ hop
 
 Download the source code and checkout into the folder.
 
-``bash
+```bash
 git clone https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter.git
 cd apache-hop-plugins-geometry-fields-converter
-``
+```
 
 **Configure the plugin installation path:**
 
@@ -56,9 +56,9 @@ Doing this will automatically update the plugin in Hop after each build.
 
 Run the following Maven command to clean, build, test, and install/update the plugin.
 
-``bash
+```bash
 mvn clean package
-``
+```
 
 ### Updating
 
