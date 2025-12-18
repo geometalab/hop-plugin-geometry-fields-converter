@@ -9,7 +9,7 @@ This enables users to perform geospatial operations using the [Hop GIS Plugins b
 The Transform treats fields of the type ``Geometry`` as WKT. \
 This plugin was developed and tested for Apache Hop version 2.16.
 
-<img src="resources/dialog.png" alt="Dialog window of the plugin" width="481"/>
+<img src="resources/dialog.png" alt="Dialog window of the plugin" width="400"/>
 
 ![Pipeline Status](https://gitlab.ost.ch//apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/badges/main/pipeline.svg)
 ![Latest Release](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/badges/release.svg)
