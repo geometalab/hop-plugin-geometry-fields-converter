@@ -33,12 +33,12 @@ build:
       - target/version.xml
       - target/lib/
 
-unit_tests:
+unit_test:
   stage: test
   script:
     - mvn test
 
-integration_tests:
+integration_test:
   stage: test
   image:
     name: apache/hop:latest
@@ -74,7 +74,6 @@ evaluate_performance:
   stage: test
   needs: [speed_test]
   script:
-    - cat speed_test/metrics.json
     - apt-get update && apt-get install -y jq bc
     - cd speed_test
     - bash evaluate_performance.sh

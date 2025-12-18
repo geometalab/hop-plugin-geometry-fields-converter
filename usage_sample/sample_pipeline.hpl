@@ -105,7 +105,7 @@
         <value>FALSE</value>
       </param>
     </params>
-    <inputFileName>C:\Users\simon\workspace\sa\apache-hop-plugin-geometry-fields-converter\usage_sample\castles.geojson</inputFileName>
+    <inputFileName>${PROJECT_HOME}\castles.geojson</inputFileName>
     <geometryFieldName>geometry</geometryFieldName>
     <encoding/>
     <rowLimit>0</rowLimit>
