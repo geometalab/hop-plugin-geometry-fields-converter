@@ -68,6 +68,10 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
   private Button wLilEndian;
   private Button wBigEndian;
   private Button wSRIDButton;
+  private Label wXInputLabel;
+  private Label wYInputLabel;
+  private Label wXOutputLabel;
+  private Label wYOutputLabel;
   private List<Button> fromFormatButtons = new ArrayList<>();
   private List<Button> toFormatButtons = new ArrayList<>();
 
@@ -270,6 +274,8 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     Listener fromPCListener =
         e -> {
           wYInputFieldCombo.setVisible(wFromPCButton.getSelection());
+          wXInputLabel.setVisible(wFromPCButton.getSelection());
+          wYInputLabel.setVisible(wFromPCButton.getSelection());
           if (wYInputFieldCombo.getText().isEmpty())
             wYInputFieldCombo.setText(input.getYInputField());
           wInputFieldCombo.setToolTipText(
@@ -285,6 +291,8 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     Listener toPCListener =
         e -> {
           wYOutputFieldCombo.setVisible(wToPCButton.getSelection());
+          wXOutputLabel.setVisible(wToPCButton.getSelection());
+          wYOutputLabel.setVisible(wToPCButton.getSelection());
           if (wYOutputFieldCombo.getText().isEmpty())
             wYOutputFieldCombo.setText(input.getYOutputField());
           wSRIDButton.setEnabled(!wToPCButton.getSelection());
@@ -394,7 +402,7 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     wSRIDField.addModifyListener(lsMod);
     FormData fdSRIDField = new FormData();
     fdSRIDField.left = new FormAttachment(wSRIDFieldLabel, margin);
-    fdSRIDField.top = new FormAttachment(attachment, 0);
+    fdSRIDField.top = new FormAttachment(wSRIDFieldLabel, 0, SWT.CENTER);
     fdSRIDField.right = new FormAttachment(100, 0);
     wSRIDField.setLayoutData(fdSRIDField);
     wSRIDField.addModifyListener(e -> input.setChanged());
@@ -425,6 +433,17 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     fdInputGroup.right = new FormAttachment(100, 0);
     wInputGroup.setLayoutData(fdInputGroup);
 
+    wXInputLabel = new Label(wInputGroup, SWT.RIGHT);
+    wXInputLabel.setText(
+        BaseMessages.getString(PKG, "GeometryFields.InputFieldSelection.XInput.Label"));
+    PropsUi.setLook(wXInputLabel);
+
+    FormData fdXInputLabel = new FormData();
+    fdXInputLabel.width = 50;
+    fdXInputLabel.left = new FormAttachment(0, 0);
+    fdXInputLabel.top = new FormAttachment(0, margin);
+    wXInputLabel.setLayoutData(fdXInputLabel);
+
     wInputFieldCombo = new ComboVar(variables, wInputGroup, SWT.DROP_DOWN | SWT.BORDER);
     wInputFieldCombo.setToolTipText(
         BaseMessages.getString(PKG, "GeometryFields.InputFieldSelection.Tooltip"));
@@ -432,11 +451,22 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     wInputFieldCombo.addModifyListener(lsMod);
     wInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
     FormData fdInputField = new FormData();
-    fdInputField.left = new FormAttachment(0, margin);
-    fdInputField.top = new FormAttachment(attachment, margin);
+    fdInputField.left = new FormAttachment(wXInputLabel, margin);
+    fdInputField.top = new FormAttachment(wXInputLabel, 0, SWT.CENTER);
     fdInputField.right = new FormAttachment(100, 0);
     wInputFieldCombo.setLayoutData(fdInputField);
     wInputFieldCombo.addModifyListener(e -> input.setChanged());
+
+    wYInputLabel = new Label(wInputGroup, SWT.RIGHT);
+    wYInputLabel.setText(
+        BaseMessages.getString(PKG, "GeometryFields.InputFieldSelection.YInput.Label"));
+    PropsUi.setLook(wYInputLabel);
+
+    FormData fdYInputLabel = new FormData();
+    fdYInputLabel.width = 50;
+    fdYInputLabel.left = new FormAttachment(0, 0);
+    fdYInputLabel.top = new FormAttachment(wInputFieldCombo, margin);
+    wYInputLabel.setLayoutData(fdYInputLabel);
 
     wYInputFieldCombo = new ComboVar(variables, wInputGroup, SWT.DROP_DOWN | SWT.BORDER);
     wYInputFieldCombo.setToolTipText(
@@ -445,8 +475,8 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     wYInputFieldCombo.addModifyListener(lsMod);
     wYInputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
     FormData fdYInputField = new FormData();
-    fdYInputField.left = new FormAttachment(0, margin);
-    fdYInputField.top = new FormAttachment(wInputFieldCombo, margin);
+    fdYInputField.left = new FormAttachment(wYInputLabel, margin);
+    fdYInputField.top = new FormAttachment(wYInputLabel, 0, SWT.CENTER);
     fdYInputField.right = new FormAttachment(100, 0);
     wYInputFieldCombo.setLayoutData(fdYInputField);
     wYInputFieldCombo.addModifyListener(e -> input.setChanged());
@@ -469,17 +499,39 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     fdOutputGroup.right = new FormAttachment(100, 0);
     wOutputGroup.setLayoutData(fdOutputGroup);
 
+    wXOutputLabel = new Label(wOutputGroup, SWT.RIGHT);
+    wXOutputLabel.setText(
+        BaseMessages.getString(PKG, "GeometryFields.OutputFieldSelection.XOutput.Label"));
+    PropsUi.setLook(wXOutputLabel);
+
+    FormData fdXOutputLabel = new FormData();
+    fdXOutputLabel.width = 50;
+    fdXOutputLabel.left = new FormAttachment(0, 0);
+    fdXOutputLabel.top = new FormAttachment(0, margin);
+    wXOutputLabel.setLayoutData(fdXOutputLabel);
+
     wOutputFieldCombo = new ComboVar(variables, wOutputGroup, SWT.DROP_DOWN | SWT.BORDER);
     wOutputFieldCombo.setToolTipText(
         BaseMessages.getString(PKG, "GeometryFields.OutputFieldSelection.Tooltip"));
     PropsUi.setLook(wOutputFieldCombo);
     wOutputFieldCombo.addModifyListener(lsMod);
     FormData fdSchemaPath = new FormData();
-    fdSchemaPath.left = new FormAttachment(0, margin);
-    fdSchemaPath.top = new FormAttachment(attachment, margin);
+    fdSchemaPath.left = new FormAttachment(wXOutputLabel, margin);
+    fdSchemaPath.top = new FormAttachment(wXOutputLabel, 0, SWT.CENTER);
     fdSchemaPath.right = new FormAttachment(100, 0);
     wOutputFieldCombo.setLayoutData(fdSchemaPath);
     wOutputFieldCombo.addModifyListener(e -> input.setChanged());
+
+    wYOutputLabel = new Label(wOutputGroup, SWT.RIGHT);
+    wYOutputLabel.setText(
+        BaseMessages.getString(PKG, "GeometryFields.OutputFieldSelection.YOutput.Label"));
+    PropsUi.setLook(wYOutputLabel);
+
+    FormData fdYOutputLabel = new FormData();
+    fdYOutputLabel.width = 50;
+    fdYOutputLabel.left = new FormAttachment(0, 0);
+    fdYOutputLabel.top = new FormAttachment(wOutputFieldCombo, margin);
+    wYOutputLabel.setLayoutData(fdYOutputLabel);
 
     wYOutputFieldCombo = new ComboVar(variables, wOutputGroup, SWT.DROP_DOWN | SWT.BORDER);
     wYOutputFieldCombo.setToolTipText(
@@ -488,8 +540,8 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
     wYOutputFieldCombo.addModifyListener(lsMod);
     wYOutputFieldCombo.setItems(fields.keySet().toArray(new String[0]));
     FormData fdYOutputField = new FormData();
-    fdYOutputField.left = new FormAttachment(0, margin);
-    fdYOutputField.top = new FormAttachment(wOutputFieldCombo, margin);
+    fdYOutputField.left = new FormAttachment(wYOutputLabel, margin);
+    fdYOutputField.top = new FormAttachment(wYOutputLabel, 0, SWT.CENTER);
     fdYOutputField.right = new FormAttachment(100, 0);
     wYOutputFieldCombo.setLayoutData(fdYOutputField);
     wYOutputFieldCombo.addModifyListener(e -> input.setChanged());
@@ -584,7 +636,11 @@ public class GeometryFieldsConverterDialog extends BaseTransformDialog implement
 
     wSRIDField.setEnabled(wSRIDButton.getSelection());
     wYInputFieldCombo.setVisible(wFromPCButton.getSelection());
+    wXInputLabel.setVisible(wFromPCButton.getSelection());
+    wYInputLabel.setVisible(wFromPCButton.getSelection());
     wYOutputFieldCombo.setVisible(wToPCButton.getSelection());
+    wXOutputLabel.setVisible(wToPCButton.getSelection());
+    wYOutputLabel.setVisible(wToPCButton.getSelection());
     inputGroup.setText(
         wFromPCButton.getSelection()
             ? BaseMessages.getString(PKG, "GeometryFields.Inputs.Label")
