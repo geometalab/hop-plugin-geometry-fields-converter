@@ -28,7 +28,7 @@ if [[ -z "$SMALL_ROWS" || -z "$BIG_ROWS" ]]; then
   exit 1
 fi
 
-# Durations are in milliseconds → convert to seconds
+# Durations are in milliseconds -> convert to seconds
 small_speed=$(echo "$SMALL_ROWS / ($SMALL_DURATION / 1000)" | bc -l)
 big_speed=$(echo "$BIG_ROWS / ($BIG_DURATION / 1000)" | bc -l)
 
@@ -37,8 +37,8 @@ ratio=$(echo "$big_speed / $small_speed" | bc -l)
 echo "---------------------------"
 echo " Performance Evaluation"
 echo "---------------------------"
-echo "Small WKT→WKB speed: $small_speed rows/sec"
-echo "Big   WKT→WKB speed: $big_speed rows/sec"
+echo "Small WKT->WKB speed: $small_speed rows/sec"
+echo "Big   WKT->WKB speed: $big_speed rows/sec"
 echo "Ratio (big/small):   $ratio"
 echo ""
 
@@ -50,6 +50,6 @@ elif (( $(echo "$ratio >= 1.50" | bc -l) )); then
 elif (( $(echo "$ratio >= 1.00" | bc -l) )); then
   echo "Result: MINIMAL"
 else
-  echo "Result: FAIL – Performance too low!"
+  echo "Result: FAIL - Performance too low!"
   exit 1
 fi
