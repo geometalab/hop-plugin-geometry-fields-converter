@@ -13,7 +13,6 @@ target/
 
 # VSC
 .vscode/
-.github/
 
 # Speed Test
 speed_test/metrics.json
