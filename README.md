@@ -11,12 +11,12 @@ This plugin was developed and tested for Apache Hop version 2.16.
 
 <img src="resources/dialog.png" alt="Dialog window of the plugin" width="400"/>
 
-![Pipeline Status](https://gitlab.ost.ch//apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/badges/main/pipeline.svg)
-![Latest Release](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/badges/release.svg)
+[![CI](https://github.com/geometalab/hop-plugin-geometry-fields-converter/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/geometalab/hop-plugin-geometry-fields-converter/actions/workflows/ci.yml)
+[![Latest Release](https://img.shields.io/github/v/release/geometalab/hop-plugin-geometry-fields-converter?display_name=tag)](https://github.com/geometalab/hop-plugin-geometry-fields-converter/releases/latest)
 
 ## Installation 
 
-Simply download the ZIP file from the [latest release](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/releases/permalink/latest), extract it, and move the resulting folder (including all its contents) into your hop/plugins/transforms directory.
+Simply download the ZIP file from the [latest release](https://github.com/geometalab/hop-plugin-geometry-fields-converter/releases/latest), then extract it directly into your Hop root directory. The archive already contains the correct plugin path structure under ``plugins/transforms/geometryfieldsconverter``.
 
 ![release zip](./resources/release.png)
 
@@ -42,8 +42,8 @@ hop
 Download the source code and checkout into the folder.
 
 ```bash
-git clone https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter.git
-cd apache-hop-plugins-geometry-fields-converter
+git clone https://github.com/geometalab/hop-plugin-geometry-fields-converter.git
+cd hop-plugin-geometry-fields-converter
 ```
 
 **Configure the plugin installation path:**
@@ -158,7 +158,7 @@ The following dependencies and Plugins were used throughout this project:
 
 ## CI/CD Pipeline
 
-A basic CI/CD pipeline is defined inside the [gitlab yml](.gitlab-ci.yml) file, with the following stages and jobs:
+A basic CI/CD pipeline is defined in the GitHub Actions workflows [ci.yml](.github/workflows/ci.yml) and [release.yml](.github/workflows/release.yml), with the following jobs:
 
 ### build
 
@@ -169,19 +169,17 @@ A basic CI/CD pipeline is defined inside the [gitlab yml](.gitlab-ci.yml) file, 
 
 ### test
 
-* **code_quality:** \
-Run the [code quality template job](https://docs.gitlab.com/ci/testing/code_quality/), performing a basic code review, as a prerequisite for merge requests.
 * **integration_test:** \
-Run the [Hop Pipeline](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/integration_test/pipeline.hpl) inside ``integration_test/`` that performs two basic geometry fields conversions to check the integrity of the Plugin. \
+Run the [Hop Pipeline](https://github.com/geometalab/hop-plugin-geometry-fields-converter/blob/main/integration_test/pipeline.hpl) inside ``integration_test/`` that performs two basic geometry fields conversions to check the integrity of the Plugin. \
 In case the type name of the Transform or the metadata changes, the pipeline has to be manually adjusted.
-* **semgrep-sast:** \
-Run the [static application security testing (SAST) template job](https://docs.gitlab.com/user/application_security/sast/), performing a security scan on the repository.
 * **unit_test:** \
-Run the [JUnit tests](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/src/test/java/ch/ost/hop/pipeline/transforms/geometryfieldsconverter/GeometryFieldsConverterTests.java).
+Run the [JUnit tests](https://github.com/geometalab/hop-plugin-geometry-fields-converter/blob/main/src/test/java/ch/ost/hop/pipeline/transforms/geometryfieldsconverter/GeometryFieldsConverterTest.java).
 * **speed_test:** \
-Run the [speed test Hop Pipeline](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/blob/main/speed_test/speed_test.hpl) inside ``speed_test/``, whose performance metrics get logged via the ``log_pipeline.hpl``, in a JSON file
+Run the [speed test Hop Pipeline](https://github.com/geometalab/hop-plugin-geometry-fields-converter/blob/main/speed_test/speed_test.hpl) inside ``speed_test/``, whose performance metrics get logged via the ``log_pipeline.hpl``, in a JSON file
 * **evaluate_performance:** \
 Calculate the speed per row with the prior JSON file and evaluate the resulting performance via a simple bash script.
+
+The full test suite (integration, speed, and performance evaluation) runs only for pushes to ``main``.
 
 ### release
 
@@ -191,7 +189,7 @@ This job only runs once a new tag is created. It creates a ZIP archive containin
 ## Language Support
 
 This plugin supports French, German, and English languages.
-The localisation files containing the messages are located in the [``src/main/resources/ch/ost/hop/pipeline/transforms/geometryfieldsconverter/messages``](https://gitlab.ost.ch/apache-hop-plugin-sa/apache-hop-plugins-geometry-fields-converter/-/tree/24d2ac3cefbd886b67c2e2cee6dc0fb40e14f1f5/src/main/resources/ch/ost/hop/pipeline/transforms/geometryfieldsconverter/messages) directory.
+The localisation files containing the messages are located in the [``src/main/resources/ch/ost/hop/pipeline/transforms/geometryfieldsconverter/messages``](https://github.com/geometalab/hop-plugin-geometry-fields-converter/tree/main/src/main/resources/ch/ost/hop/pipeline/transforms/geometryfieldsconverter/messages) directory.
 Adding a new language is done by creating an additional file following the naming scheme ``[messages_xx_XX.properties]`` and translating all messages accordingly.
 It is important to note that these files are not UTF-8 encoded, but use ISO-8859-1 (Latin-1).
 Therefore, characters not contained in Latin-1 must be escaped using their Unicode notation (``\uXXXX``).
