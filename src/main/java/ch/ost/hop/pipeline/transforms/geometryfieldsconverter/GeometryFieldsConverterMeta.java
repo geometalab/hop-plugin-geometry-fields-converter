@@ -42,7 +42,7 @@ import org.apache.hop.pipeline.transform.TransformMeta;
     categoryDescription = "GeometryFields.Category",
     keywords = "i18n::GeometryFields.keyword",
     documentationUrl =
-      "https://github.com/geometalab/hop-plugin-geometry-fields-converter/blob/main/README.md")
+        "https://github.com/geometalab/hop-plugin-geometry-fields-converter/blob/main/README.md")
 public class GeometryFieldsConverterMeta
     extends BaseTransformMeta<GeometryFieldsConverter, GeometryFieldsConverterData> {
 
