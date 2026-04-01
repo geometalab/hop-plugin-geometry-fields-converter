@@ -27,12 +27,16 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y zip
           mvn -B package
-          cp version.xml target/version.xml
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          cd target
-          zip -r "../geometryfieldsconverter.zip" "version.xml" "lib" "hop-transform-geometryfieldsconverter-${VERSION}.jar"
+          PLUGIN_DIR="release/plugins/transforms/geometryfieldsconverter"
+          mkdir -p "${PLUGIN_DIR}/lib"
+          cp "target/hop-transform-geometryfieldsconverter-${VERSION}.jar" "${PLUGIN_DIR}/"
+          cp "version.xml" "${PLUGIN_DIR}/"
+          cp -r target/lib/. "${PLUGIN_DIR}/lib/"
+          cd release
+          zip -r "../geometryfieldsconverter-${VERSION}.zip" plugins/
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          files: geometryfieldsconverter.zip
+          files: geometryfieldsconverter-*.zip
