@@ -83,8 +83,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    container:
-      image: apache/hop:latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
@@ -97,19 +95,17 @@ jobs:
 
       - name: Run integration pipeline
         run: |
-          mkdir -p /files
-          mkdir -p /opt/hop/plugins/transforms/geometryfieldsconverter
-          cp -r integration_test/* /files/
-          cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
-          /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl
+          docker run --rm --entrypoint /bin/sh \
+            -v "${GITHUB_WORKSPACE}:/workspace" \
+            -w /workspace \
+            apache/hop:latest \
+            -lc "mkdir -p /files /opt/hop/plugins/transforms/geometryfieldsconverter; cp -r integration_test/* /files/; cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/; /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl"
 
   speed_test:
     name: Speed Test
     runs-on: ubuntu-latest
     needs: build
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    container:
-      image: apache/hop:latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
@@ -122,17 +118,11 @@ jobs:
 
       - name: Run speed test pipeline
         run: |
-          apt-get update
-          apt-get install -y wget unzip
-          mkdir -p /files
-          /opt/hop/hop-conf.sh -pc -p speed_test -ph /files
-          wget https://github.com/atolcd/hop-gis-plugins/releases/download/v1.4.0/gis-plugin-assemblies-1.4.0.zip -O gis.zip
-          unzip gis.zip -d /opt/hop/plugins/
-          mkdir -p /opt/hop/plugins/transforms/geometryfieldsconverter
-          cp -r speed_test/* /files/
-          cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/
-          /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl
-          cp /files/metrics.json speed_test/metrics.json
+          docker run --rm --entrypoint /bin/sh \
+            -v "${GITHUB_WORKSPACE}:/workspace" \
+            -w /workspace \
+            apache/hop:latest \
+            -lc "mkdir -p /files /opt/hop/plugins/transforms/geometryfieldsconverter; /opt/hop/hop-conf.sh -pc -p speed_test -ph /files; wget https://github.com/atolcd/hop-gis-plugins/releases/download/v1.4.0/gis-plugin-assemblies-1.4.0.zip -O gis.zip; unzip gis.zip -d /opt/hop/plugins/; cp -r speed_test/* /files/; cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/; /opt/hop/hop-run.sh -j speed_test -r local -f /files/speed_test.hpl; cp /files/metrics.json speed_test/metrics.json"
 
       - name: Upload speed test metrics
         uses: actions/upload-artifact@v4
