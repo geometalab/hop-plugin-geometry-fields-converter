@@ -83,7 +83,7 @@ jobs:
     name: Integration Test
     runs-on: ubuntu-latest
     needs: build
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/github_migration') }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
@@ -106,7 +106,7 @@ jobs:
     name: Speed Test
     runs-on: ubuntu-latest
     needs: build
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/github_migration') }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
@@ -135,7 +135,7 @@ jobs:
     name: Evaluate Performance
     runs-on: ubuntu-latest
     needs: speed_test
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/github_migration') }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
