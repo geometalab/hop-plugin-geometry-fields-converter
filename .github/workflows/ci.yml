@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - github_migration
 
 permissions:
   contents: read
