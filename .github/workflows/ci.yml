@@ -98,7 +98,7 @@ jobs:
             -v "${GITHUB_WORKSPACE}:/workspace" \
             -w /workspace \
             apache/hop:latest \
-            -lc "mkdir -p /files /opt/hop/plugins/transforms/geometryfieldsconverter; cp -r integration_test/* /files/; cp -r target/* /opt/hop/plugins/transforms/geometryfieldsconverter/; /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl"
+            -lc "mkdir -p /files /opt/hop/plugins/transforms/geometryfieldsconverter; cp -r integration_test/* /files/; cp -f ./*.jar /opt/hop/plugins/transforms/geometryfieldsconverter/; cp -f ./version.xml /opt/hop/plugins/transforms/geometryfieldsconverter/; cp -r ./lib /opt/hop/plugins/transforms/geometryfieldsconverter/; /opt/hop/hop-run.sh -r local -f /files/pipeline.hpl"
 
   speed_test:
     name: Speed Test
