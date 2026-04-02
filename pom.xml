@@ -19,7 +19,7 @@
         <jandex.version>3.2.3</jandex.version>
         <spotless.version>2.38.0</spotless.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hop.plugins.dir></hop.plugins.dir>
+        <hop.plugins.dir>${project.build.directory}/hop/plugins/transforms/geometryfieldsconverter</hop.plugins.dir>
     </properties>
 
     <build>
