@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  prepare_release:
+    name: Prepare and Publish Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Build release package
+        run: |
+          sudo apt-get update && sudo apt-get install -y zip
+          mvn -B package
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          PLUGIN_DIR="release/plugins/transforms/geometryfieldsconverter"
+          mkdir -p "${PLUGIN_DIR}/lib"
+          cp "target/hop-transform-geometryfieldsconverter-${VERSION}.jar" "${PLUGIN_DIR}/"
+          cp "version.xml" "${PLUGIN_DIR}/"
+          cp -r target/lib/. "${PLUGIN_DIR}/lib/"
+          cd release
+          zip -r "../geometryfieldsconverter-${VERSION}.zip" plugins/
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: geometryfieldsconverter-*.zip
